@@ -3,8 +3,15 @@ package business.entities;
 import java.util.Date
 
 class Indebted(
-  private var name: String,
-  private var birthDay: Date,
-  private var debt: Double) {
-  private var properties : List[Property] = List[Property]()
+  private var _name: String,
+  private var _birthDay: Date,
+  private var _debt: Double) {
+  
+  private var _properties : List[Property] = List[Property]()
+  
+  def name = this._name
+  def birthDay = this._birthDay
+  def debt = this._debt
+  def properties = this._properties
+  
 }
