@@ -1,5 +1,12 @@
 package business.services
 
-class UserServices {
+import java.util.Date;
 
+class UserServices {
+  def getOpenAuctions = {
+
+  }
+  def getUser(login : String ,password : String) = {
+
+  }
 }
