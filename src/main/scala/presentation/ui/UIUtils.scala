@@ -1,4 +1,4 @@
-package presentation.ui
+package main.scala.presentation.ui
 
 import java.io.BufferedReader
 import java.io.InputStreamReader

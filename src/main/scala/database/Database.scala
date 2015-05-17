@@ -1,7 +1,7 @@
-package database
+package main.scala.database
 
 import java.util.Date
-import business.entities.PropertyKind
+import main.scala.business.entities.PropertyKind
 
 class Database {
   

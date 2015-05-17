@@ -1,4 +1,4 @@
-package presentation.ui;
+package main.scala.presentation.ui;
 
 class UI {  
   

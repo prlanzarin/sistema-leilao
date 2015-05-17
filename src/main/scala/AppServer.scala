@@ -1,7 +1,9 @@
+package main.scala
+
 import java.io._
 import java.net.{InetAddress,ServerSocket,Socket,SocketException}
 import java.util.Random
-import business.entities._
+import main.scala.business.entities._
 
 object AppServer {
     def main(args: Array[String]): Unit = {
