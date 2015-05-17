@@ -1,19 +1,12 @@
 package business.entities;
 
 import java.util.Date
+import scala.collection.immutable.List 
 
-class Indebted(
-  private var _name: String,
-  private var _birthDay: Date,
-  private var _debt: Double,
-  private var _cpf: String) {
-  
-  private var _properties : List[Property] = List[Property]()
-  
-  def name = this._name
-  def birthDay = this._birthDay
-  def debt = this._debt
-  def cpf = this._cpf
-  def properties = this._properties
-  
+class Indebted(name: String,
+               birthDay: Date,
+               dept: Double,
+               cpd: String) {
+    private var properties: List[Property] = List.empty[Property]
+    def addProperty(p: Property) = p :: this.properties
 }
