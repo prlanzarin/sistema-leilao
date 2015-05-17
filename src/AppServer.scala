@@ -22,16 +22,23 @@ object AppServer {
 
 case class ServerThread(socket: Socket) extends Thread("ServerThread") {
     override def run(): Unit = {
-        val rand = new Random(System.currentTimeMillis());
         try {
             val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()));
             val in = new ObjectInputStream(
                     new DataInputStream(socket.getInputStream()));
 
             val msg = in.readObject().asInstanceOf[RequestMessage];
+            val str =
+                msg match {
+                    case AddIndebtedRequest(i) =>
+                        "Recebi requisição de inserção de endividado"
+                    case AddPropertyRequest(p) =>
+                        "Recebi requisição de inserção de bem"
+                    case _ => "Requisição não conhecida"
+                }
+            println(str);
 
-            println("Recebi " + msg.toString())
-            out.writeObject("Recebido !");
+            out.writeObject("Sucesso");
             out.close();
             in.close();
             socket.close()
