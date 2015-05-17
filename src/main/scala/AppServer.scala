@@ -32,10 +32,11 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             val msg = in.readObject().asInstanceOf[RequestMessage];
             val str = msg match {
                     case AddIndebtedRequest(i) =>
+                        println("Server: adding indebted")
                         val serv = new ManagerServices()
                         serv.createIndebted(i)
                         "Recebi requisição de inserção do endividado " + i.name
-                    case AddPropertyRequest(p) =>
+                    case AddPropertyRequest(i, p) =>
                         "Recebi requisição de inserção de bem"
                 }
             println(str);
