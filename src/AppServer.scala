@@ -31,7 +31,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             val str =
                 msg match {
                     case AddIndebtedRequest(i) =>
-                        "Recebi requisição de inserção de endividado"
+                        "Recebi requisição de inserção do endividado " + i.name
                     case AddPropertyRequest(p) =>
                         "Recebi requisição de inserção de bem"
                     case _ => "Requisição não conhecida"
