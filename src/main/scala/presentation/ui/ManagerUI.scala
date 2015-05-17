@@ -5,13 +5,13 @@ import java.util.HashMap
 import presentation.controller.CreateIndebtedCommand
 import presentation.controller.SelectIndebtedCommand
 import presentation.controller.ExitCommand
-import presentation.controller.ExitCommand
 
 class ManagerUI extends UI {
   val commands = Map[String, Command](
     "C" -> new CreateIndebtedCommand(),
     "S" -> new SelectIndebtedCommand(),
     "Q" -> new ExitCommand)
+    
 
   def show {
     println("Menu do Gerente\n")
