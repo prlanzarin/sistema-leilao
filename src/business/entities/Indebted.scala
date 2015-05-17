@@ -1,7 +1,6 @@
 package business.entities;
 
 import java.util.Date
-import scala.collection.immutable.List 
 
 class Indebted(name: String,
                birthDay: Date,
