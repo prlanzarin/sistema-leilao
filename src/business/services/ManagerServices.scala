@@ -12,8 +12,6 @@ class ManagerServices extends UserServices {
   def createIndebted(name: String, bday: Date, debt: Double, cpf: String): Boolean = {
     if (!validateIndebted(cpf))
       return false
-    if (database.queryIndebted(cpf) != null)
-      return false
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
@@ -22,8 +20,14 @@ class ManagerServices extends UserServices {
 
   }
 
-  def createProperty(indebted: Indebted, name: String, value: Double, kind: PropertyKind) = {
-
+  def createProperty(indebted: Indebted, idKey: Integer, name: String, value: Double, kind: PropertyKind): Boolean = {
+    if (!validateIndebted(indebted.cpf))
+      return false
+    if (!validateProperty(indebted.cpf, name))
+      return false
+    val property = new Property(idKey, name, value, kind)
+    database.addProperty(name, value, kind.toString)
+    return true
   }
 
   def endAuction(auction: Auction) = {
@@ -38,8 +42,9 @@ class ManagerServices extends UserServices {
 
   }
 
-  def getIndebted = {
-
+  def getIndebted: List[Indebted] = {
+    val indebteds = database.queryIndebteds
+    return indebteds
   }
 
   def generateReport(indebteds: List[Indebted]) = {
@@ -47,9 +52,14 @@ class ManagerServices extends UserServices {
   }
 
   def validateIndebted(cpf: String): Boolean = {
-    if (cpf.length != 8)
+    if (database.queryIndebted(cpf) != null)
       return false
-    else
-      return true
+    return true
+  }
+
+  def validateProperty(indebtedCpf: String, name: String): Boolean = {
+    if (database.queryProperty(indebtedCpf, name) != null)
+      return false
+    return true
   }
 }
