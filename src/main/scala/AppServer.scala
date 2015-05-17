@@ -2,6 +2,7 @@ import java.io._
 import java.net.{InetAddress,ServerSocket,Socket,SocketException}
 import java.util.Random
 import business.entities._
+import business.services._
 
 object AppServer {
     def main(args: Array[String]): Unit = {
@@ -28,13 +29,13 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                     new DataInputStream(socket.getInputStream()));
 
             val msg = in.readObject().asInstanceOf[RequestMessage];
-            val str =
-                msg match {
+            val str = msg match {
                     case AddIndebtedRequest(i) =>
+                        val serv = new ManagerServices()
+                        serv.createIndebted(i)
                         "Recebi requisição de inserção do endividado " + i.name
                     case AddPropertyRequest(p) =>
                         "Recebi requisição de inserção de bem"
-                    case _ => "Requisição não conhecida"
                 }
             println(str);
 

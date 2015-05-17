@@ -9,7 +9,11 @@ import database.Database
 class ManagerServices extends UserServices {
   val database = new Database
 
-  def createIndebted(name: String, bday: Date, debt: Double, cpf: String): Boolean = {
+  def createIndebted(indebted : Indebted) : Boolean = {
+    val name = indebted.name
+    val bday = indebted.birthDay
+    val debt = indebted.debt
+    val cpf = indebted.cpf
     if (!validateIndebted(cpf))
       return false
     if (database.queryIndebted(cpf) != null)
