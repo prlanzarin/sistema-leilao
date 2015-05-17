@@ -1,63 +1,62 @@
 package database
 
 import business.entities.PropertyKind
-import scala.slick.driver.SQLiteDriver.api._
-import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.Date
-import slick.driver.SQLiteDriver
 import java.sql.Date
-/*
-class SQLite(name: String) {
-def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-  def nom = column[String]("NOM", O.NotNull)
-  def prénom = column[String]("PRENOM")
-  def sexe = column[Int]("SEXE")
-  def télPortable = column[String]("TELPOR")
-  def télBureau = column[String]("TELBUR")
-  def télPrivé = column[String]("TELPRI")
-  def siteRDV = column[String]("SITE")
-  def typeRDV = column[String]("TYPE")
-  def libelléRDV = column[String]("LIBELLE")
-  def numRDV = column[String]("NUMRDV")
-  def étape = column[String]("ETAPE")
-  def dateRDV = column[Date]("DATE")
-  def heureRDVString = column[String]("HEURE")
-  def statut = column[String]("STATUT")
-  def orderId = column[String]("ORDERID")
-    }
+
+// Import the session management, including the implicit threadLocalSession
+import org.scalaquery.session._
+import org.scalaquery.session.Database.threadLocalSession
+
+import org.scalaquery.ql._
+import org.scalaquery.ql.TypeMapper._
+
+import org.scalaquery.ql.extended.H2Driver.Implicit._
+import org.scalaquery.ql.extended.{ExtendedTable => Table}
+
+object DatabaseApp {
+  def main(){
+    val db = new Database("data1")
+    db.newDbSession()
   }
-} */
+}
+
 class Database(name : String) {
-  
-  val db = Database.forURL("jdbc:sqlite:testdb.db" format name, driver = "org.sqlite.JDBC")
-  
- implicit val JavaUtilDateMapper =
-    MappedColumnType .base[java.util.Date, java.sql.Timestamp] (
-      d => new java.sql.Timestamp(d.getTime),
-      d => new java.util.Date(d.getTime))
-      
-  class PropertiesTable(tag : Tag) extends Table[(Int, String, Double, String, Int)](tag, "USERS") {
+  val db = Database.forURL("jdbc:h2:file:data/db" format name, driver = "org.h2.Driver")
+
+  val indebteds = new Table[(Int, String, Int , String, Double)]("USERS") {
+    def id = column[Int]("I_ID", O.PrimaryKey, O.AutoInc)
+    def name = column[String]("NAME")
+    def bdate = column[Int]("BIRTHDATE")
+    def cpf = column[String]("CPF")
+    def debt = column[Double]("DEBT")
+
+    def * = id ~ name ~ bdate ~ cpf ~ debt
+  }
+
+  val properties = new  Table[(Int, String, Double, String, Int)]("USERS") {
     def id = column[Int]("P_ID", O.PrimaryKey, O.AutoInc)
     def name = column[String]("NAME")
     def value = column[Double]("VALUE")
     def kind = column[String]("KIND")
     def ownerID = column[Int]("OWNER")
-    def owner = foreignKey("OWNER_FK", ownerID, TableQuery[IndebtedsTable])(_.id)
-    
-    def * = (id, name, value, kind, ownerID)
+    def owner = foreignKey("OWNER_FK", ownerID, indebteds)(_.id)
 
+    def * = id ~ name ~ value ~ kind ~ ownerID
   }
-  
-  class IndebtedsTable(tag : Tag) extends Table[(Int, String, java.util.Date , String, Double)](tag, "USERS") {
-    def id = column[Int]("I_ID", O.PrimaryKey, O.AutoInc)
-    def name = column[String]("NAME")
-    def bdate = column[java.util.Date]("BIRTHDATE")
-    def cpf = column[String]("CPF")
-    def debt = column[Double]("DEBT")
-    
-    def * = (id, name, bdate, cpf, debt)
+
+  def newDbSession():Unit = {
+    db withSession {
+      (indebteds.ddl ++ properties.ddl).create
+      indebteds.insert(0, "Joao", 101010, "01234567891", 150.82)
+      properties.insert(0, "S10", 35000.50, "Car", 0)
+    }
+
+    println("Coffees:")
+    Query(indebteds) foreach { case (id, name, bdate, cpf, debt) =>
+      println("  " + name + "\t" + name + "\t" + bdate + "\t" + cpf + "\t" + debt)
+    }
   }
-  
   /* 
    * TODO
    * type String of CPF is a placeholder
