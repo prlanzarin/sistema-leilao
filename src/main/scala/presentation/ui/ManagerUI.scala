@@ -1,11 +1,11 @@
-package main.scala.presentation.ui;
+package presentation.ui;
 
-import main.scala.presentation.controller.Command
+import presentation.controller.Command
 import java.util.HashMap
-import main.scala.presentation.controller.CreateIndebtedCommand
-import main.scala.presentation.controller.SelectIndebtedCommand
-import main.scala.presentation.controller.ExitCommand
-import main.scala.presentation.controller.ExitCommand
+import presentation.controller.CreateIndebtedCommand
+import presentation.controller.SelectIndebtedCommand
+import presentation.controller.ExitCommand
+import presentation.controller.ExitCommand
 
 class ManagerUI extends UI {
   val commands = Map[String, Command](

@@ -1,4 +1,4 @@
-package main.scala.business.services
+package business.services
 
 class ClientServices extends UserServices {
 

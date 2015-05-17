@@ -1,10 +1,10 @@
-package main.scala.business.services
+package business.services
 
 import java.util.Date
 
-import main.scala.business.entities.PropertyKind.PropertyKind
-import main.scala.business.entities.{Auction, Property, Indebted}
-import main.scala.database.Database
+import business.entities.PropertyKind.PropertyKind
+import business.entities.{Auction, Property, Indebted}
+import database.Database
 
 class ManagerServices extends UserServices {
   val database = new Database

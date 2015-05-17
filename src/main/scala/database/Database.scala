@@ -1,4 +1,4 @@
-package main.scala.database
+package database
 
 import java.util.Date
 import main.scala.business.entities.PropertyKind

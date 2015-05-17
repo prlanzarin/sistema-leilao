@@ -1,4 +1,4 @@
-package main.scala.business.entities
+package business.entities
 
 import PropertyKind._
 

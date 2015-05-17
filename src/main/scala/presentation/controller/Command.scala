@@ -1,10 +1,10 @@
-package main.scala.presentation.controller
+package presentation.controller
 
-import main.scala.presentation.ui.UIUtils
-import main.scala.business.entities.Indebted
-import main.scala.business.entities.Property
-import main.scala.business.entities.PropertyKind
-import main.scala.business.entities.PropertyKind._
+import presentation.ui.UIUtils
+import business.entities.Indebted
+import business.entities.Property
+import business.entities.PropertyKind
+import business.entities.PropertyKind._
 
 abstract class Command {
   def execute
