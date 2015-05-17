@@ -20,7 +20,7 @@ class ManagerServices extends UserServices {
 
   }
 
-  def createProperty(indebted: Indebted, idKey: Integer, name: String, value: Double, kind: PropertyKind): Boolean = {
+  def createProperty(indebted: Indebted, idKey: Int, name: String, value: Double, kind: PropertyKind): Boolean = {
     if (!validateIndebted(indebted.cpf))
       return false
     if (!validateProperty(indebted.cpf, name))
@@ -42,7 +42,7 @@ class ManagerServices extends UserServices {
 
   }
 
-  def getIndebted: List[Indebted] = {
+  def getIndebted: Unit = {
     val indebteds = database.queryIndebteds
     return indebteds
   }
