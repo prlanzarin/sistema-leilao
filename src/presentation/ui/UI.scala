@@ -10,9 +10,10 @@ import java.util.Calendar
 import java.text.SimpleDateFormat
 import java.text.ParseException
 
-class UI {
+class UI {  
   val reader = new BufferedReader(new InputStreamReader(System.in))
-  val dateFormatter = new SimpleDateFormat("dd/MM/yyyy")
+  val dateFormat = "dd/MM/yyyy"
+  val dateFormatter = new SimpleDateFormat(dateFormat)
 
   def readInt(message: String): Integer = {
     println(message)
@@ -83,5 +84,28 @@ class UI {
         return input
     }
     return null
+  }
+  
+  def select(message: String, list: List[String]): String = {
+    println(message)
+    println("Índice\tItem")
+    for(i <- 0 until list.size){
+      println(i + "\t" + list(i))
+    }
+    val i:Int = readInt("Informe o número do índice correspondente:")
+    return list(i)
+  }
+  
+  def toJsonAction(action: String, args: List[String]): String = {
+    val jsonArgs = args.tail.foldLeft("\"" + args(0) + "\"")((a, j) => a + ", \"" + j + "\"")
+    val json = "{ \"action\": \""+action+"\", "
+      .+("\"args\": [ ")
+      .+(jsonArgs)  
+      .+(" ] }")    
+    return json
+  }
+  
+  def parseJsonQuery(query: String): List[List[String]] = {
+    return List[List[String]]()    
   }
 }
