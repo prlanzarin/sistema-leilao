@@ -5,7 +5,7 @@ import java.util.Date
 class Indebted(name: String,
                birthDay: Date,
                dept: Double,
-               cpd: String) {
+               cpf: String) {
     private var properties: List[Property] = List.empty[Property]
     def addProperty(p: Property) = p :: this.properties
 }
