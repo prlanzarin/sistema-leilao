@@ -3,7 +3,7 @@ package business.entities;
 import PropertyKind._
 
 class Property(
-  private var _idKey: Integer,
+  private var _idKey: Int,
   private var _name: String,
   private var _value: Double,
   private var _kind: PropertyKind) {
