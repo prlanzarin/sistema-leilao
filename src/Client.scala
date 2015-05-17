@@ -1,6 +1,9 @@
 import java.io._
 import java.net.{InetAddress,ServerSocket,Socket,SocketException}
 import java.util.Random
+import business.entities.Indebted
+import business.entities._
+import java.util.Date
 
 object Client {
 
@@ -12,8 +15,12 @@ object Client {
                         new DataOutputStream(socket.getOutputStream()))
                 val in = new ObjectInputStream(new DataInputStream(socket.getInputStream()))
 
-                val str : String = "Endividado Fulano de Tal"
-                out.writeObject(str)
+                val indebted = new Indebted( "Fulano de Tal"
+                                           , new Date
+                                           , 1000
+                                           , "982231482-00" )
+                val msg : RequestMessage = AddIndebtedRequest(indebted)
+                out.writeObject(msg)
                 out.flush()
 
                 while (true) {

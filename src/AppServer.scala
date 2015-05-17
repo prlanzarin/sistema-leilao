@@ -1,6 +1,7 @@
 import java.io._
 import java.net.{InetAddress,ServerSocket,Socket,SocketException}
 import java.util.Random
+import business.entities._
 
 object AppServer {
     def main(args: Array[String]): Unit = {
@@ -27,9 +28,9 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             val in = new ObjectInputStream(
                     new DataInputStream(socket.getInputStream()));
 
-            val str = in.readObject().asInstanceOf[String];
+            val msg = in.readObject().asInstanceOf[RequestMessage];
 
-            println("Recebi " + str)
+            println("Recebi " + msg.toString())
             out.writeObject("Recebido !");
             out.close();
             in.close();
