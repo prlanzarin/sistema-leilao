@@ -1,3 +1,5 @@
+package main.scala
+
 import java.io._
 import java.net.{InetAddress,ServerSocket,Socket,SocketException}
 import java.util.Random
