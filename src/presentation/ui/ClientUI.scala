@@ -1,5 +1,5 @@
 package presentation.ui
 
-class ViewClient extends UI {
+class ClientUI extends UI {
 
 }
