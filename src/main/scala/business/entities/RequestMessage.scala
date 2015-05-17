@@ -1,6 +1,4 @@
-package business.entities;
-import business.entities._
-
+package main.scala.business.entities
 
 abstract class RequestMessage extends Serializable
 case class AddIndebtedRequest(indebted : Indebted) extends RequestMessage

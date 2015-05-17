@@ -1,4 +1,4 @@
-package presentation.controller
+package main.scala.presentation.controller
 
 class ControllerClient {
 

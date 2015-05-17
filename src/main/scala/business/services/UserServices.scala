@@ -1,4 +1,4 @@
-package business.services
+package main.scala.business.services
 
 import java.util.Date;
 
