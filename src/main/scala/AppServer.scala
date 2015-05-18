@@ -30,18 +30,33 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                     new DataInputStream(socket.getInputStream()));
 
             val msg = in.readObject().asInstanceOf[RequestMessage];
-            val str = msg match {
+            val r = msg match {
                     case AddIndebtedRequest(i) =>
                         println("Server: adding indebted")
                         val serv = new ManagerServices()
-                        serv.createIndebted(i)
-                        "Recebi requisição de inserção do endividado " + i.name
+                        if (serv.insertIndebted(i))
+                            AddIndebtedReply("Success")
+                        else
+                            new AddIndebtedReply("Failed")
                     case AddPropertyRequest(i, p) =>
-                        "Recebi requisição de inserção de bem"
+                        println("Server: adding property")
+                        val serv = new ManagerServices()
+                        if (serv.insertProperty(i, p))
+                            AddPropertyReply("Success")
+                        else
+                            new AddPropertyReply("Failed")
+                    case QueryIndebtedsRequest() =>
+                        println("Server: querying indebted")
+                        val serv = new ManagerServices()
+                        val indebted = serv.getIndebteds()
+                        if (indebted.isEmpty)
+                            QueryIndebtedsReply(None)
+                        else
+                            QueryIndebtedsReply(Some(indebted))
+                    case _ => throw new SocketException // TODO Create other exception
                 }
-            println(str);
 
-            out.writeObject("Sucesso");
+            out.writeObject(r);
             out.close();
             in.close();
             socket.close()
