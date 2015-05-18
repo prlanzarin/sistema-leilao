@@ -49,7 +49,7 @@ object Connection {
             r = in.readObject().asInstanceOf[ReplyMessage]
         }
         r match {
-            case AddIndebtedReply(str) => println("sucesso")
+            case AddPropertyReply(str) => println("sucesso")
             case _ => ;
         }
     }
