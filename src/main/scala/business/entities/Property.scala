@@ -4,7 +4,8 @@ import PropertyKind._
 
 class Property(val name: String,
                val value: Double,
-               val kind: PropertyKind) {
+               val kind: PropertyKind)
+extends Serializable {
 
   private var _idKey: Int = 0 //TODO não sei se essa id está certa
 
