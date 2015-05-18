@@ -31,11 +31,11 @@ class ManagerServices extends UserServices {
     val value = p.value
     val kind = p.kind
 
-    if (database.queryIndebted(cpf))
+    if (!(database.queryIndebted(cpf)))
       return false
 
-    val property = new Property(name, value, kind)
     database.addProperty(cpf, name, value, kind.toString)
+
     return true
   }
 

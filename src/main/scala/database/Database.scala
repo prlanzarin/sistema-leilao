@@ -1,6 +1,6 @@
 package database
 
-import business.entities.{Indebted, Property, PropertyKind}
+import business.entities._
 
 import org.scalaquery.meta.MTable
 import org.scalaquery.session._
@@ -12,11 +12,15 @@ import org.scalaquery.ql.extended.{ExtendedTable => Table}
 
 class Database() {
   implicit val JavaUtilDateTypeMapper =
-    MappedTypeMapper.base[java.util.Date, Long]  (_.getTime, new java.util.Date(_))
-  val db = Database.forURL("jdbc:h2:file:./db/TEST83" , driver = "org.h2.Driver")
+    MappedTypeMapper.base[java.util.Date, Long](_.getTime,
+                                                new java.util.Date(_))
+  val db = Database.forURL("jdbc:h2:file:./db/TESTDB",
+                            driver = "org.h2.Driver")
   var PropID : Int = 0
 
-  val indebteds = new Table[(String, String, java.util.Date, Double)]("INDEBTEDS") {
+  val indebteds = new
+      Table[(String, String, java.util.Date, Double)]("INDEBTEDS") {
+
     def cpf = column[String]("CPF", O.PrimaryKey)
     def name = column[String]("NAME")
     def bdate = column[java.util.Date]("BIRTHDATE")
@@ -25,7 +29,8 @@ class Database() {
     def * = cpf ~ name ~ bdate ~ debt
   }
 
-  val properties = new  Table[(Int, String, Double, String, String)]("PROPERTIES") {
+  val properties = new
+      Table[(Int, String, Double, String, String)]("PROPERTIES") {
     def id = column[Int]("P_ID", O.PrimaryKey, O.AutoInc)
     def name = column[String]("NAME")
     def value = column[Double]("VALUE")
@@ -37,6 +42,7 @@ class Database() {
   }
 
   def populateDb() = {
+
     db withSession {
       var a = new java.util.Date()
 
@@ -52,23 +58,24 @@ class Database() {
           ("06666666666", "Joao, o Pesquisador Usuario", a, 10.50)
         )
 
-        properties.insert(PropID, "Onibus da Carris", 35000.50, "Vehicle", "01111111111")
+        properties.insert(PropID, "Onibus da Carris",
+          35000.50, "Vehicle", "01111111111")
         PropID = PropID + 1
-        properties.insert(PropID, "Bicicleta Sundown", 20.00, "Vehicle", "02222222222")
+        properties.insert(PropID, "Bicicleta Sundown",
+          20.00, "Vehicle", "02222222222")
         PropID = PropID + 1
-        properties.insert(PropID, "Biju", 10.50, "Jewel", "03333333333")
+        properties.insert(PropID, "Biju",
+          10.50, "Jewel", "03333333333")
         PropID = PropID + 1
-        properties.insert(PropID, "Skate motorizado", 50000.00, "Vehicle", "04444444444")
+        properties.insert(PropID, "Skate motorizado",
+          50000.00, "Vehicle", "04444444444")
         PropID = PropID + 1
-        properties.insert(PropID, "Acordeao", 500.00, "Other", "05555555555")
+        properties.insert(PropID, "Acordeao",
+          500.00, "Other", "05555555555")
         PropID = PropID + 1
-        properties.insert(PropID, "Apartamento Duplex Power Plus", 300000.00, "Realty", "06666666666")
+        properties.insert(PropID, "Apartamento Duplex Power Plus",
+          300000.00, "Realty", "06666666666")
         PropID = PropID + 1
-      }
-
-      println("Indebteds:")
-      Query(indebteds) foreach { case (cpf, name, bdate, debt) =>
-        println("  " + "\t" + cpf + "\t" + bdate + "\t" + name + "\t" + debt)
       }
     }
   }
@@ -77,12 +84,12 @@ class Database() {
     var found: Boolean = false
 
     db withSession {
-
       if (!MTable.getTables.list.exists(_.name.name == indebteds.tableName))
         indebteds.ddl.create
+
       val query =
         for {
-          i <- indebteds if i.cpf === indebtedCPF
+            i <- indebteds if i.cpf === indebtedCPF
         } yield i.cpf
 
       if (query.list.size > 0)
@@ -91,7 +98,8 @@ class Database() {
     return found
   }
 
-  def addIndebted(name : String, birthDay : java.util.Date, debt : Double, cpf : String) = {
+  def addIndebted(name : String, birthDay : java.util.Date,
+                  debt : Double, cpf : String) = {
 
     db withSession {
 
@@ -104,15 +112,17 @@ class Database() {
     }
   }
 
-  def addProperty(cpf : String, propertyName : String, value : Double, kind : String) = {
+  def addProperty(cpf : String, propertyName : String,
+                  value : Double, kind : String) = {
 
     db withSession {
-      if (!MTable.getTables.list.exists(_.name.name == indebteds.tableName))
+      if (!MTable.getTables.list.exists(_.name.name == properties.tableName))
         properties.ddl.create
 
-      val query = for {
-        i <- indebteds if i.cpf === cpf
-      } yield i.cpf
+      val query =
+        for {
+            i <- indebteds if i.cpf === cpf
+        } yield i.cpf
 
       PropID = PropID + 1
       properties.insert(PropID, propertyName, value, kind , query.list.head)
@@ -130,7 +140,8 @@ class Database() {
 
       val query =
         for {
-          i <- properties if i.ownerID === indebtedCPF && i.name === propertyName
+          i <- properties
+          if i.ownerID === indebtedCPF && i.name === propertyName
         } yield i.id
 
       if (query.list.size == 0)
@@ -170,41 +181,35 @@ class Database() {
 
       Query(properties) foreach {
         case (id, name, value, kind, owner) =>
-          loProperties = new Property(name, value, PropertyKind.withName(kind)) :: loProperties
+          loProperties = new
+              Property(name, value, PropertyKind.withName(kind)) :: loProperties
       }
     }
 
     loProperties
   }
 
-  /*
-   * TODO / 2nd iteration
-   */
-  def addAuction() = {
+  def addAuction(auction: Auction) = {
 
   }
-  /*
-   * TODO / 2nd iteration
-   */
-  def addUser() = {
+
+  def addUser(client: Client) = {
 
   }
-  /*
- * TODO / 2nd iteration
- */
-  def queryScheduledAuctions = {
+
+  def addUser(manager: Manager) = {
 
   }
-  /*
-   * TODO / 2nd iteration
-   */
-  def queryOpenAuctions = {
 
+  def queryScheduledAuctions : List[Auction] = {
+      Nil
   }
-  /*
-   * TODO / 2nd iteration
-   */
-  def queryClosedAuctions = {
 
+  def queryOpenAuctions : List[Auction] = {
+      Nil
+  }
+
+  def queryClosedAuctions : List[Auction] = {
+      Nil
   }
 }
