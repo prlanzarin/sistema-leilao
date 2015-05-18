@@ -13,6 +13,7 @@ abstract class Command {
 class CreateIndebtedCommand extends Command {
   override def execute {
     val indebted = readIndebted
+    Connection.sendAddIndebtedRequest(indebted)
     //send indebted to app-server
     //recieve result from app-server
   }

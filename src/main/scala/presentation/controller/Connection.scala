@@ -12,7 +12,7 @@ object Connection {
 
     @throws(classOf[IOException])
     @throws(classOf[SocketException])
-    def init = {
+    def init {
         ia = InetAddress.getByName("localhost")
         socket = new Socket(ia, 9999)
         out = new ObjectOutputStream(
@@ -20,23 +20,31 @@ object Connection {
         in = new ObjectInputStream(new DataInputStream(socket.getInputStream()))
     }
 
+    def end {
+        socket.close()
+        in.close()
+        out.close()
+    }
+
     def sendAddIndebtedRequest(indebted: Indebted) {
         val msg: RequestMessage = AddIndebtedRequest(indebted)
         out.writeObject(msg)
         out.flush()
-        while (true) {
+        var x = in.readObject().asInstanceOf[String]
+        while (x == null) {
             val x = in.readObject().asInstanceOf[String]
-            println("Massa, valeu")
         }
+        println(x)
     }
 
     def sendAddPropertyRequest(indebted: Indebted, property: Property) {
-        //val msg: RequestMessage = AddIndebtedRequest(indebted)
-        //out.writeObject(msg)
+        val msg: RequestMessage = AddPropertyRequest(indebted, property)
+        out.writeObject(msg)
         out.flush()
-        while (true) {
+        var x = in.readObject().asInstanceOf[String]
+        while (x == null) {
             val x = in.readObject().asInstanceOf[String]
-            println("Massa, valeu")
         }
+        println(x)
     }
 }
