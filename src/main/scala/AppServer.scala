@@ -1,6 +1,6 @@
 
 import java.io._
-import java.net.{InetAddress,ServerSocket,Socket,SocketException}
+import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
 import java.util.Random
 import business.entities._
 import business.services._
@@ -12,11 +12,10 @@ object AppServer {
             while (true)
                 new ServerThread(listener.accept()).start();
             listener.close()
-        }
-        catch {
+        } catch {
             case e: IOException =>
-                    System.err.println("Could not listen on port: 9999.");
-                    System.exit(-1)
+                System.err.println("Could not listen on port: 9999.");
+                System.exit(-1)
         }
     }
 
@@ -27,8 +26,9 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
         try {
             val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()));
             val in = new ObjectInputStream(
-                    new DataInputStream(socket.getInputStream()));
+                new DataInputStream(socket.getInputStream()));
 
+<<<<<<< HEAD
             val msg = in.readObject().asInstanceOf[RequestMessage];
             val r = msg match {
                     case AddIndebtedRequest(i) =>
@@ -38,6 +38,16 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             AddIndebtedReply("Success")
                         else
                             new AddIndebtedReply("Failed")
+=======
+            while (socket.isBound()) {
+                val msg = in.readObject().asInstanceOf[RequestMessage];
+                val str = msg match {
+                    case AddIndebtedRequest(i) =>
+                        println("Server: adding indebted")
+                        val serv = new ManagerServices()
+                        serv.createIndebted(i)
+                            "Recebi requisição de inserção do endividado " + i.name
+>>>>>>> 07674f2dff458e2f8e214a547ad3f00d89efe101
                     case AddPropertyRequest(i, p) =>
                         println("Server: adding property")
                         val serv = new ManagerServices()
@@ -55,17 +65,23 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             QueryIndebtedsReply(Some(indebted))
                     case _ => throw new SocketException // TODO Create other exception
                 }
+<<<<<<< HEAD
 
             out.writeObject(r);
+=======
+                println(str);
+                out.writeObject("Sucesso");
+            }
+
+>>>>>>> 07674f2dff458e2f8e214a547ad3f00d89efe101
             out.close();
             in.close();
             socket.close()
-        }
-        catch {
+        } catch {
             case e: SocketException =>
-                    () // avoid stack trace when stopping a client with Ctrl-C
+                () // avoid stack trace when stopping a client with Ctrl-C
             case e: IOException =>
-                    e.printStackTrace();
+                e.printStackTrace();
         }
     }
 

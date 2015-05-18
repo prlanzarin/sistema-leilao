@@ -16,8 +16,6 @@ class ManagerServices extends UserServices {
     val cpf = indebted.cpf
     if (!validateIndebted(cpf))
       return false
-    if (database.queryIndebted(cpf))
-      return false
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
@@ -26,15 +24,18 @@ class ManagerServices extends UserServices {
 
   }
 
+<<<<<<< HEAD
   def insertProperty(i: Indebted, p: Property) : Boolean = {
     val cpf = i.cpf
-    
-    if (database.queryIndebted(cpf)) {
-        database.addProperty(cpf, p.name, p.value, "") // TODO arrumar kind
-        return true
-    } else {
-        return false
-    }
+    val name = p.name
+
+    if (!validateIndebted(cpf))
+      return false
+    if (!validateProperty(cpf, name))
+      return false
+    val property = new Property(idKey, name, value, kind)
+    database.addProperty(cpf, name, p.value, p.kind.toString)
+    return true
   }
 
   def endAuction(auction: Auction) = {
@@ -49,17 +50,24 @@ class ManagerServices extends UserServices {
 
   }
 
-  def getIndebteds() : List[Indebted] = sys.error("todo")
-
+  def getIndebteds: List[Indebted] = {
+    val indebteds = database.queryIndebteds
+    return indebteds
+  }
 
   def generateReport(indebteds: List[Indebted]) = {
 
   }
 
   def validateIndebted(cpf: String): Boolean = {
-    if (cpf.length != 8)
+    if (database.queryIndebted(cpf) != null)
       return false
-    else
-      return true
+    return true
+  }
+
+  def validateProperty(indebtedCpf: String, name: String): Boolean = {
+    if (database.queryProperty(indebtedCpf, name) != null)
+      return false
+    return true
   }
 }
