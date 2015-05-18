@@ -7,7 +7,6 @@ class Property(val name: String,
                val kind: PropertyKind)
 extends Serializable {
 
-  private var _idKey: Int = 0 //TODO não sei se essa id está certa
-
-  def idKey = this._idKey
+    override def toString: String =
+        "Nome: " + name + "\nValor: " + Double + "\nTipo: " + kind.toString
 }

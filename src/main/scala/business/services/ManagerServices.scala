@@ -14,8 +14,9 @@ class ManagerServices extends UserServices {
     val bday = indebted.birthDay
     val debt = indebted.debt
     val cpf = indebted.cpf
-    if (!validateIndebted(cpf))
+    if (database.queryIndebted(cpf) == true)
       return false
+
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
@@ -30,12 +31,11 @@ class ManagerServices extends UserServices {
     val value = p.value
     val kind = p.kind
 
-    if (!validateIndebted(cpf))
+    if (!(database.queryIndebted(cpf)))
       return false
-    if (!validateProperty(cpf, name))
-      return false
-    val property = new Property(name, value, kind)
+
     database.addProperty(cpf, name, value, kind.toString)
+
     return true
   }
 
@@ -52,23 +52,11 @@ class ManagerServices extends UserServices {
   }
 
   def getIndebteds(): List[Indebted] = {
-    val indebteds = database.queryIndebteds
+    val indebteds = database.getIndebteds
     return indebteds
   }
 
   def generateReport(indebteds: List[Indebted]) = {
 
-  }
-
-  def validateIndebted(cpf: String): Boolean = {
-    if (database.queryIndebted(cpf) != null)
-      return false
-    return true
-  }
-
-  def validateProperty(indebtedCpf: String, name: String): Boolean = {
-    if (database.queryProperty(indebtedCpf, name) != null)
-      return false
-    return true
   }
 }

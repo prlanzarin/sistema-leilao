@@ -31,13 +31,13 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             while (socket.isBound()) {
                 val msg = in.readObject().asInstanceOf[RequestMessage];
                 val r = msg match {
-                        case AddIndebtedRequest(i) =>
-                            println("Server: adding indebted")
-                            val serv = new ManagerServices()
-                            if (serv.insertIndebted(i))
-                                AddIndebtedReply("Success")
-                            else
-                                new AddIndebtedReply("Failed")
+                    case AddIndebtedRequest(i) =>
+                        println("Server: adding indebted")
+                        val serv = new ManagerServices()
+                        if (serv.insertIndebted(i))
+                            AddIndebtedReply("Success")
+                        else
+                            new AddIndebtedReply("Failed")
 
                     case AddPropertyRequest(i, p) =>
                         println("Server: adding property")
@@ -56,8 +56,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             QueryIndebtedsReply(Some(indebted))
                     case _ => throw new SocketException // TODO Create other exception
                 }
-
-            out.writeObject(r);
+                out.writeObject(r);
             }
 
             out.close();
