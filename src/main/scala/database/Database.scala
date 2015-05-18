@@ -14,7 +14,7 @@ class Database() {
   implicit val JavaUtilDateTypeMapper =
     MappedTypeMapper.base[java.util.Date, Long](_.getTime,
                                                 new java.util.Date(_))
-  val db = Database.forURL("jdbc:h2:file:./db/TESTDB",
+  val db = Database.forURL("jdbc:h2:file:./db/TESTD0219",
                             driver = "org.h2.Driver")
   var PropID : Int = 0
 
@@ -159,7 +159,6 @@ class Database() {
         indebteds.ddl.create
         return Nil
       }
-
       Query(indebteds) foreach {
         case (cpf, name, bdate, debt) =>
           loIndebteds = new Indebted(name, bdate, debt, cpf) :: loIndebteds
