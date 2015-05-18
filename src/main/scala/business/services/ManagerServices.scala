@@ -14,11 +14,9 @@ class ManagerServices extends UserServices {
     val bday = indebted.birthDay
     val debt = indebted.debt
     val cpf = indebted.cpf
-    println("Post thing thingie")
     if (database.queryIndebted(cpf) == true)
       return false
 
-    println("Post thing thingie")
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
@@ -54,7 +52,7 @@ class ManagerServices extends UserServices {
   }
 
   def getIndebteds(): List[Indebted] = {
-    val indebteds = database.queryIndebteds
+    val indebteds = database.getIndebteds
     return indebteds
   }
 

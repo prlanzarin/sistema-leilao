@@ -140,7 +140,7 @@ class Database() {
     found
   }
 
-  def queryIndebteds() : List[Indebted] = {
+  def getIndebteds() : List[Indebted] = {
     var loIndebteds : List[Indebted] = Nil
 
     db withSession {
@@ -158,7 +158,7 @@ class Database() {
     loIndebteds
   }
 
-  def queryProperties() : List[Property] = {
+  def getProperties() : List[Property] = {
     var loProperties : List[Property] = Nil
 
     db withSession {
@@ -207,5 +207,4 @@ class Database() {
   def queryClosedAuctions = {
 
   }
-
 }
