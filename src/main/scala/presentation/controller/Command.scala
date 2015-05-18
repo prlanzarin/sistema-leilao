@@ -14,8 +14,6 @@ class CreateIndebtedCommand extends Command {
     override def execute {
         val indebted = readIndebted
         Connection.sendAddIndebtedRequest(indebted)
-        //send indebted to app-server
-        //recieve result from app-server
     }
 
     def readIndebted: Indebted = {
@@ -52,8 +50,7 @@ class CreatePropertyCommand(indebtedCpf: String) extends Command {
 
 class SelectIndebtedCommand extends Command {
     override def execute {
-        //send request to app-server
-        val loi: List[Indebted] = null //recieve response from app-server
+        val loi: List[Indebted] = Connection.sendQueryIndebtedsRequest().get
         val indebted = selectIndebted(loi)
         val subcommands = Map[String, Command](
             "C" -> new CreatePropertyCommand(indebted.cpf),

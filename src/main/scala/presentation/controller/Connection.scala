@@ -31,9 +31,6 @@ object Connection {
         out.writeObject(msg)
         out.flush()
         var r = in.readObject().asInstanceOf[ReplyMessage]
-        while (r == null) {
-            r = in.readObject().asInstanceOf[ReplyMessage]
-        }
         r match {
             case AddIndebtedReply(str) => println("sucesso")
             case _ => ;
@@ -45,12 +42,20 @@ object Connection {
         out.writeObject(msg)
         out.flush()
         var r = in.readObject().asInstanceOf[ReplyMessage]
-        while (r == null) {
-            r = in.readObject().asInstanceOf[ReplyMessage]
-        }
         r match {
             case AddPropertyReply(str) => println("sucesso")
             case _ => ;
+        }
+    }
+
+    def sendQueryIndebtedsRequest(): Option[List[Indebted]] = {
+        val msg: RequestMessage = QueryIndebtedsRequest()
+        out.writeObject(msg)
+        out.flush()
+        var r = in.readObject().asInstanceOf[ReplyMessage]
+        r match {
+            case QueryIndebtedsReply(loi) => loi
+            case _ => null;
         }
     }
 }

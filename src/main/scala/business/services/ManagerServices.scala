@@ -16,7 +16,6 @@ class ManagerServices extends UserServices {
     val cpf = indebted.cpf
     if (database.queryIndebted(cpf) == true)
       return false
-
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
