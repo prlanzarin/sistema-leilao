@@ -25,7 +25,7 @@ object Client {
                 out.flush()
 
                 while (true) {
-                    val x = in.readObject().asInstanceOf[String]
+                    val x = in.readObject().asInstanceOf[ReplyMessage]
                         println("Massa, valeu")
                 }
             out.close()
