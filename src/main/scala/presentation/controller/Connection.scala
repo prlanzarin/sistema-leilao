@@ -30,21 +30,27 @@ object Connection {
         val msg: RequestMessage = AddIndebtedRequest(indebted)
         out.writeObject(msg)
         out.flush()
-        var x = in.readObject().asInstanceOf[String]
-        while (x == null) {
-            val x = in.readObject().asInstanceOf[String]
+        var r = in.readObject().asInstanceOf[ReplyMessage]
+        while (r == null) {
+            r = in.readObject().asInstanceOf[ReplyMessage]
         }
-        println(x)
+        r match {
+            case AddIndebtedReply(str) => println("sucesso")
+            case _ => ;
+        }
     }
 
     def sendAddPropertyRequest(indebted: Indebted, property: Property) {
         val msg: RequestMessage = AddPropertyRequest(indebted, property)
         out.writeObject(msg)
         out.flush()
-        var x = in.readObject().asInstanceOf[String]
-        while (x == null) {
-            val x = in.readObject().asInstanceOf[String]
+        var r = in.readObject().asInstanceOf[ReplyMessage]
+        while (r == null) {
+            r = in.readObject().asInstanceOf[ReplyMessage]
         }
-        println(x)
+        r match {
+            case AddIndebtedReply(str) => println("sucesso")
+            case _ => ;
+        }
     }
 }
