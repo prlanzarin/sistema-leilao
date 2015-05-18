@@ -50,7 +50,7 @@ class CreatePropertyCommand(indebtedCpf: String) extends Command {
 
 class SelectIndebtedCommand extends Command {
     override def execute {
-        val loi: List[Indebted] = Connection.sendQueryIndebtedsRequest().get
+        val loi: List[Indebted] = Connection.sendQueryIndebtedsRequest()
         val indebted = selectIndebted(loi)
         val subcommands = Map[String, Command](
             "C" -> new CreatePropertyCommand(indebted.cpf),

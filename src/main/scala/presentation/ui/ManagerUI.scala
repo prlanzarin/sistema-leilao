@@ -41,7 +41,7 @@ class ManagerUI extends UI {
     }
 }
 
-object ManagerTest {
+object ManagerSession {
     def main(args: Array[String]): Unit = {
         try {
             Connection.init

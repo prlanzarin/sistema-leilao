@@ -44,18 +44,18 @@ object Connection {
         var r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
             case AddPropertyReply(str) => println("sucesso")
-            case _ => ;
+            case _ => ; // ignore wrong typed message
         }
     }
 
-    def sendQueryIndebtedsRequest(): Option[List[Indebted]] = {
+    def sendQueryIndebtedsRequest(): List[Indebted] = {
         val msg: RequestMessage = QueryIndebtedsRequest()
         out.writeObject(msg)
         out.flush()
         var r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
             case QueryIndebtedsReply(loi) => loi
-            case _ => null;
+            case _ => List() // ignore wrong typed message
         }
     }
 }

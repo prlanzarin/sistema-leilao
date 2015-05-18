@@ -37,7 +37,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         if (serv.insertIndebted(i))
                             AddIndebtedReply("Success")
                         else
-                            new AddIndebtedReply("Failed")
+                            AddIndebtedReply("Failed")
 
                     case AddPropertyRequest(i, p) =>
                         println("Server: adding property")
@@ -50,10 +50,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
                         val indebted = serv.getIndebteds()
-                        if (indebted.isEmpty)
-                            QueryIndebtedsReply(None)
-                        else
-                            QueryIndebtedsReply(Some(indebted))
+                        QueryIndebtedsReply(indebted) // Might be empty
                     case _ => throw new SocketException // TODO Create other exception
                 }
                 out.writeObject(r);
