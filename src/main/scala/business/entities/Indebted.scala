@@ -9,4 +9,7 @@ class Indebted (val name: String,
 extends Serializable {
     private var properties: List[Property] = List.empty[Property]
     def addProperty(p: Property) = p :: this.properties
+    override def toString: String =
+        "Nome: " + name + "\nCPF: " + cpf + "\nDívida: " + debt
+        .+("\nAniversário: " + birthDay)
 }
