@@ -17,6 +17,7 @@ object Client {
             val in = new ObjectInputStream(new DataInputStream(socket.getInputStream()))
 
             val indebted = new Indebted("Fulano de Tal", new Date, 1000, "982231482-00")
+            //val indebted = new Indebted("Gringo", new Date, 1000, "01111111111")
             val msg: RequestMessage = AddIndebtedRequest(indebted)
             out.writeObject(msg)
             out.flush()
