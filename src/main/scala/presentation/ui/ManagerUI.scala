@@ -25,7 +25,7 @@ class ManagerUI extends UI {
 
     def showCommands {
         println("Opções:")
-        commands.foreach(p => println(p._1 + " - " + p._2))
+        commands.foreach(p => println(p._1 + "\t" + p._2))
     }
 
     def chooseCommand: Command = {
@@ -52,7 +52,6 @@ object ManagerSession {
             case e: SocketException =>
                 println("Não foi possível conectar ao servidor.")
             case e: IOException => ()
-        } finally {
-        }
+        } 
     }
 }

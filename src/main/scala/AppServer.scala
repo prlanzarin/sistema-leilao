@@ -50,10 +50,12 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
                         val indebted = serv.getIndebteds()
-                        QueryIndebtedsReply(indebted) // Might be empty
+                        indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x)); println("Adicionando")}
+                        QueryIndebtedsReply(null) // Might be empty
                     case _ => throw new SocketException // TODO Create other exception
                 }
                 out.writeObject(r);
+                out.flush()
             }
 
             out.close();

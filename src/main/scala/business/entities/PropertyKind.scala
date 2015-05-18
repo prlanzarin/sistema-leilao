@@ -2,8 +2,8 @@ package business.entities
 
 object PropertyKind extends Enumeration{
   type PropertyKind = Value
-  val REALTY = Value("Realty")
-  val JEWEL = Value("Jewel")
-  val VEHICLE = Value("Vehicle")
-  val OTHER = Value("Other")
+  val REALTY = Value("Imóvel")
+  val JEWEL = Value("Jóia")
+  val VEHICLE = Value("Veículo")
+  val OTHER = Value("Outro")
 }

@@ -32,7 +32,7 @@ object Connection {
         out.flush()
         var r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
-            case AddIndebtedReply(str) => println("sucesso")
+            case AddIndebtedReply(str) => println("\nSucesso.\n")
             case _ => ;
         }
     }
@@ -43,7 +43,7 @@ object Connection {
         out.flush()
         var r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
-            case AddPropertyReply(str) => println("sucesso")
+            case AddPropertyReply(str) => println("\nSucesso.\n")
             case _ => ; // ignore wrong typed message
         }
     }
@@ -52,10 +52,15 @@ object Connection {
         val msg: RequestMessage = QueryIndebtedsRequest()
         out.writeObject(msg)
         out.flush()
+        var loi = List[Indebted]()
         var r = in.readObject().asInstanceOf[ReplyMessage]
-        r match {
-            case QueryIndebtedsReply(loi) => loi
-            case _ => List() // ignore wrong typed message
+        while (r != QueryIndebtedsReply(null)) {
+            r match {
+                case QueryIndebtedsReply(i) => loi = loi.+:(i)
+                case _ => List() // ignore wrong typed message
+            }
+            r = in.readObject().asInstanceOf[ReplyMessage]
         }
+        return loi
     }
 }

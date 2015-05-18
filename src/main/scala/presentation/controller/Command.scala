@@ -30,14 +30,13 @@ class CreateIndebtedCommand extends Command {
     override def toString: String = "Cadastrar endividado"
 }
 
-class CreatePropertyCommand(indebtedCpf: String) extends Command {
+class CreatePropertyCommand(indebted: Indebted) extends Command {
     override def execute {
-        val property = readProperty(indebtedCpf)
-        //send property to app-server
-        //recieve result from app-server
+        val property = readProperty
+        Connection.sendAddPropertyRequest(indebted, property)
     }
 
-    def readProperty(indebtedCpf: String): Property = {
+    def readProperty: Property = {
         println("Preencha com as informações do bem:")
         val name = UIUtils.readString("Informe o nome:")
         val value = UIUtils.readDouble("Informe o valor: (R$)", 0.0)
@@ -45,24 +44,31 @@ class CreatePropertyCommand(indebtedCpf: String) extends Command {
         val kind = UIUtils.select("Informe o tipo do bem:", properties)
         return new Property(name, value, PropertyKind.withName(kind))
     }
-
+    
+    override def toString: String = "Cadastrar Bem"
 }
 
 class SelectIndebtedCommand extends Command {
     override def execute {
         val loi: List[Indebted] = Connection.sendQueryIndebtedsRequest()
-        val indebted = selectIndebted(loi)
-        val subcommands = Map[String, Command](
-            "C" -> new CreatePropertyCommand(indebted.cpf),
-            "Q" -> new ExitCommand)
-        println(indebted)
-        getCommand(subcommands)
+        if (loi == Nil)
+            println("Não há endividados cadastrados.")
+        else {
+            val indebted = selectIndebted(loi)
+            val subcommands = Map[String, Command](
+                "C" -> new CreatePropertyCommand(indebted),
+                "Q" -> new ExitCommand)
+            println("\nDados do Endividado:")
+            println(indebted)
+            getCommand(subcommands)
+        }
     }
 
     def selectIndebted(loi: List[Indebted]): Indebted = {
         println("Selecione um endividado:")
+        println("Índice\tEndividado")
         for (i <- 0 until loi.size) {
-            println(i + " - " + loi(i))
+            println(i + "\t" + loi(i).name)
         }
         val i = UIUtils.readInt("Informe o índice do endividado correspondente:")
         return loi(i)
