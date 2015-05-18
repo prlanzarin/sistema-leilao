@@ -1,4 +1,4 @@
-package main.scala.business.entities
+package business.entities
 
 class User(
   private var userName: String,

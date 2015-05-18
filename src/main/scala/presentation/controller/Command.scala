@@ -1,10 +1,10 @@
-package main.scala.presentation.controller
+package presentation.controller
 
-import main.scala.presentation.ui.UIUtils
-import main.scala.business.entities.Indebted
-import main.scala.business.entities.Property
-import main.scala.business.entities.PropertyKind
-import main.scala.business.entities.PropertyKind._
+import presentation.ui.UIUtils
+import business.entities.Indebted
+import business.entities.Property
+import business.entities.PropertyKind
+import business.entities.PropertyKind._
 
 abstract class Command {
   def execute
@@ -13,12 +13,13 @@ abstract class Command {
 class CreateIndebtedCommand extends Command {
   override def execute {
     val indebted = readIndebted
+    Connection.sendAddIndebtedRequest(indebted)
     //send indebted to app-server
     //recieve result from app-server
   }
 
   def readIndebted: Indebted = {
-    println("Preencha as informações do endividado:")
+    println("Preencha com as informações do endividado:")
     val name = UIUtils.readString("Informe o nome:")
     val cpf = UIUtils.readCPF("Informe o CPF do endividado: (somente dígitos)")
     val bday = UIUtils.readDate(
@@ -39,19 +40,30 @@ class CreatePropertyCommand(indebtedCpf: String) extends Command {
   }
 
   def readProperty(indebtedCpf: String): Property = {
-    println("Preencha as informações do bem:")
+    println("Preencha com as informações do bem:")
     val name = UIUtils.readString("Informe o nome:")
     val value = UIUtils.readDouble("Informe o valor: (R$)", 0.0)
     val properties = "Imóvel" :: "Jóia" :: "Veículo" :: "Outro" :: List()
     val kind = UIUtils.select("Informe o tipo do bem:", properties)
-    return new Property(0, name, value, PropertyKind.withName(kind))
+    return new Property(name, value, PropertyKind.withName(kind))
   }
   
 }
 
 class SelectIndebtedCommand extends Command {
   override def execute {
-
+    //send request to app-server
+    //recieve result from app-server
+    //val indebted = selectIndebted(recieved list)
+  }
+  
+  def selectIndebted(loi: List[Indebted]): Indebted = {
+    println("Selecione um endividado:")
+    for (i <- 0 until loi.size){
+      println(i + " - " + loi(i))
+    }
+    val i = UIUtils.readInt("Informe o índice do endividado correspondente:")
+    return loi(i)
   }
   
   override def toString: String = "Selecionar endividado"

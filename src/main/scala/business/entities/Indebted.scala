@@ -1,10 +1,10 @@
-package main.scala.business.entities
+package business.entities
 
 import java.util.Date
 
 class Indebted (val name: String,
                 val birthDay: Date,
-                val dept: Double,
+                val debt: Double,
                 val cpf: String)
 extends Serializable {
     private var properties: List[Property] = List.empty[Property]

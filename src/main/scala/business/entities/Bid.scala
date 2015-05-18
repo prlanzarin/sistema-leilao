@@ -1,4 +1,4 @@
-package main.scala.business.entities
+package business.entities
 
 class Bid(
     private var _auction: Auction,

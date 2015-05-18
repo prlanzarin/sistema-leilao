@@ -1,4 +1,4 @@
-package main.scala.business.entities
+package business.entities
 
 object PropertyKind extends Enumeration{
   type PropertyKind = Value

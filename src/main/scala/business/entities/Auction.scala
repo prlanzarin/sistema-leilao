@@ -1,4 +1,4 @@
-package main.scala.business.entities
+package business.entities
 
 import java.util.Date
 import java.util.Calendar
