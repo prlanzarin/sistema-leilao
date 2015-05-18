@@ -28,26 +28,17 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             val in = new ObjectInputStream(
                 new DataInputStream(socket.getInputStream()));
 
-<<<<<<< HEAD
-            val msg = in.readObject().asInstanceOf[RequestMessage];
-            val r = msg match {
-                    case AddIndebtedRequest(i) =>
-                        println("Server: adding indebted")
-                        val serv = new ManagerServices()
-                        if (serv.insertIndebted(i))
-                            AddIndebtedReply("Success")
-                        else
-                            new AddIndebtedReply("Failed")
-=======
             while (socket.isBound()) {
                 val msg = in.readObject().asInstanceOf[RequestMessage];
-                val str = msg match {
-                    case AddIndebtedRequest(i) =>
-                        println("Server: adding indebted")
-                        val serv = new ManagerServices()
-                        serv.createIndebted(i)
-                            "Recebi requisição de inserção do endividado " + i.name
->>>>>>> 07674f2dff458e2f8e214a547ad3f00d89efe101
+                val r = msg match {
+                        case AddIndebtedRequest(i) =>
+                            println("Server: adding indebted")
+                            val serv = new ManagerServices()
+                            if (serv.insertIndebted(i))
+                                AddIndebtedReply("Success")
+                            else
+                                new AddIndebtedReply("Failed")
+
                     case AddPropertyRequest(i, p) =>
                         println("Server: adding property")
                         val serv = new ManagerServices()
@@ -65,15 +56,10 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             QueryIndebtedsReply(Some(indebted))
                     case _ => throw new SocketException // TODO Create other exception
                 }
-<<<<<<< HEAD
 
             out.writeObject(r);
-=======
-                println(str);
-                out.writeObject("Sucesso");
             }
 
->>>>>>> 07674f2dff458e2f8e214a547ad3f00d89efe101
             out.close();
             in.close();
             socket.close()

@@ -3,7 +3,7 @@ package business.services
 import java.util.Date
 
 import business.entities.PropertyKind.PropertyKind
-import business.entities.{Auction, Property, Indebted}
+import business.entities._ //{Auction, Property, Indebted}
 import database.Database
 
 class ManagerServices extends UserServices {
@@ -24,17 +24,18 @@ class ManagerServices extends UserServices {
 
   }
 
-<<<<<<< HEAD
   def insertProperty(i: Indebted, p: Property) : Boolean = {
     val cpf = i.cpf
     val name = p.name
+    val value = p.value
+    val kind = p.kind
 
     if (!validateIndebted(cpf))
       return false
     if (!validateProperty(cpf, name))
       return false
-    val property = new Property(idKey, name, value, kind)
-    database.addProperty(cpf, name, p.value, p.kind.toString)
+    val property = new Property(name, value, kind)
+    database.addProperty(cpf, name, value, kind.toString)
     return true
   }
 
@@ -50,7 +51,7 @@ class ManagerServices extends UserServices {
 
   }
 
-  def getIndebteds: List[Indebted] = {
+  def getIndebteds(): List[Indebted] = {
     val indebteds = database.queryIndebteds
     return indebteds
   }
