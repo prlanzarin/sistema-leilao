@@ -9,25 +9,32 @@ import database.Database
 class ManagerServices extends UserServices {
   val database = new Database
 
-  def createIndebted(indebted : Indebted) : Boolean = {
+  def insertIndebted(indebted : Indebted) : Boolean = {
     val name = indebted.name
     val bday = indebted.birthDay
     val debt = indebted.debt
     val cpf = indebted.cpf
     if (!validateIndebted(cpf))
       return false
-    if (database.queryIndebted(cpf) != null)
+    if (database.queryIndebted(cpf))
       return false
     database.addIndebted(name, bday, debt, cpf)
     return true
   }
 
-  def createAuction(beginDate: Date, endDate: Date, indebted: Indebted, property: Property) = {
+  def insertAuction(beginDate: Date, endDate: Date, indebted: Indebted, property: Property) = {
 
   }
 
-  def createProperty(indebted: Indebted, name: String, value: Double, kind: PropertyKind) = {
-
+  def insertProperty(i: Indebted, p: Property) : Boolean = {
+    val cpf = i.cpf
+    
+    if (database.queryIndebted(cpf)) {
+        database.addProperty(cpf, p.name, p.value, "") // TODO arrumar kind
+        return true
+    } else {
+        return false
+    }
   }
 
   def endAuction(auction: Auction) = {
@@ -42,9 +49,8 @@ class ManagerServices extends UserServices {
 
   }
 
-  def getIndebted = {
+  def getIndebteds() : List[Indebted] = sys.error("todo")
 
-  }
 
   def generateReport(indebteds: List[Indebted]) = {
 

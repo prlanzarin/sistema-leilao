@@ -1,7 +1,7 @@
 package database
 
 import java.util.Date
-import business.entities.PropertyKind
+import business.entities._
 
 class Database {
   
@@ -26,25 +26,22 @@ class Database {
   /*
    * TODO
    */
-  def queryIndebteds = {
+  def queryIndebteds() : List[Indebted]= sys.error("todo")
+    
+  /*
+   * TODO
+   */
+  def queryProperties() : List[Property] = sys.error("todo")
+  /*
+   * TODO
+   */
+  def addIndebted(name : String, birthDay : Date, debt : Double, CPF : String) : Unit = {
     
   }
   /*
    * TODO
    */
-  def queryProperties = {
-    
-  }
-  /*
-   * TODO
-   */
-  def addIndebted(name : String, birthDay : Date, debt : Double, CPF : String) = {
-    
-  }
-  /*
-   * TODO
-   */
-  def addProperty(propertyName : String, value : Double, kind : String) = {
+  def addProperty(cpf : String, propertyName : String, value : Double, kind : String) : Unit = {
     
   }
   /*
@@ -63,13 +60,11 @@ class Database {
    * TODO
    * type String of CPF is a placeholder
    */
-  def queryProperty(indebtedCPF : String, propertyName : String) = {
+  def queryProperty(indebtedCPF : String, propertyName : String) : Boolean = sys.error("todo")
     
-  }
   /*
    * TODO
    */
-  def queryIndebted(indebtedCPF : String) = {
+  def queryIndebted(indebtedCPF : String) : Boolean = sys.error("todo")
     
-  }
 }
