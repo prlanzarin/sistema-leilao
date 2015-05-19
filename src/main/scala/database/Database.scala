@@ -25,41 +25,90 @@ object Database {
         java.util.Date, Double,
         Boolean, String, Int)]("AUCTION") {
 
-        def auctionId = column[Int]("Auct_ID", O.PrimaryKey, O.AutoInc)
-        def begin = column[java.util.Date]("BEGIN")
-        def end = column[java.util.Date]("END")
-        def highestBid = column[Double]("H_BID")
-        def open = column[Boolean]("OPEN")
-        def indebted = column[String]("INDEBTED")
-        def property = column[Int]("PROP_ID")
+        def auctionId = column[Int]("AUCT_ID", O.PrimaryKey, O.AutoInc)
+        def begin = column[java.util.Date]("BEGIN", O.NotNull)
+        def end = column[java.util.Date]("END", O.NotNull)
+        def highestBid = column[Double]("H_BID", O.Nullable)
+        def open = column[Boolean]("OPEN", O.NotNull)
+        def indebted = column[String]("INDEBTED", O.NotNull)
+        def property = column[Int]("PROP_ID", O.NotNull)
 
-        def indb = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
-        def prop = foreignKey("PROP_FK", property, properties)(_.id)
+        def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
+        def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
 
         def * = auctionId ~ begin ~ end ~
             highestBid ~ open ~ indebted ~ property
     }
 
+    val managers = new
+            Table[(Int, String, String, java.util.Date)]("MANAGER") {
+
+        def managerID = column[Int]("MAN_ID", O.PrimaryKey, O.AutoInc, O
+            .NotNull)
+        def userName = column[String]("NAME", O.NotNull)
+        def passWord = column[String]("PASSWORD", O.NotNull)
+        def name = column[java.util.Date]("NAME", O.NotNull)
+
+        def * = managerID ~ userName ~ passWord ~ name
+    }
+
+    val clients = new Table[(Int, String, String, java.util.Date,
+        String, java.util.Date, String, String,
+        String)]("CLIENT") {
+
+        def clientID = column[Int]("CLT_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+        def userName = column[String]("NAME", O.NotNull)
+        def passWord = column[String]("PASSWORD", O.NotNull)
+        def name = column[java.util.Date]("NAME", O.NotNull)
+        def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull)
+        def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
+        def telephone = column[String]("TELEPHONE", O.NotNull)
+        def address = column[String]("ADDRESS", O.NotNull)
+        def email = column[String]("EMAIL", O.NotNull)
+        //def cltAuctions = column[Int]("CLT_AUCTIONS", O.NotNull)
+
+        //def cltAuctionsKey = foreignKey("CLT_AUCTIONS_FK", cltAuctions,
+        //    userAuctions)(_.userAuctionsID)
+
+        def * = clientID ~ userName ~ passWord ~ name ~
+            cpf ~ bdate ~ telephone ~ address ~ email //~ cltAuctions
+    }
+    /*
+        val userAuctions = new
+                Table[(Int, Int, Int)]("USER_AUCTIONS") {
+
+            def userAuctionsID = column[Int]("UA_ID", O.PrimaryKey, O.NotNull)
+            def auctionID = column[Int]("AUCTION_ID", O.NotNull)
+            def userID = column[Int]("USER_ID", O.NotNull)
+
+            def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_
+                .auctionId)
+            def userKey = foreignKey("USER_FK", userID, clients)(_.clientID)
+
+            def * = userAuctionsID ~ auctionID ~ userID
+        }
+        */
     val indebteds = new
             Table[(String, String, java.util.Date, Double)]("INDEBTED") {
 
-        def cpf = column[String]("CPF", O.PrimaryKey)
-        def name = column[String]("NAME")
-        def bdate = column[java.util.Date]("BIRTHDATE")
-        def debt = column[Double]("DEBT")
+        def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull)
+        def name = column[String]("NAME", O.NotNull)
+        def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
+        def debt = column[Double]("DEBT", O.NotNull)
 
         def * = cpf ~ name ~ bdate ~ debt
     }
 
     val properties = new
-            Table[(Int, String, Double, String, String)]("PROPERTIE") {
-        def id = column[Int]("PROP_ID", O.PrimaryKey, O.AutoInc)
-        def name = column[String]("NAME")
-        def value = column[Double]("VALUE")
-        def kind = column[String]("KIND")
+            Table[(Int, String, Double, String, String)]("PROPERTIES") {
 
-        def ownerID = column[String]("OWNER")
-        def owner = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
+        def id = column[Int]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+        def name = column[String]("NAME", O.NotNull)
+        def value = column[Double]("VALUE", O.NotNull)
+        def kind = column[String]("KIND", O.NotNull)
+        def ownerID = column[String]("OWNER", O.NotNull)
+
+        def ownerIDKey = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
 
         def * = id ~ name ~ value ~ kind ~ ownerID
     }
