@@ -3,15 +3,26 @@ package business.entities
 import java.util.Date
 
 class Client(
-  username: String,
-  password: String,
-  name: String,
-  private var CPF: String,
-  private var birthDay: Date,
-  private var telephone: String,
-  private var address: String,
-  private var email: String)
-  extends User(username, password, name) {
-  private var auctions: List[Auction] = List[Auction]()
+                username: String,
+                password: String,
+                name: String,
+                val CPF: String,
+                val birthDay: Date)
+    extends User(username, password, name) {
+
+    private var _telephone : String = "" //TODO: choose default value
+    private var _address : String = ""
+    private var _email : String = ""
+    private var _auctions: List[Auction] = List[Auction]()
+
+    def telephone : String = _telephone
+    def adress : String = _address
+    def email : String = _email
+    def auctions : List[Auction] = _auctions
+
+    def telephone_(ntelephone : String) = _telephone = ntelephone
+    def address_(naddress : String) = _address = naddress
+    def email_(nemail : String) = _email = nemail
+    def auctions_(nauctions : List[Auction]) = _auctions = nauctions
 
 }
