@@ -10,11 +10,11 @@ import org.scalaquery.ql.TypeMapper._
 import org.scalaquery.ql.extended.H2Driver.Implicit._
 import org.scalaquery.ql.extended.{ExtendedTable => Table}
 
-class Database() {
+object Database {
   implicit val JavaUtilDateTypeMapper =
     MappedTypeMapper.base[java.util.Date, Long](_.getTime,
                                                 new java.util.Date(_))
-  val db = Database.forURL("jdbc:h2:file:./db/TESTD0219",
+  val db = org.scalaquery.session.Database.forURL("jdbc:h2:file:./db/TESTD02115123",
                             driver = "org.h2.Driver")
   var PropID : Int = 0
 

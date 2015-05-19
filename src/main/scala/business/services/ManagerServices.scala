@@ -7,16 +7,15 @@ import business.entities._ //{Auction, Property, Indebted}
 import database.Database
 
 class ManagerServices extends UserServices {
-  val database = new Database
 
   def insertIndebted(indebted : Indebted) : Boolean = {
     val name = indebted.name
     val bday = indebted.birthDay
     val debt = indebted.debt
     val cpf = indebted.cpf
-    if (database.queryIndebted(cpf) == true)
+    if (Database.queryIndebted(cpf) == true)
       return false
-    database.addIndebted(name, bday, debt, cpf)
+    Database.addIndebted(name, bday, debt, cpf)
     return true
   }
 
@@ -30,10 +29,10 @@ class ManagerServices extends UserServices {
     val value = p.value
     val kind = p.kind
 
-    if (!(database.queryIndebted(cpf)))
+    if (!(Database.queryIndebted(cpf)))
       return false
 
-    database.addProperty(cpf, name, value, kind.toString)
+    Database.addProperty(cpf, name, value, kind.toString)
 
     return true
   }
@@ -51,7 +50,7 @@ class ManagerServices extends UserServices {
   }
 
   def getIndebteds(): List[Indebted] = {
-    val indebteds = database.getIndebteds
+    val indebteds = Database.getIndebteds
     return indebteds
   }
 
