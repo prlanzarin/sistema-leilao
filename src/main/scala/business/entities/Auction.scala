@@ -10,14 +10,14 @@ class Auction(   val indebted: Indebted,
     extends Serializable {
 
     private var _highestBid: Bid = null
-    private var _opened: Boolean = Calendar.getInstance().
+    private var _open: Boolean = Calendar.getInstance().
         getTime().compareTo(begin) >= 0
 
     def highestBid = _highestBid
 
-    def opened = _opened
+    def open = _open
 
-    def opened_(b : Boolean) = _opened = b
+    def open(b : Boolean) = _open = b
 
     def highestbid_(bid : Bid) = _highestBid = bid
 

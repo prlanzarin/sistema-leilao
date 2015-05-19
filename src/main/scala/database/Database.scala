@@ -11,15 +11,37 @@ import org.scalaquery.ql.extended.H2Driver.Implicit._
 import org.scalaquery.ql.extended.{ExtendedTable => Table}
 
 object Database {
+
     implicit val JavaUtilDateTypeMapper =
         MappedTypeMapper.base[java.util.Date, Long](_.getTime,
             new java.util.Date(_))
+
     val db = org.scalaquery.session.Database.
-        forURL("jdbc:h2:file:./db/TESTD02115123", driver = "org.h2.Driver")
+        forURL("jdbc:h2:file:./db/auctiondb", driver = "org.h2.Driver")
+
     var PropID : Int = 0
 
+    val auctions = new Table[(Int, java.util.Date,
+        java.util.Date, Double,
+        Boolean, String, Int)]("AUCTION") {
+
+        def auctionId = column[Int]("Auct_ID", O.PrimaryKey, O.AutoInc)
+        def begin = column[java.util.Date]("BEGIN")
+        def end = column[java.util.Date]("END")
+        def highestBid = column[Double]("H_BID")
+        def open = column[Boolean]("OPEN")
+        def indebted = column[String]("INDEBTED")
+        def property = column[Int]("PROP_ID")
+
+        def indb = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
+        def prop = foreignKey("PROP_FK", property, properties)(_.id)
+
+        def * = auctionId ~ begin ~ end ~
+            highestBid ~ open ~ indebted ~ property
+    }
+
     val indebteds = new
-            Table[(String, String, java.util.Date, Double)]("INDEBTEDS") {
+            Table[(String, String, java.util.Date, Double)]("INDEBTED") {
 
         def cpf = column[String]("CPF", O.PrimaryKey)
         def name = column[String]("NAME")
@@ -30,11 +52,12 @@ object Database {
     }
 
     val properties = new
-            Table[(Int, String, Double, String, String)]("PROPERTIES") {
-        def id = column[Int]("P_ID", O.PrimaryKey, O.AutoInc)
+            Table[(Int, String, Double, String, String)]("PROPERTIE") {
+        def id = column[Int]("PROP_ID", O.PrimaryKey, O.AutoInc)
         def name = column[String]("NAME")
         def value = column[Double]("VALUE")
         def kind = column[String]("KIND")
+
         def ownerID = column[String]("OWNER")
         def owner = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
 
