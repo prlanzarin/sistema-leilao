@@ -4,6 +4,7 @@ import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
 import java.util.Random
 import business.entities._
 import business.services._
+import database.Database
 
 object AppServer {
     def main(args: Array[String]): Unit = {
@@ -24,6 +25,7 @@ object AppServer {
 case class ServerThread(socket: Socket) extends Thread("ServerThread") {
     override def run(): Unit = {
         try {
+            Database.populateDb()
             val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()));
             val in = new ObjectInputStream(
                 new DataInputStream(socket.getInputStream()));
