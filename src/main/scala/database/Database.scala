@@ -21,17 +21,17 @@ object Database {
 
     var PropID : Int = 0
 
-    val auctions = new Table[(Int, java.util.Date,
+    val auctions = new Table[(Long, java.util.Date,
         java.util.Date, Double,
-        Boolean, String, Int)]("AUCTION") {
+        Boolean, String, Long)]("AUCTION") {
 
-        def auctionId = column[Int]("AUCT_ID", O.PrimaryKey, O.AutoInc)
+        def auctionId = column[Long]("AUCT_ID", O.PrimaryKey, O.AutoInc)
         def begin = column[java.util.Date]("BEGIN", O.NotNull)
         def end = column[java.util.Date]("END", O.NotNull)
         def highestBid = column[Double]("H_BID", O.Nullable)
         def open = column[Boolean]("OPEN", O.NotNull)
         def indebted = column[String]("INDEBTED", O.NotNull)
-        def property = column[Int]("PROP_ID", O.NotNull)
+        def property = column[Long]("PROP_ID", O.NotNull)
 
         def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
         def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
@@ -41,9 +41,9 @@ object Database {
     }
 
     val managers = new
-            Table[(Int, String, String, java.util.Date)]("MANAGER") {
+            Table[(Long, String, String, java.util.Date)]("MANAGER") {
 
-        def managerID = column[Int]("MAN_ID", O.PrimaryKey, O.AutoInc, O
+        def managerID = column[Long]("MAN_ID", O.PrimaryKey, O.AutoInc, O
             .NotNull)
         def userName = column[String]("NAME", O.NotNull)
         def passWord = column[String]("PASSWORD", O.NotNull)
@@ -52,11 +52,12 @@ object Database {
         def * = managerID ~ userName ~ passWord ~ name
     }
 
-    val clients = new Table[(Int, String, String, java.util.Date,
+    val clients = new Table[(Long, String, String, java.util.Date,
         String, java.util.Date, String, String,
         String)]("CLIENT") {
 
-        def clientID = column[Int]("CLT_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+        def clientID = column[Long]("CLT_ID", O.PrimaryKey, O.AutoInc, O
+            .NotNull)
         def userName = column[String]("NAME", O.NotNull)
         def passWord = column[String]("PASSWORD", O.NotNull)
         def name = column[java.util.Date]("NAME", O.NotNull)
@@ -65,29 +66,26 @@ object Database {
         def telephone = column[String]("TELEPHONE", O.NotNull)
         def address = column[String]("ADDRESS", O.NotNull)
         def email = column[String]("EMAIL", O.NotNull)
-        //def cltAuctions = column[Int]("CLT_AUCTIONS", O.NotNull)
-
-        //def cltAuctionsKey = foreignKey("CLT_AUCTIONS_FK", cltAuctions,
-        //    userAuctions)(_.userAuctionsID)
 
         def * = clientID ~ userName ~ passWord ~ name ~
             cpf ~ bdate ~ telephone ~ address ~ email //~ cltAuctions
     }
-    /*
-        val userAuctions = new
-                Table[(Int, Int, Int)]("USER_AUCTIONS") {
 
-            def userAuctionsID = column[Int]("UA_ID", O.PrimaryKey, O.NotNull)
-            def auctionID = column[Int]("AUCTION_ID", O.NotNull)
-            def userID = column[Int]("USER_ID", O.NotNull)
+    val userAuctions = new
+            Table[(Long, Long)]("USER_AUCTIONS") {
 
-            def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_
-                .auctionId)
-            def userKey = foreignKey("USER_FK", userID, clients)(_.clientID)
+        def userAuctionsID = column[Long]("UA_ID", O.PrimaryKey, O.NotNull, O
+            .AutoInc, O.DBType("serial"))
+        def auctionID = column[Long]("AUCTION_ID", O.NotNull)
+        def userID = column[Long]("USER_ID", O.NotNull)
 
-            def * = userAuctionsID ~ auctionID ~ userID
-        }
-        */
+        def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_
+            .auctionId)
+        def userKey = foreignKey("USER_FK", userID, clients)(_.clientID)
+
+        def * = auctionID ~ userID
+    }
+
     val indebteds = new
             Table[(String, String, java.util.Date, Double)]("INDEBTED") {
 
@@ -100,9 +98,10 @@ object Database {
     }
 
     val properties = new
-            Table[(Int, String, Double, String, String)]("PROPERTIES") {
+            Table[(String, Double, String, String)]("PROPERTIES") {
 
-        def id = column[Int]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+        def id = column[Long]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull, O
+            .DBType("serial"))
         def name = column[String]("NAME", O.NotNull)
         def value = column[Double]("VALUE", O.NotNull)
         def kind = column[String]("KIND", O.NotNull)
@@ -110,7 +109,7 @@ object Database {
 
         def ownerIDKey = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
 
-        def * = id ~ name ~ value ~ kind ~ ownerID
+        def * = name ~ value ~ kind ~ ownerID
     }
 
     def populateDb() = {
@@ -119,36 +118,35 @@ object Database {
             var a = new java.util.Date()
 
             if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName)) {
+                .tableName) && (!MTable.getTables.list.exists(_.name.name ==
+                properties.tableName))) {
 
                 (indebteds.ddl ++ properties.ddl).create
                 indebteds.insertAll(
-                    ("01111111111", "Gringo", a, 15000.50),
-                    ("02222222222", "Mortimer", a, 2800.70),
-                    ("03333333333", "Tuco", a, 550.30),
-                    ("04444444444", "Jerusa Valente", a, 19200.50),
+                    ("01111111111", "Siburgo Boapinta", a, 15000.50),
+                    ("02222222222", "Coronel Mortelenta", a, 2800.70),
+                    ("03333333333", "MC Carmen Furacao", a, 550.30),
+                    ("04444444444", "Princesa Jujubas", a, 19200.50),
+                    ("06666666661", "JOAO, o Devedor Usuario", a, 10.50),
                     ("05555555555", "Douglas 10 Imortal Tricolor", a, 503810.38),
-                    ("06666666666", "Joao, o Pesquisador Usuario", a, 10.50)
+                    ("06666666666", "Ze do Caixao", a, 1550.00),
+                    ("09999999999", "Pe. Fabio de Mormon", a, 300.00),
+                    ("07777777777", "Cesar Menotti", a, 10000.666),
+                    ("08888888888", "E Fabiano", a, 9999.333)
                 )
 
-                properties.insert(PropID, "Onibus da Carris",
-                    35000.50, "Vehicle", "01111111111")
-                PropID = PropID + 1
-                properties.insert(PropID, "Bicicleta Sundown",
-                    20.00, "Vehicle", "02222222222")
-                PropID = PropID + 1
-                properties.insert(PropID, "Biju",
-                    10.50, "Jewel", "03333333333")
-                PropID = PropID + 1
-                properties.insert(PropID, "Skate motorizado",
-                    50000.00, "Vehicle", "04444444444")
-                PropID = PropID + 1
-                properties.insert(PropID, "Acordeao",
-                    500.00, "Other", "05555555555")
-                PropID = PropID + 1
-                properties.insert(PropID, "Apartamento Duplex Power Plus",
-                    300000.00, "Realty", "06666666666")
-                PropID = PropID + 1
+                properties.insert("Onibus da Carris",
+                    35000.50, PropertyKind.VEHICLE.toString, "01111111111")
+                properties.insert("Bicicleta Sundown",
+                    20.00, PropertyKind.VEHICLE.toString, "02222222222")
+                properties.insert("Oculos OAKLEY phoda",
+                    10.50, PropertyKind.OTHER.toString, "03333333333")
+                properties.insert("Skate motorizado",
+                    50000.00, PropertyKind.VEHICLE.toString, "04444444444")
+                properties.insert("TOURO NELORI BOA PINTA",
+                    500.00, PropertyKind.OTHER.toString, "05555555555")
+                properties.insert("Apartamento Duplex Power Plus",
+                    300000.00, PropertyKind.REALTY.toString, "06666666666")
             }
         }
     }
@@ -202,7 +200,7 @@ object Database {
                 } yield i.cpf
 
             PropID = PropID + 1
-            properties.insert(PropID, propertyName, value,
+            properties.insert(propertyName, value,
                 kind , query.list.head)
         }
     }
@@ -256,12 +254,13 @@ object Database {
 
             if (!MTable.getTables.list.exists(_.name.name == properties
                 .tableName)) {
+                indebteds.ddl.create
                 properties.ddl.create
                 return Nil
             }
 
             Query(properties) foreach {
-                case (id, name, value, kind, owner) =>
+                case (name, value, kind, owner) =>
                     loProperties =
                         new Property(name,
                             value,
