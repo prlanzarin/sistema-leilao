@@ -52,7 +52,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
                         val indebted = serv.getIndebteds()
-                        indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x)); println("Adicionando")}
+                        indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x))}
                         QueryIndebtedsReply(null) // Might be empty
                     case _ => throw new SocketException // TODO Create other exception
                 }

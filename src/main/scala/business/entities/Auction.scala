@@ -17,7 +17,7 @@ class Auction(   val indebted: Indebted,
 
     def open = _open
 
-    def open(b : Boolean) = _open = b
+    def open_(b : Boolean) = _open = b
 
     def highestbid_(bid : Bid) = _highestBid = bid
 

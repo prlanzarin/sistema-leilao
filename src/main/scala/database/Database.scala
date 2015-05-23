@@ -19,13 +19,12 @@ object Database {
     val db = org.scalaquery.session.Database.
         forURL("jdbc:h2:file:./db/auctiondb", driver = "org.h2.Driver")
 
-    var PropID : Int = 0
-
-    val auctions = new Table[(Long, java.util.Date,
+    val auctions = new Table[(java.util.Date,
         java.util.Date, Double,
         Boolean, String, Long)]("AUCTION") {
 
-        def auctionId = column[Long]("AUCT_ID", O.PrimaryKey, O.AutoInc)
+        def auctionId = column[Long]("AUCT_ID", O.PrimaryKey, O.AutoInc, O
+            .DBType("serial"))
         def begin = column[java.util.Date]("BEGIN", O.NotNull)
         def end = column[java.util.Date]("END", O.NotNull)
         def highestBid = column[Double]("H_BID", O.Nullable)
@@ -36,7 +35,7 @@ object Database {
         def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
         def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
 
-        def * = auctionId ~ begin ~ end ~
+        def * = begin ~ end ~
             highestBid ~ open ~ indebted ~ property
     }
 
@@ -112,10 +111,13 @@ object Database {
         def * = name ~ value ~ kind ~ ownerID
     }
 
+    private def hasTable(table : Table[Any]) : Boolean =
+        MTable.getTables.list.exists(_.name.name == table.tableName)
+
     def populateDb() = {
 
         db withSession {
-            var a = new java.util.Date()
+            val a = new java.util.Date()
 
             if (!MTable.getTables.list.exists(_.name.name == indebteds
                 .tableName) && (!MTable.getTables.list.exists(_.name.name ==
@@ -151,26 +153,6 @@ object Database {
         }
     }
 
-    def queryIndebted(indebtedCPF : String) : Boolean = {
-        var found: Boolean = false
-
-        db withSession {
-            if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName)) {
-                indebteds.ddl.create
-            }
-
-            val query =
-                for {
-                    i <- indebteds if i.cpf === indebtedCPF
-                } yield i.cpf
-
-            if (query.list.size > 0)
-                found = true
-        }
-        return found
-    }
-
     def addIndebted(name : String, birthDay : java.util.Date,
                     debt : Double, cpf : String) = {
 
@@ -199,11 +181,53 @@ object Database {
                     i <- indebteds if i.cpf === cpf
                 } yield i.cpf
 
-            PropID = PropID + 1
             properties.insert(propertyName, value,
                 kind , query.list.head)
         }
     }
+
+    def addAuction(auction: Auction) = {
+        db withSession {
+            val query =
+                for {
+                    i <- properties
+                    if i.name === auction.property.name && i.ownerID ===
+                        auction.indebted.cpf
+                } yield i.id
+
+            if (!MTable.getTables.list.exists(_.name.name == indebteds
+                .tableName)) {
+                auctions.ddl.create
+                auctions.insert(auction.begin, auction.end, auction
+                    .highestBid.value, auction.open, auction.indebted.cpf,
+                    query.list.head)
+            }
+            else
+                auctions.insert(auction.begin, auction.end, auction
+                    .highestBid.value, auction.open, auction.indebted.cpf,
+                    query.list.head)
+        }
+    }
+
+    def queryIndebted(indebtedCPF : String) : Boolean = {
+        var found: Boolean = false
+
+        db withSession {
+            if (!MTable.getTables.list.exists(_.name.name == indebteds
+                .tableName))
+                indebteds.ddl.create
+
+            val query =
+                for {
+                    i <- indebteds if i.cpf === indebtedCPF
+                } yield i.cpf
+
+            if (query.list.size > 0)
+                found = true
+        }
+        found
+    }
+
 
     def queryProperty(indebtedCPF : String, propertyName : String): Boolean = {
         var found: Boolean = true
@@ -228,7 +252,7 @@ object Database {
         found
     }
 
-    def getIndebteds() : List[Indebted] = {
+    def getIndebteds : List[Indebted] = {
         var loIndebteds : List[Indebted] = Nil
 
         db withSession {
@@ -247,7 +271,7 @@ object Database {
         loIndebteds
     }
 
-    def getProperties() : List[Property] = {
+    def getProperties : List[Property] = {
         var loProperties : List[Property] = Nil
 
         db withSession {
@@ -269,9 +293,35 @@ object Database {
         }
         loProperties
     }
+/*
+    def getAuctions : List[Auction] = {
+        var loAuctions : List[Auction] = Nil
 
-    def addAuction(auction: Auction) = {
+        db withSession {
 
+            if (!MTable.getTables.list.exists(_.name.name == auctions
+                .tableName)) {
+                auctions.ddl.create
+                indebteds.ddl.create
+                properties.ddl.create
+                return Nil
+            }
+
+            Query(auctions) foreach {
+                case (begin, end, highestBid, open, indebted, property) =>
+                    loAuctions =
+                        new Auction(indebted, begin, end) :: loAuctions
+            }
+        }
+        loAuctions
+    }
+*/
+    def getOpenAuctions : List[Auction] = {
+        Nil
+    }
+
+    def getClosedAuctions : List[Auction] = {
+        Nil
     }
 
     def addUser(client: Client) = {
@@ -280,17 +330,5 @@ object Database {
 
     def addUser(manager: Manager) = {
 
-    }
-
-    def queryScheduledAuctions : List[Auction] = {
-        Nil
-    }
-
-    def queryOpenAuctions : List[Auction] = {
-        Nil
-    }
-
-    def queryClosedAuctions : List[Auction] = {
-        Nil
     }
 }
