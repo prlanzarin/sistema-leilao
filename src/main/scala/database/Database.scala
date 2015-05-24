@@ -1,6 +1,7 @@
 package database
 
 import business.entities._
+import org.scalaquery.meta
 
 import org.scalaquery.meta.MTable
 import org.scalaquery.session._
@@ -159,27 +160,22 @@ object Database {
         db withSession {
 
             if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName)) {
+                .tableName))
                 indebteds.ddl.create
-                indebteds.insert(cpf, name, birthDay, debt)
-            }
-            else
-                indebteds.insert(cpf, name, birthDay, debt)
+
+            indebteds.insert(cpf, name, birthDay, debt)
         }
     }
 
     def addProperty(cpf : String, propertyName : String,
                     value : Double, kind : String) = {
+        lazy val query =
+            for { i <- indebteds if i.cpf === cpf } yield i.cpf
 
         db withSession {
             if (!MTable.getTables.list.exists(_.name.name == properties
                 .tableName))
                 properties.ddl.create
-
-            val query =
-                for {
-                    i <- indebteds if i.cpf === cpf
-                } yield i.cpf
 
             properties.insert(propertyName, value,
                 kind , query.list.head)
@@ -187,70 +183,58 @@ object Database {
     }
 
     def addAuction(auction: Auction) = {
-        db withSession {
-            val query =
-                for {
-                    i <- properties
-                    if i.name === auction.property.name && i.ownerID ===
-                        auction.indebted.cpf
-                } yield i.id
-
-            if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName)) {
-                auctions.ddl.create
-                auctions.insert(auction.begin, auction.end, auction
-                    .highestBid.value, auction.open, auction.indebted.cpf,
-                    query.list.head)
-            }
-            else
-                auctions.insert(auction.begin, auction.end, auction
-                    .highestBid.value, auction.open, auction.indebted.cpf,
-                    query.list.head)
-        }
-    }
-
-    def queryIndebted(indebtedCPF : String) : Boolean = {
-        var found: Boolean = false
+        lazy val query =
+            for {
+                i <- properties if i.name === auction.property.name &&
+                i.ownerID === auction.indebted.cpf
+            } yield i.id
 
         db withSession {
             if (!MTable.getTables.list.exists(_.name.name == indebteds
                 .tableName))
-                indebteds.ddl.create
+                auctions.ddl.create
 
-            val query =
-                for {
-                    i <- indebteds if i.cpf === indebtedCPF
-                } yield i.cpf
-
-            if (query.list.size > 0)
-                found = true
+            auctions.insert(auction.begin, auction.end, auction
+                .highestBid.value, auction.open, auction.indebted.cpf,
+                query.list.head)
         }
-        found
     }
 
-
-    def queryProperty(indebtedCPF : String, propertyName : String): Boolean = {
-        var found: Boolean = true
+    def queryIndebted(indebtedCPF: String): Option[Indebted] = {
+        lazy val dbQuery = for {
+            i <- indebteds if i.cpf === indebtedCPF
+        } yield i.*
 
         db withSession {
-            if (!MTable.getTables.list.exists(_.name.name == properties
-                .tableName)) {
-                properties.ddl.create
-                return false
-            }
-
-            val query =
-                for {
-                    i <- properties
-                    if i.ownerID === indebtedCPF && i.name === propertyName
-                } yield i.id
-
-            if (query.list.size == 0)
-                found = false
+            MTable.getTables(properties.tableName).firstOption.flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (cpf, name, bdate, debt) =>
+                            new Indebted(name, bdate, debt, cpf)
+                    }
+            )
         }
-
-        found
     }
+
+
+    def queryProperty(indebtedCPF : String, propertyName : String):
+    Option[Property] = {
+        lazy val dbQuery = for {
+            p <- properties if p.ownerID === indebtedCPF && p.name ===
+            propertyName
+        } yield p.*
+
+        db withSession {
+            MTable.getTables(properties.tableName).firstOption.flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (name, value, kind, ownerID) =>
+                            new Property(name, value, PropertyKind.withName(kind))
+                    }
+            )
+        }
+    }
+
 
     def getIndebteds : List[Indebted] = {
         var loIndebteds : List[Indebted] = Nil
