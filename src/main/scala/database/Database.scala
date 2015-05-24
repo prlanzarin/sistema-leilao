@@ -1,10 +1,8 @@
 package database
 
 import business.entities._
-import org.scalaquery.meta
 
 import org.scalaquery.meta.MTable
-import org.scalaquery.session._
 import org.scalaquery.session.Database.threadLocalSession
 import org.scalaquery.ql._
 import org.scalaquery.ql.TypeMapper._
@@ -158,11 +156,8 @@ object Database {
                     debt : Double, cpf : String) = {
 
         db withSession {
-
-            if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName))
-                indebteds.ddl.create
-
+            MTable.getTables(auctions.tableName).firstOption.foreach(MTable =>
+                indebteds.ddl.create)
             indebteds.insert(cpf, name, birthDay, debt)
         }
     }
@@ -173,12 +168,13 @@ object Database {
             for { i <- indebteds if i.cpf === cpf } yield i.cpf
 
         db withSession {
-            if (!MTable.getTables.list.exists(_.name.name == properties
-                .tableName))
-                properties.ddl.create
-
-            properties.insert(propertyName, value,
-                kind , query.list.head)
+            MTable.getTables(auctions.tableName).firstOption.foreach(
+                MTable => {
+                    indebteds.ddl.create
+                    properties.ddl.create
+                }
+            )
+            properties.insert(propertyName, value, kind , query.list.head)
         }
     }
 
@@ -190,10 +186,13 @@ object Database {
             } yield i.id
 
         db withSession {
-            if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName))
-                auctions.ddl.create
-
+            MTable.getTables(auctions.tableName).firstOption.foreach(
+                MTable => {
+                    auctions.ddl.create
+                    indebteds.ddl.create
+                    properties.ddl.create
+                }
+            )
             auctions.insert(auction.begin, auction.end, auction
                 .highestBid.value, auction.open, auction.indebted.cpf,
                 query.list.head)
@@ -206,7 +205,7 @@ object Database {
         } yield i.*
 
         db withSession {
-            MTable.getTables(properties.tableName).firstOption.flatMap(
+            MTable.getTables(indebteds.tableName).firstOption.flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (cpf, name, bdate, debt) =>
