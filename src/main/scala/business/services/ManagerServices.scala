@@ -41,17 +41,24 @@ class ManagerServices extends UserServices {
 
     }
 
-    def getProperties = {
-
+    def getProperties : List[Property] = {
+        Database.getProperties
     }
 
-    def getClosedAuctions = {
-
+    def getAuctions : List[Auction] = {
+        Database.getAuctions
     }
 
-    def getIndebteds(): List[Indebted] = {
-        val indebteds = Database.getIndebteds
-        return indebteds
+    def getOpenAuction : List[Auction] = {
+        Database.getOpenAuctions
+    }
+
+    def getClosedAuctions : List[Auction] = {
+        Database.getClosedAuctions
+    }
+
+    def getIndebteds : List[Indebted] = {
+        Database.getIndebteds
     }
 
     def generateReport(indebteds: List[Indebted]) = {

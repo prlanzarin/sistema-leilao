@@ -21,9 +21,9 @@ object Database {
     val managers = new
             Table[(String, String, String)]("MANAGER") {
 
-        def userName = column[String]("NAME", O.PrimaryKey, O.NotNull)
+        def userName = column[String]("U_NAME", O.PrimaryKey, O.NotNull)
         def passWord = column[String]("PASSWORD", O.NotNull)
-        def name = column[String]("NAME", O.NotNull)
+        def name = column[String]("R_NAME", O.NotNull)
 
         def * = userName ~ passWord ~ name
     }
@@ -31,9 +31,9 @@ object Database {
     val clients = new Table[(String, String, String, String, java.util.Date,
         String, String, String)]("CLIENT") {
 
-        def userName = column[String]("NAME", O.NotNull)
+        def userName = column[String]("U_NAME", O.NotNull)
         def passWord = column[String]("PASSWORD", O.NotNull)
-        def name = column[String]("NAME", O.NotNull)
+        def name = column[String]("R_NAME", O.NotNull)
         def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull, O.PrimaryKey)
         def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
         def telephone = column[String]("TELEPHONE", O.NotNull)
@@ -107,13 +107,34 @@ object Database {
 
         db withSession {
             val a = new java.util.Date()
+            val b = new java.util.Date(2015, 9, 25)
 
             if (!MTable.getTables.list.exists(_.name.name == indebteds
                 .tableName) && (!MTable.getTables.list.exists(_.name.name ==
-                properties.tableName))) {
+                properties.tableName)) && (!MTable.getTables.list.exists(_.name.
+                name == auctions.tableName)) && (!MTable.getTables.list.exists
+                (_.name.name == clients.tableName)) && (!MTable.getTables.list.
+                exists(_.name.name == managers.tableName))) {
+
+                managers.ddl.create
+                managers.insertAll(
+                    ("lpsilvestrin", "123", "Luis"),
+                    ("prlanzarin", "123", "Paulo"),
+                    ("mhbackes", "123", "Marcos"),
+                    ("rgherdt", "123", "Ricardo")
+                )
+
+                clients.ddl.create
+                clients.insertAll(
+                    ("maurilio", "123", "Maurilio Santiago", "12345678901",
+                        a, "12345600", "Rua do Papagaio", "maurilio@lapaz.com"),
+                    ("mariella", "123", "Mariella Santiago", "12345678902",
+                        a, "12345601", "Rua da Anta", "mariella@lapaz.com"),
+                    ("chimerito", "123", "Chimerito Santiago", "12345678903",
+                        a, "12345602", "Rua do Mamute", "chimerito@lapaz.com")
+                )
 
                 indebteds.ddl.create
-
                 indebteds.insertAll(
                     ("01111111111", "Siburgo Boapinta", a, 15000.50),
                     ("02222222222", "Coronel Mortelenta", a, 2800.70),
@@ -140,12 +161,12 @@ object Database {
                     500.00, PropertyKind.OTHER.toString, "05555555555")
                 properties.insert(Some(6L), "Apartamento Duplex Power Plus",
                     300000.00, PropertyKind.REALTY.toString, "06666666666")
-                println("AHHH")
 
                 auctions.ddl.create
                 auctions.insertAll(
-                    (a, a, 10403.00, true, "01111111111", 1L),
-                    (a, a, 10403.00, true, "02222222222", 2L)
+                    (a, b, 10403.00, true, "01111111111", 1L),
+                    (a, b, 50590.35, false, "02222222222", 2L),
+                    (a, b, 0, true, "03333333333", 3L)
                 )
             }
         }
@@ -153,7 +174,7 @@ object Database {
 
     def addUser(client: Client) = {
         db withSession {
-            MTable.getTables(clients.tableName).firstOption.foreach(
+            MTable.getTables(clients.tableName).firstOption foreach(
                 MTable => {
                     clients.insert(client.userName, client.password,
                     client.name, client.CPF, client.birthDay, client
@@ -163,7 +184,7 @@ object Database {
 
     def addUser(manager: Manager) = {
         db withSession {
-            MTable.getTables(managers.tableName).firstOption.foreach(
+            MTable.getTables(managers.tableName).firstOption foreach(
                 MTable => {managers.insert(manager.userName, manager.password,
                     manager.name)})
         }
@@ -172,7 +193,7 @@ object Database {
     def addIndebted(name : String, birthDay : java.util.Date,
                     debt : Double, cpf : String) = {
         db withSession {
-            MTable.getTables(auctions.tableName).firstOption.foreach(
+            MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => {indebteds.insert(cpf, name, birthDay, debt)})
         }
     }
@@ -183,7 +204,7 @@ object Database {
             for { i <- indebteds if i.cpf === cpf } yield i.cpf
 
         db withSession {
-            MTable.getTables(auctions.tableName).firstOption.foreach(
+            MTable.getTables(auctions.tableName).firstOption  foreach(
                 MTable => {properties.insert(None, propertyName, value, kind ,
                     dbQuery.list.head)}
             )
@@ -198,7 +219,7 @@ object Database {
             } yield i.id
 
         db withSession {
-            MTable.getTables(auctions.tableName).firstOption.foreach(
+            MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => {
                     auctions.insert(auction.begin, auction.end, auction
                         .highestBid.value, auction.open, auction.indebted.cpf,
@@ -214,7 +235,7 @@ object Database {
         } yield i.*
 
         db withSession {
-            MTable.getTables(indebteds.tableName).firstOption.flatMap(
+            MTable.getTables(indebteds.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (cpf, name, bdate, debt) =>
@@ -232,7 +253,7 @@ object Database {
         } yield p.*
 
         db withSession {
-            MTable.getTables(properties.tableName).firstOption.flatMap(
+            MTable.getTables(properties.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (id, name, value, kind, ownerID) =>
@@ -248,7 +269,7 @@ object Database {
         } yield p.*
 
         db withSession {
-            MTable.getTables(properties.tableName).firstOption.flatMap(
+            MTable.getTables(properties.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (id, name, value, kind, ownerID) =>
@@ -265,7 +286,7 @@ object Database {
         } yield m.*
 
         db withSession {
-            MTable.getTables(managers.tableName).firstOption.flatMap(
+            MTable.getTables(managers.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (userName, passWord, name) =>
@@ -282,7 +303,7 @@ object Database {
         } yield c.*
 
         db withSession {
-            MTable.getTables(clients.tableName).firstOption.flatMap(
+            MTable.getTables(clients.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (userName, passWord, name, cpf, bdate,
@@ -317,10 +338,9 @@ object Database {
                         value,
                         PropertyKind.withName(kind))
                 }
-                case None => {
+                case None =>
                     (indebteds.ddl ++ properties.ddl).create
                     Nil
-                }
             }
         }
     }
@@ -329,7 +349,7 @@ object Database {
         lazy val dbQuery = Query(auctions).list
 
         db withSession {
-            MTable.getTables(properties.tableName) firstOption match {
+            MTable.getTables(auctions.tableName) firstOption match {
                 case Some(x) => dbQuery flatMap {
                     case (begin, end, highestBid, open, indebted, property) =>
                         for{
@@ -350,7 +370,7 @@ object Database {
         } yield a.*
 
         db withSession {
-            MTable.getTables(properties.tableName) firstOption match {
+            MTable.getTables(auctions.tableName) firstOption match {
                 case Some(x) => dbQuery.list flatMap {
                     case (begin, end, highestBid, open, indebted, property) =>
                         for{
@@ -371,7 +391,7 @@ object Database {
         } yield a.*
 
         db withSession {
-            MTable.getTables(properties.tableName) firstOption match {
+            MTable.getTables(auctions.tableName) firstOption match {
                 case Some(x) => dbQuery.list flatMap {
                     case (begin, end, highestBid, open, indebted, property) =>
                         for{

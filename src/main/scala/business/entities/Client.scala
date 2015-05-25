@@ -2,6 +2,8 @@ package business.entities
 
 import java.util.Date
 
+import presentation.ui.UIUtils
+
 class Client(
                 username: String,
                 password: String,
@@ -24,5 +26,9 @@ class Client(
     def address_(naddress : String) = _address = naddress
     def email_(nemail : String) = _email = nemail
     def auctions_(nauctions : List[Auction]) = _auctions = nauctions
+
+    override def toString: String = "Client username: " + username +
+        "\nPassword: " + password + "\nNome: " + name +("\nData de " +
+        "nascimento: " + UIUtils.dateFormatter.format(birthDay))
 
 }
