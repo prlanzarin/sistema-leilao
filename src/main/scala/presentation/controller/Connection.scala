@@ -26,11 +26,22 @@ object Connection {
         out.close()
     }
 
+    def sendAddUserRequest(user: User) {
+        val msg: RequestMessage = AddUserRequest(user)
+        out.writeObject(msg)
+        out.flush()
+        val r = in.readObject().asInstanceOf[ReplyMessage]
+        r match {
+            case AddUserReply(str) => println("\nSucesso.\n")
+            case _ => ;
+        }
+    }
+
     def sendAddIndebtedRequest(indebted: Indebted) {
         val msg: RequestMessage = AddIndebtedRequest(indebted)
         out.writeObject(msg)
         out.flush()
-        var r = in.readObject().asInstanceOf[ReplyMessage]
+        val r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
             case AddIndebtedReply(str) => println("\nSucesso.\n")
             case _ => ;
@@ -41,7 +52,7 @@ object Connection {
         val msg: RequestMessage = AddPropertyRequest(indebted, property)
         out.writeObject(msg)
         out.flush()
-        var r = in.readObject().asInstanceOf[ReplyMessage]
+        val r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
             case AddPropertyReply(str) => println("\nSucesso.\n")
             case _ => ; // ignore wrong typed message

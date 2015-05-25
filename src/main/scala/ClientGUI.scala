@@ -3,7 +3,6 @@ package main.scala
 import main.scala.presentation.gui.LoginFrame
 
 import scala.swing.SimpleSwingApplication
-import scala.swing.Dialog
 import java.net.SocketException
 
 /**

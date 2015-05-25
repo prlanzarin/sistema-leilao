@@ -174,7 +174,7 @@ object Database {
             MTable.getTables(users.tableName).firstOption foreach(
                 MTable => {
                     users.insert(client.userName, client.password,
-                        client.name, Some(client.CPF), Some(client.birthDay),
+                    client.name, Some(client.CPF), Some(client.birthDay),
                         Some(client.telephone), Some(client.address), Some
                             (client.email), 1)})
         }
@@ -205,7 +205,7 @@ object Database {
             MTable.getTables(auctions.tableName).firstOption  foreach(
                 MTable => {properties.insert(None, propertyName, value, kind ,
                     dbQuery.list.head)}
-                )
+            )
         }
     }
 
@@ -223,7 +223,7 @@ object Database {
                         .highestBid.value, auction.open, auction.indebted.cpf,
                         dbQuery.list.head)
                 }
-                )
+            )
         }
     }
 
@@ -239,7 +239,7 @@ object Database {
                         case (cpf, name, bdate, debt) =>
                             new Indebted(name, bdate, debt, cpf)
                     }
-                )
+            )
         }
     }
 
@@ -257,7 +257,7 @@ object Database {
                         case (id, name, value, kind, ownerID) =>
                             new Property(name, value, PropertyKind.withName(kind))
                     }
-                )
+            )
         }
     }
 
@@ -273,15 +273,15 @@ object Database {
                         case (id, name, value, kind, ownerID) =>
                             new Property(name, value, PropertyKind.withName(kind))
                     }
-                )
+            )
         }
     }
 
     def queryUser(login : String ,password : String) : Option[User] = {
         lazy val dbQuery = for {
-            u <- users if u.userName === login && u.passWord ===
+            m <- users if m.userName === login && m.passWord ===
             password
-        } yield u.*
+        } yield m.*
 
         db withSession {
             MTable.getTables(users.tableName).firstOption flatMap(
@@ -292,8 +292,7 @@ object Database {
                             usrLevel match {
                                 case 0 => new Manager(userName, passWord, name)
                                 case 1 => new Client(userName, passWord,
-                                    name, cpf.get, bdate.get, telephone.get,
-                                    address.get, email.get)
+                                    name, cpf.get, bdate.get, telephone.get, address.get, email.get)
                             }
                     }
                 )
@@ -314,7 +313,7 @@ object Database {
                         telephone, address, email, usrLevel) =>
                             new Manager(userName, passWord, name)
                     }
-                )
+            )
         }
     }
 
@@ -330,10 +329,9 @@ object Database {
                     dbQuery.firstOption map {
                         case (userName, passWord, name, cpf, bdate,
                         telephone, address, email, usrLevel) =>
-                            new Client(userName, passWord, name, cpf.get,
-                                bdate.get, telephone.get, address.get, email.get)
+                            new Client(userName, passWord, name, cpf.get, bdate.get, telephone.get, address.get, email.get)
                     }
-                )
+            )
         }
     }
 
