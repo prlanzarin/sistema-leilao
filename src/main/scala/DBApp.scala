@@ -16,13 +16,15 @@ object DBApp {
         val prlanza = new Manager("prlanzarin", "123", "Paulo")
         val neicilua = new Manager("neicilua", "123", "Neicilua")
         val maurilio = new Client("maurilio", "123", "Maurilio Santiago",
-            "12345678901", date)
+            "12345678901", date, "12345600", "Rua do Papagaio",
+            "maurilio@lapaz.com")
         val divermio = new Client("divermio", "123", "Divermio Tiamatu",
-            "19293840918", date)
+            "19293840918", date, "33516666", "Garganta del Diavolo",
+            "divermio@lapaz.com")
 
         println("-----MANAGERS TEST-----")
         println("--ADD TEST--")
-        //Database.addUser(neicilua) //retire o comentario para adicionar a base
+        Database.addUser(neicilua) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
         Database.queryUser(neicilua).foreach(man => println(man))
@@ -34,7 +36,7 @@ object DBApp {
 
         println("-----CLIENTS TEST-----")
         println("--ADD TEST--")
-        //Database.addUser(divermio) //retire o comentario para adicionar a base
+        Database.addUser(divermio) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
         Database.queryUser("divermio", "123").foreach(man => println(man))
@@ -42,9 +44,11 @@ object DBApp {
         Database.queryUser(divermio).foreach(man => println(man))
         Database.queryUser(maurilio).foreach(clt => println(clt)) //yes
         Database.queryUser(new Client("maulirio", "123", "Maurilio Santiago",
-            "12345678901", date)).foreach(clt => println(clt)) //no
+            "12345678901", date, "12345600", "Rua do Papagaio",
+            "maurilio@lapaz.com")).foreach(clt => println(clt)) //no
         Database.queryUser(new Client("maurilio", "124", "Maurilio Santiago",
-            "12345678901", date)).foreach(clt => println(clt)) //no
+            "12345678901", date, "12345600", "Rua do Papagaio",
+            "maurilio@lapaz.com")).foreach(clt => println(clt)) //no
 
         println("-----INDEBTEDS TEST-----")
         println("--QUERY TEST--")
