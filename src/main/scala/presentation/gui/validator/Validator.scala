@@ -9,7 +9,7 @@ import java.util.Date
 object Validator {
   val dateFormat = "dd/MM/yyyy"
   val dateFormatter = new SimpleDateFormat(dateFormat)
-  val passwordSize = 6
+  val passwordSize = 3
 
   def validateName(input: String): String = {
     if(input.isEmpty)
@@ -56,7 +56,7 @@ object Validator {
   def validatePassword(rawInput: Array[Char]) : String = {
     val input = new String(rawInput)
     if(input.size < passwordSize)
-      throw new ValidationException("Senha inválida, informe uma senha de pelo menos " + passwordSize + " dígitos")
+      throw new ValidationException("Senha inválida, a senha deve ter pelo menos " + passwordSize + " dígitos")
     input
   }
 }

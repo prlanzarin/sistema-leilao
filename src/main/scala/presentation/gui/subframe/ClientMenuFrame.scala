@@ -9,7 +9,7 @@ import scala.swing.{Action, Button, Frame}
  * Created by mhbackes on 25/05/15.
  */
 class ClientMenuFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
-  title = "Bem Vindo!"
+  title = "Bem Vindo, " + client.name + "!"
   resizable = false
   val newBid = new Button {
     action = Action("Novo Lance") {
@@ -24,12 +24,12 @@ class ClientMenuFrame(parent: Frame, client: Client) extends ChildFrame(parent) 
   contents = new ButtonsPanel(List(newBid, history))
 
   def newBidAction = {
-    visible = false
-    //new NewBidFrame(this, client)
+//    visible = false
+//    new NewBidFrame(this, client)
   }
 
   def historyAction = {
-    visible = false
-    //new HistoryFrame(this, client)
+//    visible = false
+//    new HistoryFrame(this, client)
   }
 }

@@ -37,6 +37,17 @@ object Connection {
         }
     }
 
+    def sendLoginRequest(userName: String, password: String): Option[User] ={
+        val msg: RequestMessage = LoginRequest(userName, password)
+        out.writeObject(msg)
+        out.flush()
+        val r = in.readObject().asInstanceOf[ReplyMessage]
+        r match {
+            case LoginReply(u) => u
+            case _ => null
+        }
+    }
+
     def sendAddIndebtedRequest(indebted: Indebted) {
         val msg: RequestMessage = AddIndebtedRequest(indebted)
         out.writeObject(msg)
