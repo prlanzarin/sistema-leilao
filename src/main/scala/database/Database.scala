@@ -18,30 +18,22 @@ object Database {
     val db = org.scalaquery.session.Database.
         forURL("jdbc:h2:file:./db/auctiondb", driver = "org.h2.Driver")
 
-    val managers = new
-            Table[(String, String, String)]("MANAGER") {
+    val users = new Table[(String, String, String, Option[String],
+        Option[java.util.Date], Option[String], Option[String],
+        Option[String], Int)]("USERS") {
 
         def userName = column[String]("U_NAME", O.PrimaryKey, O.NotNull)
         def passWord = column[String]("PASSWORD", O.NotNull)
         def name = column[String]("R_NAME", O.NotNull)
-
-        def * = userName ~ passWord ~ name
-    }
-
-    val clients = new Table[(String, String, String, String, java.util.Date,
-        String, String, String)]("CLIENT") {
-
-        def userName = column[String]("U_NAME", O.NotNull)
-        def passWord = column[String]("PASSWORD", O.NotNull)
-        def name = column[String]("R_NAME", O.NotNull)
-        def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull, O.PrimaryKey)
-        def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
-        def telephone = column[String]("TELEPHONE", O.NotNull)
-        def address = column[String]("ADDRESS", O.NotNull)
-        def email = column[String]("EMAIL", O.NotNull)
+        def cpf = column[String]("CPF", O.Nullable)
+        def bdate = column[java.util.Date]("BIRTHDATE", O.Nullable)
+        def telephone = column[String]("TELEPHONE", O.Nullable)
+        def address = column[String]("ADDRESS", O.Nullable)
+        def email = column[String]("EMAIL", O.Nullable)
+        def usrLevel = column[Int]("U_LVL", O.NotNull)
 
         def * = userName ~ passWord ~ name ~
-            cpf ~ bdate ~ telephone ~ address ~ email
+            cpf.? ~ bdate.? ~ telephone.? ~ address.? ~ email.? ~ usrLevel
     }
 
     val indebteds = new
@@ -98,7 +90,7 @@ object Database {
 
         def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_
             .auctionId)
-        def userKey = foreignKey("USER_FK", userID, clients)(_.cpf)
+        def userKey = foreignKey("USER_FK", userID, users)(_.userName)
 
         def * = auctionID ~ userID
     }
@@ -113,25 +105,30 @@ object Database {
                 .tableName) && (!MTable.getTables.list.exists(_.name.name ==
                 properties.tableName)) && (!MTable.getTables.list.exists(_.name.
                 name == auctions.tableName)) && (!MTable.getTables.list.exists
-                (_.name.name == clients.tableName)) && (!MTable.getTables.list.
-                exists(_.name.name == managers.tableName))) {
+                (_.name.name == users.tableName))) {
 
-                managers.ddl.create
-                managers.insertAll(
-                    ("lpsilvestrin", "123", "Luis"),
-                    ("prlanzarin", "123", "Paulo"),
-                    ("mhbackes", "123", "Marcos"),
-                    ("rgherdt", "123", "Ricardo")
+                users.ddl.create
+                users.insertAll(
+                    ("lpsilvestrin", "123", "Luis", None, None, None, None,
+                        None, 0),
+                    ("prlanzarin", "123", "Paulo", None, None, None, None,
+                        None, 0),
+                    ("mhbackes", "123", "Marcos", None, None, None, None,
+                        None, 0),
+                    ("rgherdt", "123", "Ricardo", None, None, None, None,
+                        None, 0)
                 )
 
-                clients.ddl.create
-                clients.insertAll(
-                    ("maurilio", "123", "Maurilio Santiago", "12345678901",
-                        a, "12345600", "Rua do Papagaio", "maurilio@lapaz.com"),
-                    ("mariella", "123", "Mariella Santiago", "12345678902",
-                        a, "12345601", "Rua da Anta", "mariella@lapaz.com"),
-                    ("chimerito", "123", "Chimerito Santiago", "12345678903",
-                        a, "12345602", "Rua do Mamute", "chimerito@lapaz.com")
+                users.insertAll(
+                    ("maurilio", "123", "Maurilio Santiago", Some("12345678901"),
+                        Some(a), Some("12345600"), Some("Rua do Papagaio"),
+                        Some("maurilio@lapaz.com"), 1),
+                    ("mariella", "123", "Mariella Santiago", Some
+                        ("12345678902"), Some(a), Some("12345601"),
+                        Some("Rua da Anta"), Some("mariella@lapaz.com"), 1),
+                    ("chimerito", "123", "Chimerito Santiago", Some("12345678903"),
+                        Some(a), Some("12345602"), Some("Rua do Mamute"),
+                        Some("chimerito@lapaz.com"), 1)
                 )
 
                 indebteds.ddl.create
@@ -174,19 +171,20 @@ object Database {
 
     def addUser(client: Client) = {
         db withSession {
-            MTable.getTables(clients.tableName).firstOption foreach(
+            MTable.getTables(users.tableName).firstOption foreach(
                 MTable => {
-                    clients.insert(client.userName, client.password,
-                    client.name, client.CPF, client.birthDay, client
-                            .telephone, client.adress, client.email)})
+                    users.insert(client.userName, client.password,
+                    client.name, Some(client.CPF), Some(client.birthDay),
+                        Some(client.telephone), Some(client.adress), Some
+                            (client.email), 1)})
         }
     }
 
     def addUser(manager: Manager) = {
         db withSession {
-            MTable.getTables(managers.tableName).firstOption foreach(
-                MTable => {managers.insert(manager.userName, manager.password,
-                    manager.name)})
+            MTable.getTables(users.tableName).firstOption foreach(
+                MTable => {users.insert(manager.userName, manager.password,
+                    manager.name, None, None, None, None, None, 0)})
         }
     }
 
@@ -279,17 +277,40 @@ object Database {
         }
     }
 
-    def queryUser(manager: Manager) : Option[Manager] = {
+    def queryUser(login : String ,password : String) : Option[User] = {
         lazy val dbQuery = for {
-            m <- managers if m.userName === manager.userName && m.passWord ===
-            manager.password
+            m <- users if m.userName === login && m.passWord ===
+            password
         } yield m.*
 
         db withSession {
-            MTable.getTables(managers.tableName).firstOption flatMap(
+            MTable.getTables(users.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
-                        case (userName, passWord, name) =>
+                        case (userName, passWord, name, cpf, bdate,
+                        telephone, address, email, usrLevel) =>
+                            usrLevel match {
+                                case 0 => new Manager(userName, passWord, name)
+                                case 1 => new Client(userName, passWord,
+                                    name, cpf.get, bdate.get)
+                            }
+                    }
+                )
+        }
+    }
+
+    def queryUser(manager: Manager) : Option[Manager] = {
+        lazy val dbQuery = for {
+            m <- users if m.userName === manager.userName && m.passWord ===
+            manager.password && m.usrLevel === 0
+        } yield m.*
+
+        db withSession {
+            MTable.getTables(users.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (userName, passWord, name, cpf, bdate,
+                        telephone, address, email, usrLevel) =>
                             new Manager(userName, passWord, name)
                     }
             )
@@ -298,17 +319,17 @@ object Database {
 
     def queryUser(client: Client) : Option[Client] = {
         lazy val dbQuery = for {
-            c <- clients if c.userName === client.userName && c.passWord ===
-            client.password
+            c <- users if c.userName === client.userName && c.passWord ===
+            client.password && c.usrLevel === 1
         } yield c.*
 
         db withSession {
-            MTable.getTables(clients.tableName).firstOption flatMap(
+            MTable.getTables(users.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
                         case (userName, passWord, name, cpf, bdate,
-                        telephone, address, email) => new Client(userName,
-                            passWord, name, cpf, bdate)
+                        telephone, address, email, usrLevel) =>
+                            new Client(userName, passWord, name, cpf.get, bdate.get)
                     }
             )
         }

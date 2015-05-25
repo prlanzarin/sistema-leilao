@@ -1,12 +1,13 @@
 package business.services
 
-import java.util.Date;
+import business.entities.{Auction, User}
+import database.Database
 
 class UserServices {
-  def getOpenAuctions = {
-
+  def getOpenAuctions : List[Auction] = {
+      Database.getOpenAuctions
   }
-  def getUser(login : String ,password : String) = {
-
+  def getUser(login : String ,password : String) : Option[User] = {
+      Database.queryUser(login, password)
   }
 }

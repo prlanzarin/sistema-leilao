@@ -37,6 +37,8 @@ object DBApp {
         //Database.addUser(divermio) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
+        Database.queryUser("divermio", "123").foreach(man => println(man))
+        Database.queryUser("neicilua", "123").foreach(man => println(man))
         Database.queryUser(divermio).foreach(man => println(man))
         Database.queryUser(maurilio).foreach(clt => println(clt)) //yes
         Database.queryUser(new Client("maulirio", "123", "Maurilio Santiago",
