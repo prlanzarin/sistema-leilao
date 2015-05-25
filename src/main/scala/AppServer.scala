@@ -48,12 +48,12 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             AddPropertyReply("Success")
                         else
                             new AddPropertyReply("Failed")
-                 /*   case QueryIndebtedsRequest() =>
+                    case QueryIndebtedsRequest() =>
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
                         val indebted = serv.getIndebteds()
                         indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x))}
-                   */     QueryIndebtedsReply(null) // Might be empty
+                        QueryIndebtedsReply(null) // Might be empty
                     case _ => throw new SocketException // TODO Create other exception
                 }
                 out.writeObject(r);

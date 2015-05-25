@@ -48,12 +48,12 @@ class ManagerServices extends UserServices {
     def getClosedAuctions = {
 
     }
-/*
+
     def getIndebteds(): List[Indebted] = {
         val indebteds = Database.getIndebteds
         return indebteds
     }
-*/
+
     def generateReport(indebteds: List[Indebted]) = {
 
     }
