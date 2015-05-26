@@ -25,7 +25,9 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
     }
   }
   val allIndebtedsReport = new Button("Relatório de Todos Endividados")
+  //TODO implement action
   val indebtedReport = new Button("Relatório do Endividado")
+  //TODO implement action
   val properties = new Button {
     action = Action("Bens") {
       propertiesAction
@@ -38,24 +40,39 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
       List(registerIndebted, allIndebtedsReport, indebtedReport, properties))) = BorderPanel.Position.South
   }
 
-  def updateIndebtedTable = {
+  def updateIndebtedTable: Unit = {
     val indebtedList = Connection.sendQueryIndebtedsRequest
     rowData = new Array[Array[Any]](indebtedList.size)
-    indebtedList.zipWithIndex.foreach { case (x, i) => rowData(i) = indebtedToCells(x) }
+    indebtedList.zipWithIndex.foreach { case (x, i) => rowData(i) = indebtedToRow(x) }
     table = new SortableTable(rowData, headers)
     scrollTable.contents = table
   }
-  def indebtedToCells(indebted: Indebted): Array[Any] = {
+
+  def indebtedToRow(indebted: Indebted): Array[Any] = {
     Array(indebted.name, Validator.dateFormatter format indebted.birthDay, indebted.cpf, indebted.debt)
   }
 
+  def rowToIndebted(row: Int): Indebted = {
+    new Indebted(table(row,0).toString, Validator.dateFormatter.parse(table(row,1).toString),
+      table(row,3).toString.toDouble, table(row,2).toString)
+  }
+
   def registerIndebtedAction = {
-        visible = false
+    visible = false
     new RegisterIndebtedFrame(this, manager)
   }
 
-  def propertiesAction = {
-    //    visible = false
-    //    new IndebtedPropertiesFrame(this)
+  def propertiesAction: Unit = {
+    val row = table.selection.rows
+    if (row.isEmpty)
+      Dialog.showMessage(properties, "Selecione um endividado", "Erro", Dialog.Message.Error)
+    else {
+      val indebted = rowToIndebted(row.anchorIndex)
+      println(Connection.sendQueryIndebtedPropertiesRequest(indebted.cpf))
+      visible = false
+      new IndebtedPropertiesFrame(this, manager, indebted)
+    }
   }
 }
+
+

@@ -43,6 +43,10 @@ class ManagerServices extends UserServices {
 
     }
 
+    def getIndebtedProperties(indebtedCpf: String): List[Property] ={
+        Database.queryIndebtedProperties(indebtedCpf)
+    }
+
     def getProperties : List[Property] = {
         Database.getProperties
     }

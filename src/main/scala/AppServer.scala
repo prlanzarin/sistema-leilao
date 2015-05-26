@@ -60,6 +60,13 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             AddPropertyReply("Success")
                         else
                             new AddPropertyReply("Failed")
+
+                    case QueryIndebtedPropertiesRequest(iCpf: String) =>
+                        println("Server: querying indebted properties")
+                        val serv = new ManagerServices
+                        val pl = serv.getIndebtedProperties(iCpf)
+                        QueryIndebtedPropertiesReply(pl)
+
                     case QueryIndebtedsRequest() =>
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
