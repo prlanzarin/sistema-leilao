@@ -33,6 +33,18 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             while (socket.isBound()) {
                 val msg = in.readObject().asInstanceOf[RequestMessage];
                 val r = msg match {
+                    case LoginRequest(u, p) =>
+                        println("Server: login request from user \"" + u + "\"")
+                        val serv = new UserServices
+                        val user: Option[User] = serv.getUser(u, p)
+                        LoginReply(user)
+
+                    case AddUserRequest(u) =>
+                        println("Server: adding user")
+                        val serv = new UserServices
+                        serv.addUser(u) // TODO check if user was really added
+                        AddUserReply("Success")
+
                     case AddIndebtedRequest(i) =>
                         println("Server: adding indebted")
                         val serv = new ManagerServices()
@@ -70,6 +82,5 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                 e.printStackTrace();
         }
     }
-
 }
   

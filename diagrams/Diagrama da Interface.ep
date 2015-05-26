@@ -67,7 +67,7 @@
             <use xlink:href="#2e383b98fcb34d73b0b4ce6bcabff025" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="facec1bd092c4e32a45aadeb35c4fcb9" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="ed8f12d985bd420e82aa353877e35b6c" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#2e383b98fcb34d73b0b4ce6bcabff025" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="1126b32f2483472a8a1e094aa1c50e54" dx="16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="1126b32f2483472a8a1e094aa1c50e54" dx="16"/>
                 </textPath>
             </text>
 
@@ -79,7 +79,7 @@
             <use xlink:href="#10e930ef5588485bb51938732e919ffc" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="73836f6d85994413a2e007a3e845d00e" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="d8df579da88945a1ac895a183c9b31e8" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#10e930ef5588485bb51938732e919ffc" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="c6421d3ffbbd41ec95ef0c75827e2a4b" dx="16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="c6421d3ffbbd41ec95ef0c75827e2a4b" dx="16"/>
                 </textPath>
             </text>
 
@@ -99,7 +99,7 @@
             <use xlink:href="#aeff99a3e1b6452fa3cfcffdaa8f3441" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="a13c77acaf3d4daaa68075846001b7d5" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="a2b0ee9dba7d45c3ae73df0db57a6b71" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#aeff99a3e1b6452fa3cfcffdaa8f3441" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="bd728fc0a18d404c96db665b56aa6cad" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="bd728fc0a18d404c96db665b56aa6cad" dx="-16"/>
                 </textPath>
             </text>
 
@@ -200,7 +200,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#a4f3927383b642a49a8cf4edc8e405e1" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="5fd37cf07dd642ab9321e995f4aebbbb" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="9334766731314c75814b8422a9a13cd0" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#a4f3927383b642a49a8cf4edc8e405e1" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="f722970a033847a1a90df72a4d597009" dx="16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="f722970a033847a1a90df72a4d597009" dx="16"/>
                 </textPath>
             </text>
 
@@ -238,7 +238,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#6ab3f6b1046c4996a32db827fb3c3170" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="28d217fd98e6413e881d4d75116b6f27" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="5b9853555dc7445db28eba203573b537" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#6ab3f6b1046c4996a32db827fb3c3170" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="6274c6b72667416ea4715c68b784bbb3" dx="16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="6274c6b72667416ea4715c68b784bbb3" dx="16"/>
                 </textPath>
             </text>
 
@@ -282,7 +282,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#a338b921b2a24524b0d16b691916fef9" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="00d4a7605d2b40d38d71cf7aa9a83697" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="4129bdaee46348d5ba2035a40bc2483d" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#a338b921b2a24524b0d16b691916fef9" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="fb4eba9ca2904b69b7f9e3448497d7b0" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="fb4eba9ca2904b69b7f9e3448497d7b0" dx="-16"/>
                 </textPath>
             </text>
 
@@ -294,7 +294,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#66ee27c478484e08842d93e55f2cbd8c" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="2f5ffadd5d7b4ed0805126ca91d6ad08" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="bb7ad1abe81746608ca81fde096e528a" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#66ee27c478484e08842d93e55f2cbd8c" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="513f83be9f424614b9d412fe6b97f90f" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="513f83be9f424614b9d412fe6b97f90f" dx="-16"/>
                 </textPath>
             </text>
 
@@ -306,7 +306,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#6672c12002bb4cfebce9a47a736398f4" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="8a7723fcd31440a280dae0580ffd88f5" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="cb9af8fc50f64a5882c030da5c4b8c91" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#6672c12002bb4cfebce9a47a736398f4" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d79baa887fed4f1786b14b8779d7bf3d" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d79baa887fed4f1786b14b8779d7bf3d" dx="-16"/>
                 </textPath>
             </text>
 
@@ -318,7 +318,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#00ce09be3f854138b7257e8d9040c9e2" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="ed91eb13c84d43ec9858f3105205bbad" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="760fda90c5f24485a6ff882ada0dc3a4" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#00ce09be3f854138b7257e8d9040c9e2" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="3c2657b17945403987b5a7ce4e390cec" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="3c2657b17945403987b5a7ce4e390cec" dx="-16"/>
                 </textPath>
             </text>
 
@@ -330,7 +330,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#7195215a9f1f459382ed1d872a7233ab" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="2b9cc82c1e6240968253a33f3eee8d32" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="d1b97401670642398b79b8304059f048" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#7195215a9f1f459382ed1d872a7233ab" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="e1d7dba4b3a74ea09b61e7b5d137c063" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="e1d7dba4b3a74ea09b61e7b5d137c063" dx="-16"/>
                 </textPath>
             </text>
 
@@ -432,7 +432,7 @@ Casa | Imóvel | R$ 3000,00 | Não | 73 | 20/06/2015 - 06:00:00]]></p:property><
             <use xlink:href="#27ee177ab30841f7b4c1b832e657e16f" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="5f4925425f914ae49ad60a1d9743e4f7" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="628576cff9664e81bb1948aa4fb4c5a1" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#27ee177ab30841f7b4c1b832e657e16f" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="9a44c5b5bf54445c9a09ab87153184bd" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="9a44c5b5bf54445c9a09ab87153184bd" dx="-16"/>
                 </textPath>
             </text>
 
@@ -465,7 +465,7 @@ Casa | Imóvel | R$ 3000,00 | Não | 73 | 20/06/2015 - 06:00:00]]></p:property><
             <use xlink:href="#43566ed98bc64f3aa24651f482b0e9b8" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="933ab3707721403693c550d38d736986" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="b9a49f66fef940668c73849736646b35" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#43566ed98bc64f3aa24651f482b0e9b8" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="5656a8aab2044cfa8277a9d256859d4a" dx="16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="5656a8aab2044cfa8277a9d256859d4a" dx="16"/>
                 </textPath>
             </text>
 
@@ -539,7 +539,7 @@ Casa | Imóvel | R$ 3000,00 | Não | 73 | 20/06/2015 - 06:00:00]]></p:property><
             <use xlink:href="#f69d26a697c3465687ace951a92869f0" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="3eccc44d3ce24c37a3c51c2727b25982" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="cbf3d27edc28475dbb753655f3cfa817" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#f69d26a697c3465687ace951a92869f0" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="679a5a87445e49d18d848c3eb42ad9df" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="679a5a87445e49d18d848c3eb42ad9df" dx="-16"/>
                 </textPath>
             </text>
 
@@ -577,7 +577,7 @@ Neymar | 04/05/1990 | 78978978978 | R$ 200,00]]></p:property><p:property name="t
             <use xlink:href="#feb47b14096e4c8884941911b5f12f0c" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="34d95e36a7d74e8a93688b731d630fa5" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="a242db58ef2d4cea9ff776303d84d17a" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#feb47b14096e4c8884941911b5f12f0c" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="fcb56729eee547c6bb62fee5bcd4e3e8" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="fcb56729eee547c6bb62fee5bcd4e3e8" dx="-16"/>
                 </textPath>
             </text>
 
@@ -589,7 +589,7 @@ Neymar | 04/05/1990 | 78978978978 | R$ 200,00]]></p:property><p:property name="t
             <use xlink:href="#db43239b9e9a4f8f94e7a10c65fc9021" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="34bb85b9573f4ddb9c05ba7869606c45" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="8ffb00450c364a3f82005d7db73c0882" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#db43239b9e9a4f8f94e7a10c65fc9021" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d655284b99404cc0980065bdbe3f6e23" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d655284b99404cc0980065bdbe3f6e23" dx="-16"/>
                 </textPath>
             </text>
 
@@ -629,7 +629,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#feca612d596d428094f735e5ad2faabe" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="417ae5228f394286880424c7272d2f48" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="76096b24d59e4bc6880a5f89788ef18e" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#feca612d596d428094f735e5ad2faabe" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="bef6d43b959d43d88ee06b772c0fe5e6" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="bef6d43b959d43d88ee06b772c0fe5e6" dx="-16"/>
                 </textPath>
             </text>
 
@@ -696,7 +696,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#c9bb487bbc72452380cedc4923342b43" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="64b9fb8eba734d8c8179341afdd512f1" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="f67cef8c6d4145028917e286a5c980b2" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#c9bb487bbc72452380cedc4923342b43" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="80690e45a2874911a85b5c7367961805" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="80690e45a2874911a85b5c7367961805" dx="-16"/>
                 </textPath>
             </text>
 
@@ -708,7 +708,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#a1f4de9202ab4ece9b94b33eb98d8973" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="fe9e9e47f29b4ff3be5817c759f8655a" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="395e3a5d48904d3f82857cc6031aba03" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#a1f4de9202ab4ece9b94b33eb98d8973" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="b2bf890f0b30434396620875837cdc51" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="b2bf890f0b30434396620875837cdc51" dx="-16"/>
                 </textPath>
             </text>
 
@@ -750,7 +750,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#e71a5975f1ac400daf9f8098ecb847aa" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="1515a3820d1a460a9f185ad3518d7f98" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="c671d1d278c94142b3344cc5dab201bc" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#e71a5975f1ac400daf9f8098ecb847aa" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="18a2246caf3b4cfea26b4e805c313caf" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="18a2246caf3b4cfea26b4e805c313caf" dx="-16"/>
                 </textPath>
             </text>
 
@@ -783,7 +783,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#8dd3c64a19e34ac198f6bd721f511558" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="60f1ef1a2a47411f8f516165d625ec77" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="186825191be14dcb8e22e19b66857e62" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#8dd3c64a19e34ac198f6bd721f511558" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="e9219c1951174194b67e6f9b72b88d34" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="e9219c1951174194b67e6f9b72b88d34" dx="-16"/>
                 </textPath>
             </text>
 
@@ -798,7 +798,7 @@ Motocicleta | 1969 | R$ 150,00]]></p:property><p:property name="textFont"><![CDA
             <use xlink:href="#b7420712eb0d480a93df852bd2b2ac47" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="b8e365c5914642879c85336b76fa31c0" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="c9d7d8904e024866b24c0658c4afa295" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#b7420712eb0d480a93df852bd2b2ac47" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="7c8be2e746fd4438b0aa8759ddba8000" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="7c8be2e746fd4438b0aa8759ddba8000" dx="-16"/>
                 </textPath>
             </text>
 
@@ -958,7 +958,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#a6e48763f50a43c7abe72ddae4fc2dbf" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="3166b2cc517446069cddb9feb2fd91f2" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="7d1aa31ab5894432bcbd6a8b2e65f0fe" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#a6e48763f50a43c7abe72ddae4fc2dbf" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="821b1ad179b948d896ca7293f843880b" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="821b1ad179b948d896ca7293f843880b" dx="-16"/>
                 </textPath>
             </text>
 
@@ -970,7 +970,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <use xlink:href="#b74efe4037b74aa7a07212cb7422c3d5" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="45766f71de3d49588b49c8cc0fb07150" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="94d60654288a44698052c15213825c12" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#b74efe4037b74aa7a07212cb7422c3d5" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d4f7b90e269e411e9671bb915dbf5b11" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="d4f7b90e269e411e9671bb915dbf5b11" dx="-16"/>
                 </textPath>
             </text>
 
@@ -979,7 +979,7 @@ Casa | Imóvel | R$ 3000,00 | 73 | 20/06/2015 - 06:00:00]]></p:property><p:prope
             <path style="fill: rgb(222, 222, 222); stroke: rgb(0, 0, 0); stroke-opacity: 1; stroke-width: 1; fill-opacity: 1;" p:name="menu" id="b0e5229eaf644f98aa5c62b7c24d4f79" d="M 0 0 C 154 0 308 0 462.3475341796875 0 C 463 9 463 19 462.3475341796875 28 C 308 27 154 27 0 28 z"/>
             <path style="fill: white; stroke: rgb(0, 0, 0); stroke-opacity: 1; stroke-width: 1;" p:name="button" id="dec02f4c4323478abc29cd2ae9645a9f" d="M 438.3475341796875 4 C 445 4 452 4 458.3475341796875 4 C 458 11 458 17 458.3475341796875 24 C 452 24 445 24 438.3475341796875 24 z M 442.3475341796875 8 C 446 12 450 16 454.3475341796875 20 M 454.3475341796875 8 C 450 12 446 16 442.3475341796875 20 M 414.3475341796875 4 C 421 4 428 4 434.3475341796875 4 C 434 11 434 17 434.3475341796875 24 C 428 24 421 24 414.3475341796875 24 z M 419.3475341796875 9 C 423 9 426 9 429.3475341796875 9 C 429 12 429 16 429.3475341796875 19 C 426 19 423 19 419.3475341796875 19 z M 390.3475341796875 4 C 397 4 404 4 410.3475341796875 4 C 410 11 410 17 410.3475341796875 24 C 404 24 397 24 390.3475341796875 24 z M 395.3475341796875 19 C 399 19 402 19 405.3475341796875 19"/>
             <foreignObject x="10" y="5" width="452.348" height="18" p:name="text" id="310cce3c507345fd806d9a7367a1484c" style="font-family: &quot;Comic Sans MS&quot;; font-size: 12px; font-weight: bold; font-style: normal; text-decoration: none; color: rgb(0, 0, 0); opacity: 1; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml">Leilão - Bens do Endividado</div></foreignObject>
-        </g><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.Sketchy.GUI:table" id="bf460c770dc04a12a87de0c9840afb05" transform="matrix(1,0,0,1,970.9994506835938,992.6010131835938)"><p:metadata><p:property name="box"><![CDATA[443.00054931640625,139.32799999999997]]></p:property><p:property name="useHtmlContent"><![CDATA[false]]></p:property><p:property name="fixedHeaderHeight"><![CDATA[false]]></p:property><p:property name="padding"><![CDATA[0,4]]></p:property><p:property name="headerHeight"><![CDATA[0,20]]></p:property><p:property name="h0"><![CDATA[110.0868019159894,0]]></p:property><p:property name="h1"><![CDATA[210.72437705436707,0]]></p:property><p:property name="h2"><![CDATA[329.6559383464152,0]]></p:property><p:property name="h3"><![CDATA[287.52244365445836,0]]></p:property><p:property name="h4"><![CDATA[398.7004943847654,0]]></p:property><p:property name="h5"><![CDATA[413.4671793619792,0]]></p:property><p:property name="h6"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h7"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h8"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h9"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h10"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h11"><![CDATA[428.2338643391927,0]]></p:property><p:property name="content"><![CDATA[Bem | Ano da Compra | Valor Estimado | Proprietário
+        </g><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.Sketchy.GUI:table" id="bf460c770dc04a12a87de0c9840afb05" transform="matrix(1,0,0,1,968.9994506835938,993.6010131835938)"><p:metadata><p:property name="box"><![CDATA[443.00054931640625,139.32799999999997]]></p:property><p:property name="useHtmlContent"><![CDATA[false]]></p:property><p:property name="fixedHeaderHeight"><![CDATA[false]]></p:property><p:property name="padding"><![CDATA[0,4]]></p:property><p:property name="headerHeight"><![CDATA[0,20]]></p:property><p:property name="h0"><![CDATA[110.0868019159894,0]]></p:property><p:property name="h1"><![CDATA[210.72437705436707,0]]></p:property><p:property name="h2"><![CDATA[329.6559383464152,0]]></p:property><p:property name="h3"><![CDATA[287.52244365445836,0]]></p:property><p:property name="h4"><![CDATA[398.7004943847654,0]]></p:property><p:property name="h5"><![CDATA[413.4671793619792,0]]></p:property><p:property name="h6"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h7"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h8"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h9"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h10"><![CDATA[428.2338643391927,0]]></p:property><p:property name="h11"><![CDATA[428.2338643391927,0]]></p:property><p:property name="content"><![CDATA[Bem | Ano da Compra | Valor Estimado | Proprietário
 Coração | 1960 | R$ 2,00 | Cesar Menotti
 Motocicleta | 1969 | R$ 150,00 | Cesar Menotti]]></p:property><p:property name="textFont"><![CDATA[Comic Sans MS|normal|normal|12px|none]]></p:property><p:property name="textAlign"><![CDATA[0,1]]></p:property><p:property name="customStyle"><![CDATA[]]></p:property><p:property name="textColor"><![CDATA['Comic Sans MS'|normal|normal|12px|none]]></p:property><p:property name="fillColor"><![CDATA[#00000000]]></p:property><p:property name="headerTextColor"><![CDATA[#000000FF]]></p:property><p:property name="headerBackground"><![CDATA[#CCCCCCFF]]></p:property><p:property name="strokeColor"><![CDATA[#000000FF]]></p:property><p:property name="strokeStyle"><![CDATA[1|]]></p:property></p:metadata>
             <path style="stroke-linejoin: round; fill: rgb(204, 204, 204); fill-opacity: 1; stroke: rgb(0, 0, 0); stroke-opacity: 1; stroke-width: 1;" p:name="header" id="b41fcc94fb934997835b134e77f3f415" transform="translate(0.5,0.5)" d="M 0 0 C 148 -1 295 -1 443.00054931640625 0 C 443 15 443 31 443.00054931640625 46.44266666666666 C 295 45 148 45 0 46.44266666666666 C 0 31 0 15 0 0 z"/>
@@ -1098,7 +1098,7 @@ Motocicleta | 1969 | R$ 150,00 | Cesar Menotti]]></p:property><p:property name="
             <use xlink:href="#442a72b6eea6423fb9de478acded8ae3" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="3463dbc616c24f78a7d740f439cbe364" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="c33551086e7d42f7b4ecc55ef61c40b1" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#442a72b6eea6423fb9de478acded8ae3" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="64a93f155586407b9b63ba5314a4f1fc" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="64a93f155586407b9b63ba5314a4f1fc" dx="-16"/>
                 </textPath>
             </text>
 
@@ -1110,7 +1110,7 @@ Motocicleta | 1969 | R$ 150,00 | Cesar Menotti]]></p:property><p:property name="
             <use xlink:href="#160baa042c264c6d84599e1855da3519" xmlns:xlink="http://www.w3.org/1999/xlink" p:name="outArrow1" id="a75579d64952402a967e78ad60809eaf" style="stroke: rgb(27, 50, 128); stroke-opacity: 1; stroke-width: 2;"/>
             <text p:name="text" id="29f5cb1e32f7423993282ac88f404443" style="fill: rgb(0, 0, 0); fill-opacity: 1; font-family: &quot;Liberation Sans&quot;,Arial,sans-serif; font-size: 13px; font-weight: normal; font-style: normal; text-decoration: none;">
                 <textPath xlink:href="#160baa042c264c6d84599e1855da3519" xmlns:xlink="http://www.w3.org/1999/xlink" startOffset="50%" text-anchor="middle" alignment-baseline="middle">
-                    <tspan dy="-4.333333333333333" p:name="textSpan" id="7f10977614564760990c02fdda5a4b97" dx="-16"></tspan>
+                    <tspan dy="-4.333333333333333" p:name="textSpan" id="7f10977614564760990c02fdda5a4b97" dx="-16"/>
                 </textPath>
             </text>
 

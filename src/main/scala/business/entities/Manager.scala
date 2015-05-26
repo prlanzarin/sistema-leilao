@@ -1,7 +1,5 @@
 package business.entities
 
-import presentation.ui.UIUtils
-
 class Manager(   userName: String,
                  password: String,
                  name: String)
