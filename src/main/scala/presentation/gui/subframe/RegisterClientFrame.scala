@@ -23,7 +23,7 @@ class RegisterClientFrame(parent: Frame) extends ChildFrame(parent) {
   val password = new PasswordField(12)
   val register = new Button {
     action = Action("Cadastrar") {
-      sendClient
+      registerClient
     }
   }
   contents = new GridPanel(9, 1) {
@@ -50,7 +50,7 @@ class RegisterClientFrame(parent: Frame) extends ChildFrame(parent) {
     new Client(clientUserName, clientPassword, clientName, clientCpf, clientBDay, clientPhone, clientAddress, clientEmail)
   }
 
-  def sendClient: Unit = {
+  def registerClient: Unit = {
     try {
       val client = parseClient
       Connection.sendAddUserRequest(client)

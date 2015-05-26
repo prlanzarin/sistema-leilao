@@ -57,4 +57,3 @@ class ManagerMenuFrame(parent: Frame, manager: Manager) extends ChildFrame(paren
 //    new ClosedAuctions(this)
   }
 }
-
