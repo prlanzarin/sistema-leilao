@@ -1,5 +1,7 @@
 package database
 
+import java.sql.Date
+
 import business.entities._
 
 import org.scalaquery.meta.MTable
@@ -338,7 +340,8 @@ object Database {
                     dbQuery.firstOption map {
                         case (userName, passWord, name, cpf, bdate,
                         telephone, address, email, usrLevel) =>
-                            new Client(userName, passWord, name, cpf.get, bdate.get, telephone.get, address.get, email.get)
+                            new Client(userName, passWord, name, cpf.get,
+                                bdate.get, telephone.get, address.get, email.get)
                     }
             )
         }
@@ -463,23 +466,11 @@ object Database {
     }
 
     def getAuctions : List[Auction] = {
-        lazy val dbQuery = Query(auctions).list
+        lazy val dbQuery = for {
+            a <- auctions
+        } yield a.*
 
-        db withSession {
-            MTable.getTables(auctions.tableName) firstOption match {
-                case Some(x) => dbQuery flatMap {
-                    case (id, begin, end, open, indebted, property) =>
-                        for {
-                            dbi <- Database.queryIndebted(indebted)
-                            dbp <- Database.queryProperty(property)
-                        } yield Auction(dbi, dbp, begin, end,
-                            queryHighestBid(id.get), open, id)
-                }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl ++ auctions.ddl).create
-                    Nil
-            }
-        }
+        queryAuctions(dbQuery)
     }
 
 
@@ -488,21 +479,7 @@ object Database {
             a <- auctions if a.open === true
         } yield a.*
 
-        db withSession {
-            MTable.getTables(auctions.tableName) firstOption match {
-                case Some(x) => dbQuery.list flatMap {
-                    case (id, begin, end, open, indebted, property) =>
-                        for{
-                            dbi <- Database.queryIndebted(indebted)
-                            dbp <- Database.queryProperty(property)
-                        } yield Auction(dbi, dbp, begin, end,
-                            queryHighestBid(id.get), open, id)
-                }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl ++ auctions.ddl).create
-                    Nil
-            }
-        }
+        queryAuctions(dbQuery)
     }
 
     def getClosedAuctions : List[Auction] = {
@@ -510,21 +487,8 @@ object Database {
             a <- auctions if a.open === false
         } yield a.*
 
-        db withSession {
-            MTable.getTables(auctions.tableName) firstOption match {
-                case Some(x) => dbQuery.list flatMap {
-                    case (id, begin, end, open, indebted, property) =>
-                        for{
-                            dbi <- Database.queryIndebted(indebted)
-                            dbp <- Database.queryProperty(property)
-                        } yield Auction(dbi, dbp, begin, end,
-                            queryHighestBid(id.get), open, id)
-                }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl ++ auctions.ddl).create
-                    Nil
-            }
-        }
+        queryAuctions(dbQuery)
+
     }
 
     private def queryUser(id : String) :  Option[Client] = {
@@ -560,4 +524,25 @@ object Database {
                 )
         }
     }
+
+    private def queryAuctions(dbQuery : Query[Projection6[Option[Long], java.util.Date,
+     java.util.Date, Boolean, String, Long], auctions.TableType]): List[Auction] = {
+
+        db withSession {
+            MTable.getTables(auctions.tableName) firstOption match {
+                case Some(x) => dbQuery.list flatMap {
+                    case (id, begin, end, open, indebted, property) =>
+                        for {
+                            dbi <- Database.queryIndebted(indebted)
+                            dbp <- Database.queryProperty(property)
+                        } yield Auction(dbi, dbp, begin, end,
+                            queryHighestBid(id.get), open, id)
+                }
+                case None =>
+                    (indebteds.ddl ++ properties.ddl ++ auctions.ddl).create
+                    Nil
+            }
+        }
+    }
+    
 }
