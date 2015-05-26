@@ -3,6 +3,7 @@ import java.io._
 import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
 import java.util.Random
 import business.entities._
+import main.scala.presentation.controller.Connection
 import presentation.controller._
 import presentation.ui._
 import java.util.Date

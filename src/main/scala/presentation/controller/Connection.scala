@@ -1,7 +1,8 @@
-package presentation.controller
+package main.scala.presentation.controller
 
 import java.io._
-import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
+import java.net.{InetAddress, Socket, SocketException}
+
 import business.entities._
 
 object Connection {

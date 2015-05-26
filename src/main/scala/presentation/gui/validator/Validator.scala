@@ -12,19 +12,19 @@ object Validator {
   val passwordSize = 3
 
   def validateName(input: String): String = {
-    if(input.isEmpty)
+    if (input.isEmpty)
       throw new ValidationException("Nome inválido")
     input
   }
 
   def validateDate(input: String): Date = {
-    if(input.isEmpty)
+    if (input.isEmpty)
       throw new ValidationException("Data inválida, formato: " + dateFormat)
     dateFormatter.parse(input)
   }
 
   def validateCpf(input: String): String = {
-    if(input.size != 11)
+    if (input.size != 11)
       throw new ValidationException("CPF inválido")
     if (input.foldRight(true)((i: Char, z: Boolean) => (z && Character.isDigit(i))))
       input
@@ -33,7 +33,7 @@ object Validator {
   }
 
   def validatePhone(input: String): String = {
-    if(input.size != 10)
+    if (input.size != 10)
       throw new ValidationException("Telefone inválido")
     if (input.foldRight(true)((i: Char, z: Boolean) => (z && Character.isDigit(i))))
       input
@@ -42,21 +42,38 @@ object Validator {
   }
 
   def validateAddress(input: String): String = {
-    if(input.isEmpty)
+    if (input.isEmpty)
       throw new ValidationException("Email inválido")
     input
   }
 
   def validateEmail(input: String): String = {
-    if(input.isEmpty)
+    if (input.isEmpty)
       throw new ValidationException("Email inválido")
     input
   }
 
-  def validatePassword(rawInput: Array[Char]) : String = {
+  def validateUsername(input: String): String = {
+    if (input.isEmpty)
+      throw new ValidationException("Usuário inválido")
+    input
+  }
+
+  def validatePassword(rawInput: Array[Char]): String = {
     val input = new String(rawInput)
-    if(input.size < passwordSize)
+    if (input.size < passwordSize)
       throw new ValidationException("Senha inválida, a senha deve ter pelo menos " + passwordSize + " dígitos")
     input
+  }
+
+  def validateValue(input: String): Double = {
+    try {
+      val value = input.toDouble
+      if(value < 0)
+        throw new ValidationException("Valor inválido")
+      value
+    } catch {
+      case e: NumberFormatException => throw new ValidationException("Valor inválido")
+    }
   }
 }
