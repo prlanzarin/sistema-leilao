@@ -1,5 +1,6 @@
 package presentation.ui;
 
+import main.scala.presentation.controller.Connection
 import presentation.controller._
 import java.io._
 import java.net.SocketException

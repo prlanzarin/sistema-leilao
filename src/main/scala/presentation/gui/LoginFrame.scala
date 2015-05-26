@@ -1,10 +1,10 @@
 package main.scala.presentation.gui
 
 import business.entities.{Client, Manager}
+import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelTextFieldPanel}
 import main.scala.presentation.gui.subframe.{ManagerMenuFrame, ClientMenuFrame, RegisterClientFrame}
 import main.scala.presentation.gui.validator.{ValidationException, Validator}
-import presentation.controller.Connection
 
 import scala.swing._
 
@@ -48,9 +48,11 @@ class LoginFrame extends MainFrame {
 
   def loginAction {
     try {
-    val user = Connection.sendLoginRequest(userName.text, Validator.validatePassword(password.password))
+      val userNameStr = Validator.validateUsername(userName.text)
+      val passwordStr = Validator.validatePassword(password.password)
+      val user = Connection.sendLoginRequest(userNameStr, passwordStr)
       user match {
-        case Some(client: Client )=> visible = false; new ClientMenuFrame(this, client)
+        case Some(client: Client) => visible = false; new ClientMenuFrame(this, client)
         case Some(manager: Manager) => visible = false; new ManagerMenuFrame(this, manager)
         case None => throw new ValidationException("Usuário ou senha inválidos")
       }

@@ -38,8 +38,8 @@ class ManagerMenuFrame(parent: Frame, manager: Manager) extends ChildFrame(paren
   }
 
   def indebtedsAction = {
-//    visible = false
-//    new IndebtedsFrame(this)
+    visible = false
+    new IndebtedsFrame(this, manager)
   }
 
   def propertiesAction = {
@@ -57,3 +57,4 @@ class ManagerMenuFrame(parent: Frame, manager: Manager) extends ChildFrame(paren
 //    new ClosedAuctions(this)
   }
 }
+

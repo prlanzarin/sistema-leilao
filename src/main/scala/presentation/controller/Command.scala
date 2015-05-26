@@ -1,5 +1,6 @@
 package presentation.controller
 
+import main.scala.presentation.controller.Connection
 import presentation.ui.UIUtils
 import business.entities.Indebted
 import business.entities.Property

@@ -1,9 +1,9 @@
 package main.scala.presentation.gui.subframe
 
 import business.entities.Client
+import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelTextFieldPanel}
 import main.scala.presentation.gui.validator.{ValidationException, Validator}
-import presentation.controller.Connection
 
 import scala.swing._
 
@@ -45,13 +45,13 @@ class RegisterClientFrame(parent: Frame) extends ChildFrame(parent) {
     val clientPhone = Validator.validatePhone(phone.text)
     val clientAddress = Validator.validateAddress(address.text)
     val clientEmail = Validator.validateEmail(email.text)
-    val clientUserName = Validator.validateName(userName.text)
+    val clientUserName = Validator.validateUsername(userName.text)
     val clientPassword = Validator.validatePassword(password.password)
     new Client(clientUserName, clientPassword, clientName, clientCpf, clientBDay, clientPhone, clientAddress, clientEmail)
   }
 
   def sendClient: Unit = {
-    try{
+    try {
       val client = parseClient
       Connection.sendAddUserRequest(client)
       Dialog.showMessage(register, "Usuário cadastrado com sucesso")

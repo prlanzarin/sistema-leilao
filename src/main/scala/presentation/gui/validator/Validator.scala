@@ -53,6 +53,12 @@ object Validator {
     input
   }
 
+  def validateUsername(input: String): String = {
+    if(input.isEmpty)
+      throw new ValidationException("Usuário inválido")
+    input
+  }
+
   def validatePassword(rawInput: Array[Char]) : String = {
     val input = new String(rawInput)
     if(input.size < passwordSize)
