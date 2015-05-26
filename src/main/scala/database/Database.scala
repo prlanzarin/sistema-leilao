@@ -158,6 +158,8 @@ object Database {
                     500.00, PropertyKind.OTHER.toString, "05555555555")
                 properties.insert(Some(6L), "Apartamento Duplex Power Plus",
                     300000.00, PropertyKind.REALTY.toString, "06666666666")
+                properties.insert(Some(7L), "Apartamento Triplex Power Max",
+                    500000.00, PropertyKind.REALTY.toString, "06666666666")
 
                 auctions.ddl.create
                 auctions.insertAll(
@@ -266,19 +268,21 @@ object Database {
         }
     }
 
-    def queryPropertyByID(propertyID : Long): Option[Property] = {
+    def queryIndebtedProperties(indebtedCPF : String) : List[Property] = {
         lazy val dbQuery = for {
-            p <- properties if p.id === propertyID
+            p <- properties if p.ownerID === indebtedCPF
         } yield p.*
 
         db withSession {
-            MTable.getTables(properties.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID) =>
-                            new Property(name, value, PropertyKind.withName(kind))
-                    }
-            )
+            MTable.getTables(userBids.tableName) firstOption match {
+                case Some(x) => dbQuery.list map {
+                    case (id, name, value, kind, ownerID) =>
+                        new Property(name, value, PropertyKind.withName(kind))
+                }
+                case None =>
+                    (users.ddl ++ auctions.ddl ++ userBids.ddl).create
+                    Nil
+            }
         }
     }
 
@@ -337,6 +341,44 @@ object Database {
                             new Client(userName, passWord, name, cpf.get, bdate.get, telephone.get, address.get, email.get)
                     }
             )
+        }
+    }
+
+    private def queryAuction(auctID : Long) : Option[Auction] = {
+        lazy val dbQuery = for {
+            a <- auctions if a.auctionId === auctID
+        } yield a.*
+
+        db withSession {
+            MTable.getTables(users.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption flatMap {
+                        case (id, begin, end, open, indebted, property) =>
+                            for {
+                                dbi <- Database.queryIndebted(indebted)
+                                dbp <- Database.queryProperty(property)
+                            } yield Auction(dbi, dbp, begin, end,
+                                queryHighestBid(id.get), open, id)
+                    }
+                )
+        }
+    }
+
+    def queryClientAuctions(client : Client) : List[Auction] = {
+        lazy val dbQuery = for {
+            ub <- userBids if ub.userID === client.userName
+        } yield ub.*
+
+        db withSession {
+            MTable.getTables(userBids.tableName) firstOption match {
+                case Some(x) => dbQuery.list map {
+                    case (ubID, auctionID, userID, value) =>
+                        queryAuction(auctionID).get
+                }
+                case None =>
+                    (users.ddl ++ auctions.ddl ++ userBids.ddl).create
+                    Nil
+            }
         }
     }
 

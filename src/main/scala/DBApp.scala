@@ -18,6 +18,9 @@ object DBApp {
         val maurilio = new Client("maurilio", "123", "Maurilio Santiago",
             "12345678901", date, "12345600", "Rua do Papagaio",
             "maurilio@lapaz.com")
+        val chimerito = new Client("chimerito", "123", "Chimerito Santiago",
+            "12345678903",
+            date, "12345602", "Rua do Mamute", "chimerito@lapaz.com")
         val divermio = new Client("divermio", "123", "Divermio Tiamatu",
             "19293840918", date, "33516666", "Garganta del Diavolo",
             "divermio@lapaz.com")
@@ -39,8 +42,9 @@ object DBApp {
         //Database.addUser(divermio) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
-        Database.queryUser("divermio", "123").foreach(man => println(man))
-        Database.queryUser("neicilua", "123").foreach(man => println(man))
+        //Database.queryUser("divermio", "123").foreach(man => println(man))
+        //Database.queryUser("neicilua", "123").foreach(man => println(man))
+        Database.queryUser("chimerito", "123").foreach(man => println(man))
         Database.queryUser(divermio).foreach(man => println(man))
         Database.queryUser(maurilio).foreach(clt => println(clt)) //yes
         Database.queryUser(new Client("maulirio", "123", "Maurilio Santiago",
@@ -68,16 +72,24 @@ object DBApp {
             foreach(prop => println(prop))//no
         Database.queryProperty("01111112434", "Onibus da Carris").
             foreach(prop => println(prop))//no
+        Database.queryIndebtedProperties("06666666666").foreach(p => println(p))
+
         println("--GET TEST--")
         Database.getProperties.foreach(prop => println(prop))
 
         println("-----AUCTIONS TEST-----")
-        println("---OPEN AUCTIONS---")
-        Database.getOpenAuctions.foreach(ac => println(ac))
-        println("---CLOSED AUCTIONS---")
-        Database.getClosedAuctions.foreach(ac => println(ac))
-        println("---GET AUCTIONS---")
-        Database.getAuctions.foreach(ac => println(ac))
+        println("--ADD AUCTIONS---")
+        Database.addAuction(Auction(Database.queryIndebted("06666666666").get,
+            Database.queryProperty("06666666666", "Apartamento Duplex Power Plus").get,
+            date, date, None, false))
+        println("--CLOSED AUCTIONS---")
+        Database.getClosedAuctions foreach(ac => println(ac))
+        println("--OPEN AUCTIONS---")
+        Database.getOpenAuctions foreach(ac => println(ac))
+        println("--GET AUCTIONS---")
+        Database.getAuctions foreach(ac => println(ac))
+        println("--CLIENT AUCTIONS--")
+        Database.queryClientAuctions(chimerito).foreach(ac => println(ac))
 
     }
 }

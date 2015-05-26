@@ -17,5 +17,6 @@ case class Auction(indebted: Indebted,
         "\nPropriedade: " + "" + property.name + "\nComeco (R$): " +
         UIUtils.dateFormatter.format(begin) +"\nFim: " + UIUtils.dateFormatter.
         format(end) + "\nIdentificador: " + auctionID.get + "\nAberto == " +
-            open + "\nLance mais alto -> " + highestBid.get
+            open + "\nLance mais alto -> " + highestBid.getOrElse(println
+            ("Nenhum"))
     }
