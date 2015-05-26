@@ -5,21 +5,16 @@ import java.util.Date
 import presentation.ui.UIUtils
 
 class Client(
-                username: String,
-                password: String,
-                name: String,
+                username : String,
+                password : String,
+                name : String,
                 val CPF: String,
                 val birthDay: Date,
                 val telephone : String,
                 val address : String,
-                val email : String)
+                val email : String,
+                val auctions: List[Auction] = List[Auction]())
     extends User(username, password, name) {
-
-    private var _auctions: List[Auction] = List[Auction]()
-
-    def auctions : List[Auction] = _auctions
-
-    def auctions_(nauctions : List[Auction]) = _auctions = nauctions
 
     override def toString: String = "Client username: " + username +
         "\nPassword: " + password + "\nNome: " + name +("\nData de " +
@@ -28,3 +23,11 @@ class Client(
         + email)
 
 }
+
+/*
+ private var _auctions: List[Auction] = List[Auction]()
+
+    def auctions : List[Auction] = _auctions
+
+    def auctions_(nauctions : List[Auction]) = _auctions = nauctions
+ */

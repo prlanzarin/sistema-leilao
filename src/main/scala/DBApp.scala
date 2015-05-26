@@ -24,7 +24,7 @@ object DBApp {
 
         println("-----MANAGERS TEST-----")
         println("--ADD TEST--")
-        Database.addUser(neicilua) //retire o comentario para adicionar a base
+        //Database.addUser(neicilua) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
         Database.queryUser(neicilua).foreach(man => println(man))
@@ -36,7 +36,7 @@ object DBApp {
 
         println("-----CLIENTS TEST-----")
         println("--ADD TEST--")
-        Database.addUser(divermio) //retire o comentario para adicionar a base
+        //Database.addUser(divermio) //retire o comentario para adicionar a base
         // so adicione uma vez
         println("--QUERY TEST--")
         Database.queryUser("divermio", "123").foreach(man => println(man))

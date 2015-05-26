@@ -12,19 +12,10 @@ case class Auction(indebted: Indebted,
                  highestBid : Option[Bid] = None,
                  open : Boolean,
                  auctionID : Option[Long] = None)
-    extends Serializable {
-
-        def open_(b : Boolean) = Auction(indebted, property, begin, end,
-            highestBid, b, auctionID)
-
-        def highestbid_(bid : Bid) = Auction(indebted, property, begin, end,
-            Some(bid), open, auctionID)
-
-        def auctionID_(id : Long) = Auction(indebted, property, begin, end,
-            highestBid, open, Some(id))
-
+    {
         override def toString: String = "Endividado: " + indebted.name +
         "\nPropriedade: " + "" + property.name + "\nComeco (R$): " +
         UIUtils.dateFormatter.format(begin) +"\nFim: " + UIUtils.dateFormatter.
-        format(end) + "\nIdentificador: " + auctionID
+        format(end) + "\nIdentificador: " + auctionID.get + "\nAberto == " +
+            open + "\nLance mais alto -> " + highestBid.get
     }
