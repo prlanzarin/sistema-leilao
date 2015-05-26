@@ -43,7 +43,8 @@ class CreatePropertyCommand(indebted: Indebted) extends Command {
         val value = UIUtils.readDouble("Informe o valor: (R$)", 0.0)
         val properties = "Imóvel" :: "Jóia" :: "Veículo" :: "Outro" :: List()
         val kind = UIUtils.select("Informe o tipo do bem:", properties)
-        return new Property(name, value, PropertyKind.withName(kind))
+        val boughtIn = 0 // TODO -> FILL
+        new Property(name, value, PropertyKind.withName(kind), boughtIn)
     }
     
     override def toString: String = "Cadastrar Bem"

@@ -50,17 +50,19 @@ object Database {
     }
 
     val properties = new
-            Table[(Option[Long], String, Double, String, String)]("PROPERTIES"){
+            Table[(Option[Long], String, Double, String, String,
+                Int)]("PROPERTIES"){
 
         def id = column[Long]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
         def name = column[String]("NAME", O.NotNull)
         def value = column[Double]("VALUE", O.NotNull)
         def kind = column[String]("KIND", O.NotNull)
         def ownerID = column[String]("OWNER", O.NotNull)
+        def boughtIn = column[Int]("BOUGHT_IN", O.NotNull)
 
         def ownerIDKey = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
 
-        def * = id.? ~ name ~ value ~ kind ~ ownerID
+        def * = id.? ~ name ~ value ~ kind ~ ownerID ~ boughtIn
     }
 
     val auctions = new Table[(Option[Long], java.util.Date, java.util.Date,
@@ -148,20 +150,20 @@ object Database {
                 )
 
                 properties.ddl.create
-                properties.insert(Some(1L), "Onibus da Carris",
-                    35000.50, PropertyKind.VEHICLE.toString, "01111111111")
-                properties.insert(Some(2L), "Bicicleta Sundown",
-                    20.00, PropertyKind.VEHICLE.toString, "02222222222")
-                properties.insert(Some(3L), "Oculos OAKLEY phoda",
-                    10.50, PropertyKind.OTHER.toString, "03333333333")
-                properties.insert(Some(4L), "Skate motorizado",
-                    50000.00, PropertyKind.VEHICLE.toString, "04444444444")
-                properties.insert(Some(5L), "TOURO NELORI BOA PINTA",
-                    500.00, PropertyKind.OTHER.toString, "05555555555")
+                properties.insert(Some(1L), "Onibus da Carris", 35000.50,
+                    PropertyKind.VEHICLE.toString, "01111111111", 2001)
+                properties.insert(Some(2L), "Bicicleta Sundown", 20.00,
+                    PropertyKind.VEHICLE.toString, "02222222222", 2002)
+                properties.insert(Some(3L), "Oculos OAKLEY phoda", 10.50,
+                    PropertyKind.OTHER.toString, "03333333333", 2003)
+                properties.insert(Some(4L), "Skate motorizado", 50000.00,
+                    PropertyKind.VEHICLE.toString, "04444444444", 2004)
+                properties.insert(Some(5L), "TOURO NELORI BOA PINTA", 500.00,
+                    PropertyKind.OTHER.toString, "05555555555", 2005)
                 properties.insert(Some(6L), "Apartamento Duplex Power Plus",
-                    300000.00, PropertyKind.REALTY.toString, "06666666666")
+                    300000.00, PropertyKind.REALTY.toString, "06666666666", 2006)
                 properties.insert(Some(7L), "Apartamento Triplex Power Max",
-                    500000.00, PropertyKind.REALTY.toString, "06666666666")
+                    500000.00, PropertyKind.REALTY.toString, "06666666666", 2007)
 
                 auctions.ddl.create
                 auctions.insertAll(
@@ -209,14 +211,14 @@ object Database {
     }
 
     def addProperty(cpf : String, propertyName : String,
-                    value : Double, kind : String) = {
+                    value : Double, kind : String, boughtIn : Int) = {
         lazy val dbQuery =
             for { i <- indebteds if i.cpf === cpf } yield i.cpf
 
         db withSession {
             MTable.getTables(auctions.tableName).firstOption  foreach(
-                MTable => {properties.insert(None, propertyName, value, kind ,
-                    dbQuery.list.head)}
+                MTable => {properties.insert(None, propertyName, value, kind,
+                    dbQuery.list.head, boughtIn)}
             )
         }
     }
@@ -263,8 +265,9 @@ object Database {
             MTable.getTables(properties.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID) =>
-                            new Property(name, value, PropertyKind.withName(kind))
+                        case (id, name, value, kind, ownerID, boughtIn) =>
+                            new Property(name, value, PropertyKind.withName
+                                (kind), boughtIn)
                     }
             )
         }
@@ -278,8 +281,9 @@ object Database {
         db withSession {
             MTable.getTables(userBids.tableName) firstOption match {
                 case Some(x) => dbQuery.list map {
-                    case (id, name, value, kind, ownerID) =>
-                        new Property(name, value, PropertyKind.withName(kind))
+                    case (id, name, value, kind, ownerID, boughtIn) =>
+                        new Property(name, value, PropertyKind.withName(kind),
+                        boughtIn)
                 }
                 case None =>
                     (users.ddl ++ auctions.ddl ++ userBids.ddl).create
@@ -435,8 +439,9 @@ object Database {
         db withSession {
             MTable.getTables(properties.tableName) firstOption match {
                 case Some(x) => dbQuery map {
-                    case (id, name, value, kind, owner) => new Property(name,
-                        value, PropertyKind.withName(kind))
+                    case (id, name, value, kind, owner, boughtIn) =>
+                        new Property (name, value, PropertyKind.withName(kind),
+                        boughtIn)
                 }
                 case None =>
                     (indebteds.ddl ++ properties.ddl).create
@@ -498,8 +503,9 @@ object Database {
             MTable.getTables(properties.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID) =>
-                            new Property(name, value, PropertyKind.withName(kind))
+                        case (id, name, value, kind, ownerID, boughtIn) =>
+                            new Property(name, value, PropertyKind.withName
+                                (kind), boughtIn)
                     }
                 )
         }

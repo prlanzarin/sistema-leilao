@@ -2,11 +2,12 @@ package business.entities
 
 import PropertyKind._
 
-class Property(val name: String,
-               val value: Double,
-               val kind: PropertyKind)
-extends Serializable {
+case class Property( name: String,
+                value: Double,
+                kind: PropertyKind,
+                boughtIn: Int) {
 
     override def toString: String =
-        "Nome: " + name + "\nValor: " + Double + "\nTipo: " + kind.toString
+        "Nome: " + name + "\nValor: " + Double + "\nTipo: " + kind.toString +
+            "\nAno de Compra: " + boughtIn
 }

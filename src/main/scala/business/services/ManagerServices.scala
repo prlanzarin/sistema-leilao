@@ -29,10 +29,12 @@ class ManagerServices extends UserServices {
         val name = p.name
         val value = p.value
         val kind = p.kind
+        val boughtIn = p.boughtIn
 
         Database.queryProperty(cpf, name) match {
             case Some(x) => false
-            case None => Database.addProperty(cpf, name, value, kind.toString)
+            case None => Database.addProperty(cpf, name, value, kind.
+                toString, boughtIn)
                 true
         }
     }
