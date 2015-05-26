@@ -91,5 +91,9 @@ object DBApp {
         println("--CLIENT AUCTIONS--")
         Database.queryClientAuctions(chimerito).foreach(ac => println(ac))
 
+        println("-----BIDS TEST-----")
+        Database.queryAuctionBids(1L).foreach(ac => println(ac))
+        Database.queryClientBids(chimerito).foreach(ac => println(ac))
+
     }
 }

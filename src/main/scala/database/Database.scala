@@ -302,8 +302,9 @@ object Database {
                         telephone, address, email, usrLevel) =>
                             usrLevel match {
                                 case 0 => new Manager(userName, passWord, name)
-                                case 1 => new Client(userName, passWord,
-                                    name, cpf.get, bdate.get, telephone.get, address.get, email.get)
+                                case 1 => new Client(userName, passWord, name,
+                                    cpf.get, bdate.get, telephone.get,
+                                    address.get, email.get)
                             }
                     }
                 )
@@ -390,17 +391,7 @@ object Database {
             ub <- userBids if ub.userID === client.userName
         } yield ub.*
 
-        db withSession {
-            MTable.getTables(userBids.tableName) firstOption match {
-                case Some(x) => dbQuery.list map {
-                    case (ubID, auctionID, userID, value) =>
-                        new Bid(auctionID, client, value)
-                }
-                case None =>
-                    (users.ddl ++ auctions.ddl ++ userBids.ddl).create
-                    Nil
-            }
-        }
+        queryBids(dbQuery)
     }
 
     def queryAuctionBids(auctID : Long) : List[Bid] = {
@@ -408,17 +399,7 @@ object Database {
             ub <- userBids if ub.auctionID === auctID
         } yield ub.*
 
-        db withSession {
-            MTable.getTables(userBids.tableName) firstOption match {
-                case Some(x) => dbQuery.list map {
-                    case (userBidID, auctionID, userID, value) =>
-                        new Bid(auctID, queryUser(userID).get, value)
-                }
-                case None =>
-                    userBids.ddl.create
-                    Nil
-            }
-        }
+        queryBids(dbQuery)
     }
 
     def queryHighestBid(auctionID : Long) : Option[Bid] = {
@@ -455,8 +436,7 @@ object Database {
             MTable.getTables(properties.tableName) firstOption match {
                 case Some(x) => dbQuery map {
                     case (id, name, value, kind, owner) => new Property(name,
-                        value,
-                        PropertyKind.withName(kind))
+                        value, PropertyKind.withName(kind))
                 }
                 case None =>
                     (indebteds.ddl ++ properties.ddl).create
@@ -544,5 +524,21 @@ object Database {
             }
         }
     }
-    
+
+    private def queryBids(dbQuery : Query[Projection4[Option[Long], Long,
+        String, Double], userBids.TableType]): List[Bid] = {
+
+        db withSession {
+            MTable.getTables(userBids.tableName) firstOption match {
+                case Some(x) => dbQuery.list map {
+                    case (userBidID, auctionID, userID, value) =>
+                        new Bid(auctionID, queryUser(userID).get, value)
+                }
+                case None =>
+                    userBids.ddl.create
+                    Nil
+            }
+        }
+    }
+
 }
