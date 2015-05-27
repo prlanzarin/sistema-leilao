@@ -273,28 +273,30 @@ object Database {
         }
     }
 
-    def queryProperties(propertyKind : String, auctionStatus : Option[Boolean]):
+    def queryProperties(propertyKind : Option[String], auctionStatus :
+    Option[Boolean]):
     List[Property] = {
         lazy val dbQueryT = for {
             a <- auctions
-            p <- properties if a.property === p.id && a.open === true &&
-            p.kind === propertyKind
+            p <- properties if a.property === p.id && a.open === true
         } yield p.*
         lazy val dbQueryF = for {
             a <- auctions
-            p <- properties if a.property === p.id && a.open === false &&
-            p.kind === propertyKind
+            p <- properties if a.property === p.id && a.open === false
         } yield p.*
         lazy val dbQueryA = for {
-            p <- properties if p.kind === propertyKind
+            p <- properties
         } yield p.*
 
         auctionStatus match {
             case Some(x) => x match {
-                case true => queryProperties(dbQueryT)
-                case false => queryProperties(dbQueryF)
+                case true => queryProperties(dbQueryT).filter(q =>
+                    propertyKind.map(q.kind.toString == _).getOrElse(true))
+                case false => queryProperties(dbQueryF).filter(q =>
+                    propertyKind.map(q.kind.toString == _).getOrElse(true))
             }
-            case None => queryProperties(dbQueryA)
+            case None => queryProperties(dbQueryA).filter(_.kind ==
+                propertyKind.getOrElse(true))
         }
     }
 
@@ -303,18 +305,7 @@ object Database {
             p <- properties if p.ownerID === indebtedCPF
         } yield p.*
 
-        db withSession {
-            MTable.getTables(userBids.tableName) firstOption match {
-                case Some(x) => dbQuery.list map {
-                    case (id, name, value, kind, ownerID, boughtIn) =>
-                        new Property(name, value, PropertyKind.withName(kind),
-                        boughtIn)
-                }
-                case None =>
-                    (users.ddl ++ auctions.ddl ++ userBids.ddl).create
-                    Nil
-            }
-        }
+        queryProperties(dbQuery)
     }
 
     def queryUser(login : String ,password : String) : Option[User] = {

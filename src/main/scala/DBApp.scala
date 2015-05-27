@@ -79,9 +79,9 @@ object DBApp {
 
         println("-----AUCTIONS TEST-----")
         println("--ADD AUCTIONS---")
-        Database.addAuction(Auction(Database.queryIndebted("06666666666").get,
+        /*Database.addAuction(Auction(Database.queryIndebted("06666666666").get,
             Database.queryProperty("06666666666", "Apartamento Duplex Power Plus").get,
-            date, date, None, false))
+            date, date, None, false))*/
         println("--CLOSED AUCTIONS---")
         Database.getClosedAuctions foreach(ac => println(ac))
         println("--OPEN AUCTIONS---")
@@ -97,14 +97,18 @@ object DBApp {
 
         println("-----QUERY PROPERTIES WITH KIND AND AUCTION-----")
         println("--VEHICLE TRUE--")
-        Database.queryProperties(PropertyKind.VEHICLE.toString, Some(true))
-            .foreach(p => println(p))
+        Database.queryProperties(Some(PropertyKind.VEHICLE.toString), Some
+            (true)).foreach(p => println(p))
         println("--VEHICLE FALSE--")
-        Database.queryProperties(PropertyKind.VEHICLE.toString, Some(false))
-            .foreach(p => println(p))
+        Database.queryProperties(Some(PropertyKind.VEHICLE.toString), Some
+            (false)).foreach(p => println(p))
         println("--VEHICLE ALL--")
-        Database.queryProperties(PropertyKind.VEHICLE.toString, None)
+        Database.queryProperties(Some(PropertyKind.VEHICLE.toString), None)
             .foreach(p => println(p))
+        println("--ALL TRUE--")
+        Database.queryProperties(None, Some(true)).foreach(p => println(p))
+        println("--ALL FALSE--")
+        Database.queryProperties(None, Some(false)).foreach(p => println(p))
 
     }
 }
