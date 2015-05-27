@@ -273,6 +273,31 @@ object Database {
         }
     }
 
+    def queryProperties(propertyKind : String, auctionStatus : Option[Boolean]):
+    List[Property] = {
+        lazy val dbQueryT = for {
+            a <- auctions
+            p <- properties if a.property === p.id && a.open === true &&
+            p.kind === propertyKind
+        } yield p.*
+        lazy val dbQueryF = for {
+            a <- auctions
+            p <- properties if a.property === p.id && a.open === false &&
+            p.kind === propertyKind
+        } yield p.*
+        lazy val dbQueryA = for {
+            p <- properties if p.kind === propertyKind
+        } yield p.*
+
+        auctionStatus match {
+            case Some(x) => x match {
+                case true => queryProperties(dbQueryT)
+                case false => queryProperties(dbQueryF)
+            }
+            case None => queryProperties(dbQueryA)
+        }
+    }
+
     def queryIndebtedProperties(indebtedCPF : String) : List[Property] = {
         lazy val dbQuery = for {
             p <- properties if p.ownerID === indebtedCPF
@@ -435,19 +460,11 @@ object Database {
     }
 
     def getProperties : List[Property] = {
-        lazy val dbQuery = Query(properties).list
-        db withSession {
-            MTable.getTables(properties.tableName) firstOption match {
-                case Some(x) => dbQuery map {
-                    case (id, name, value, kind, owner, boughtIn) =>
-                        new Property (name, value, PropertyKind.withName(kind),
-                        boughtIn)
-                }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl).create
-                    Nil
-            }
-        }
+        lazy val dbQuery = for {
+            p <- properties
+        } yield p.*
+
+        queryProperties(dbQuery)
     }
 
     def getAuctions : List[Auction] = {
@@ -547,4 +564,21 @@ object Database {
         }
     }
 
+    private def queryProperties(dbQuery : Query[Projection6[Option[Long],
+        String, Double, String, String, Int], properties.TableType])
+    : List[Property] = {
+
+        db withSession {
+            MTable.getTables(properties.tableName) firstOption match {
+                case Some(x) => dbQuery.list map {
+                    case (id, name, value, kind, owner, boughtIn) =>
+                        new Property (name, value, PropertyKind.withName(kind),
+                            boughtIn)
+                }
+                case None =>
+                    (indebteds.ddl ++ properties.ddl).create
+                    Nil
+            }
+        }
+    }
 }

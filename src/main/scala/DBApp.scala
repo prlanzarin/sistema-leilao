@@ -95,5 +95,16 @@ object DBApp {
         Database.queryAuctionBids(1L).foreach(ac => println(ac))
         Database.queryClientBids(chimerito).foreach(ac => println(ac))
 
+        println("-----QUERY PROPERTIES WITH KIND AND AUCTION-----")
+        println("--VEHICLE TRUE--")
+        Database.queryProperties(PropertyKind.VEHICLE.toString, Some(true))
+            .foreach(p => println(p))
+        println("--VEHICLE FALSE--")
+        Database.queryProperties(PropertyKind.VEHICLE.toString, Some(false))
+            .foreach(p => println(p))
+        println("--VEHICLE ALL--")
+        Database.queryProperties(PropertyKind.VEHICLE.toString, None)
+            .foreach(p => println(p))
+
     }
 }
