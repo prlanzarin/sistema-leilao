@@ -47,9 +47,9 @@ class SortableTable(var rowData: Array[Array[Any]], headers: Seq[Any]) extends T
 
   def sortByRow(row: Int)(reverse: Boolean)(a: Array[Any], b: Array[Any]): Boolean = { //FIXME only sorts strings
     if (reverse)
-      a(row).toString > b(row).toString
+      a(row).toString.toUpperCase > b(row).toString.toUpperCase
     else
-      a(row).toString < b(row).toString
+      a(row).toString.toUpperCase < b(row).toString.toUpperCase
   }
 
   def updateCells {

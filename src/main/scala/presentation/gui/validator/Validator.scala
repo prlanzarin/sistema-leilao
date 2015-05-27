@@ -1,7 +1,7 @@
 package main.scala.presentation.gui.validator
 
 import java.text.{SimpleDateFormat, ParsePosition, FieldPosition, DateFormat}
-import java.util.Date
+import java.util.{Calendar, Date}
 
 /**
  * Created by mhbackes on 25/05/15.
@@ -74,6 +74,19 @@ object Validator {
       value
     } catch {
       case e: NumberFormatException => throw new ValidationException("Valor inválido")
+    }
+  }
+
+  def validateYear(input: String): Int = {
+    if(input.size > 4)
+      throw new ValidationException("Ano inválido")
+    try {
+      val year = input.toInt
+      if(year > Calendar.getInstance.get(Calendar.YEAR))
+        throw new ValidationException("Ano inválido")
+      year
+    } catch {
+      case e: NumberFormatException => throw new ValidationException("Ano inválido")
     }
   }
 }
