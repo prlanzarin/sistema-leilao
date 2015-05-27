@@ -53,6 +53,7 @@ class RegisterIndebtedFrame(parent: Frame, manager: Manager) extends ChildFrame(
   override def closeOperation: Unit = {
     parent match {
       case p: IndebtedsFrame => p.updateIndebtedTable
+      case _ =>
     }
     super.closeOperation
   }

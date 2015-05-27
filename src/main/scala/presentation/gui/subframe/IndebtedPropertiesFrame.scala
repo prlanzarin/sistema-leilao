@@ -14,7 +14,7 @@ class IndebtedPropertiesFrame(parent: Frame, manager: Manager, indebted: Indebte
   extends ChildFrame(parent) {
   title = "Bens de " + indebted.name
   resizable = false
-  val headers = Seq("Bem", "Ano da Compra", "Valor Estimado", "Tipo")
+  val headers = Seq("Bem", "Ano da Compra", "Valor Estimado (R$)", "Tipo")
   var rowData: Array[Array[Any]] = Array()
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
@@ -44,21 +44,21 @@ class IndebtedPropertiesFrame(parent: Frame, manager: Manager, indebted: Indebte
   }
 
   def propertyToRow(property: Property): Array[Any] = {
-    Array(property.name, "1969", property.value, property.kind)
+    Array(property.name, property.boughtIn, property.value, property.kind)
   }
 
   def rowToProperty(row: Int): Property = {
     new Property(table(row, 0).toString, table(row,2).toString.toDouble,
-      PropertyKind.withName(table(row,3).toString))
+      PropertyKind.withName(table(row,3).toString), table(row,1).toString.toInt)
   }
 
   def newPropertyAction = {
-//    visible = false
-//    new NewPropertyFrame(this)
+    visible = false
+    new RegisterPropertyFrame(this, manager, indebted)
   }
 
   def newAuctionAction = {
-//    visible = false
-//    new NewAuctionFrame(this)
+    //    visible = false
+    //    new NewAuctionFrame(this)
   }
 }
