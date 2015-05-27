@@ -187,10 +187,10 @@ object Database {
         db withSession {
             MTable.getTables(users.tableName).firstOption foreach(
                 MTable => {
-                    users.insert(client.userName, client.password,
-                    client.name, Some(client.CPF), Some(client.birthDay),
-                        Some(client.telephone), Some(client.address), Some
-                            (client.email), 1)})
+                    users.insert(client.userName, client.password, client.name,
+                        Some(client.CPF), Some(client.birthDay),
+                        Some(client.telephone), Some(client.address),
+                        Some(client.email), 1)})
         }
     }
 
@@ -255,7 +255,21 @@ object Database {
     }
 
     def queryIndebted(property : Property) : Option[Indebted] = {
-        None
+        lazy val dbQuery = for {
+            p <- properties
+            i <- indebteds if p.id === property.propertyID && p.ownerID === i.cpf
+        } yield i.*
+
+        db withSession {
+            MTable.getTables(indebteds.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (cpf, name, bdate, debt) =>
+                            new Indebted(name, bdate, debt, cpf,
+                                queryIndebtedProperties(cpf))
+                    }
+                )
+        }
     }
 
     def queryProperty(indebtedCPF : String, propertyName : String):
@@ -274,6 +288,23 @@ object Database {
                                 (kind), boughtIn)
                     }
             )
+        }
+    }
+
+    def queryProperty(propertyID : Long): Option[Property] = {
+        lazy val dbQuery = for {
+            p <- properties if p.id === propertyID
+        } yield p.*
+
+        db withSession {
+            MTable.getTables(properties.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (id, name, value, kind, ownerID, boughtIn) =>
+                            new Property(name, value, PropertyKind.withName
+                                (kind), boughtIn)
+                    }
+                )
         }
     }
 
@@ -371,26 +402,6 @@ object Database {
         }
     }
 
-    private def queryAuction(auctID : Long) : Option[Auction] = {
-        lazy val dbQuery = for {
-            a <- auctions if a.auctionId === auctID
-        } yield a.*
-
-        db withSession {
-            MTable.getTables(users.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption flatMap {
-                        case (id, begin, end, open, indebted, property) =>
-                            for {
-                                dbi <- Database.queryIndebted(indebted)
-                                dbp <- Database.queryProperty(property)
-                            } yield Auction(dbi, dbp, begin, end,
-                                queryHighestBid(id.get), open, id)
-                    }
-                )
-        }
-    }
-
     def queryClientAuctions(client : Client) : List[Auction] = {
         lazy val dbQuery = for {
             ub <- userBids if ub.userID === client.userName
@@ -425,13 +436,27 @@ object Database {
         queryBids(dbQuery)
     }
 
-    def queryHighestBid(auctionID : Long) : Option[Bid] = {
+    def queryAuction(auctID : Long) : Option[Auction] = {
+        lazy val dbQuery = for {
+            a <- auctions if a.auctionId === auctID
+        } yield a.*
 
-        def max(lob : List[Bid]) : Option[Bid] = lob match {
-            case Nil => None
-            case List(b: Bid) => Some(b)
-            case h :: h1 :: t => max((if (h.value > h1.value) h else h1) :: t)
+        db withSession {
+            MTable.getTables(users.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption flatMap {
+                        case (id, begin, end, open, indebted, property) =>
+                            for {
+                                dbi <- Database.queryIndebted(indebted)
+                                dbp <- Database.queryProperty(property)
+                            } yield Auction(dbi, dbp, begin, end,
+                                queryHighestBid(id.get), open, id)
+                    }
+                )
         }
+    }
+
+    def queryHighestBid(auctionID : Long) : Option[Bid] = {
 
         db withSession {
             max(queryAuctionBids(auctionID))
@@ -505,23 +530,6 @@ object Database {
         }
     }
 
-    private def queryProperty(propertyID : Long): Option[Property] = {
-        lazy val dbQuery = for {
-            p <- properties if p.id === propertyID
-        } yield p.*
-
-        db withSession {
-            MTable.getTables(properties.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID, boughtIn) =>
-                            new Property(name, value, PropertyKind.withName
-                                (kind), boughtIn)
-                    }
-                )
-        }
-    }
-
     private def queryAuctions(dbQuery : Query[Projection6[Option[Long], java.util.Date,
      java.util.Date, Boolean, String, Long], auctions.TableType]): List[Auction] = {
 
@@ -574,5 +582,11 @@ object Database {
                     Nil
             }
         }
+    }
+
+    private def max(lob : List[Bid]) : Option[Bid] = lob match {
+        case Nil => None
+        case List(b: Bid) => Some(b)
+        case h :: h1 :: t => max((if (h.value > h1.value) h else h1) :: t)
     }
 }
