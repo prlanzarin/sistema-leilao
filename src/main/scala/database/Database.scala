@@ -254,6 +254,10 @@ object Database {
         }
     }
 
+    def queryIndebted(property : Property) : Option[Indebted] = {
+        None
+    }
+
     def queryProperty(indebtedCPF : String, propertyName : String):
     Option[Property] = {
         lazy val dbQuery = for {
@@ -274,8 +278,7 @@ object Database {
     }
 
     def queryProperties(propertyKind : Option[String], auctionStatus :
-    Option[Boolean]):
-    List[Property] = {
+    Option[Boolean]): List[Property] = {
         lazy val dbQueryT = for {
             a <- auctions
             p <- properties if a.property === p.id && a.open === true

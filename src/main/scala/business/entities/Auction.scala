@@ -6,17 +6,26 @@ import java.util.Calendar
 import presentation.ui.UIUtils
 
 case class Auction(indebted: Indebted,
-                 property: Property,
-                 begin: Date,
-                 end: Date,
-                 highestBid : Option[Bid] = None,
-                 open : Boolean,
-                 auctionID : Option[Long] = None)
-    {
-        override def toString: String = "Endividado: " + indebted.name +
+                   property: Property,
+                   begin: Date,
+                   end: Date,
+                   highestBid : Option[Bid] = None,
+                   open : Boolean,
+                   auctionID : Option[Long] = None) {
+
+    def highestBid_(bid : Option[Bid]) = Auction(indebted, property, begin,
+        end, bid, open, auctionID)
+
+    def open_(isOpen : Boolean) = Auction(indebted, property, begin, end,
+        highestBid, isOpen, auctionID)
+
+    def auctionID_(newID : Option[Long]) = Auction(indebted, property,
+        begin, end, highestBid, open, newID)
+
+    override def toString: String = "Endividado: " + indebted.name +
         "\nPropriedade: " + "" + property.name + "\nComeco (R$): " +
         UIUtils.dateFormatter.format(begin) +"\nFim: " + UIUtils.dateFormatter.
         format(end) + "\nIdentificador: " + auctionID.get + "\nAberto == " +
-            open + "\nLance mais alto -> " + highestBid.getOrElse(println
-            ("Nenhum"))
-    }
+        open + "\nLance mais alto -> " + highestBid.getOrElse(println
+        ("Nenhum"))
+}
