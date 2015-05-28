@@ -73,6 +73,12 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         val indebted = serv.getIndebteds
                         indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x))}
                         QueryIndebtedsReply(null) // Might be empty
+
+                    case QueryPropertiesRequest(k, i) =>
+                        println("Server: querying properties")
+                        val serv = new ManagerServices
+                        val pl = serv.getProperties(k,i)
+                        QueryPropertiesReply(pl)
                     case _ => throw new SocketException // TODO Create other exception
                 }
                 out.writeObject(r);

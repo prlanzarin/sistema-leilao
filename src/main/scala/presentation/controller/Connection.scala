@@ -75,7 +75,7 @@ object Connection {
         val msg: RequestMessage = QueryIndebtedPropertiesRequest(indebtedCpf)
         out.writeObject(msg)
         out.flush()
-        val r = in.readObject().asInstanceOf[QueryIndebtedPropertiesReply]
+        val r = in.readObject().asInstanceOf[ReplyMessage]
         r match {
             case QueryIndebtedPropertiesReply(lp) => lp
             case _ => Nil
@@ -96,5 +96,16 @@ object Connection {
             r = in.readObject().asInstanceOf[ReplyMessage]
         }
         loi
+    }
+
+    def sendQueryPropertiesRequest(kind: Option[String], inAuction: Option[Boolean]): List[Property] ={
+        val msg: RequestMessage = QueryPropertiesRequest(kind, inAuction)
+        out.writeObject(msg)
+        out.flush()
+        val r = in.readObject().asInstanceOf[ReplyMessage]
+        r match {
+            case QueryPropertiesReply(lp) => lp
+            case _ => Nil
+        }
     }
 }
