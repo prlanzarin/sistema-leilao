@@ -7,4 +7,5 @@ case class AddIndebtedRequest(i: Indebted) extends RequestMessage
 case class AddPropertyRequest(i: Indebted, p : Property) extends RequestMessage
 case class QueryIndebtedPropertiesRequest(iCpf: String) extends RequestMessage
 case class QueryIndebtedsRequest() extends RequestMessage
+case class QueryPropertiesRequest(k: Option[String], i: Option[Boolean]) extends RequestMessage
 

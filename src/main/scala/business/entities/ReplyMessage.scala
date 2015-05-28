@@ -7,3 +7,4 @@ case class AddIndebtedReply(msg: String) extends ReplyMessage
 case class AddPropertyReply(msg: String) extends ReplyMessage
 case class QueryIndebtedPropertiesReply(il : List[Property]) extends ReplyMessage
 case class QueryIndebtedsReply(il : Indebted) extends ReplyMessage
+case class QueryPropertiesReply(pl: List[Property]) extends ReplyMessage

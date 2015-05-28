@@ -62,3 +62,5 @@ class IndebtedPropertiesFrame(parent: Frame, manager: Manager, indebted: Indebte
     //    new NewAuctionFrame(this)
   }
 }
+
+

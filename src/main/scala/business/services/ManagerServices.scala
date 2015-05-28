@@ -2,6 +2,7 @@ package business.services
 
 import java.util.Date
 
+import business.entities.PropertyKind.PropertyKind
 import business.entities.{Auction, Indebted, Property}
 import database.Database
 
@@ -49,6 +50,10 @@ class ManagerServices extends UserServices {
 
     def getProperties : List[Property] = {
         Database.getProperties
+    }
+
+    def getProperties(kind: Option[String], inAuction: Option[Boolean]): List[Property] ={
+        Database.queryProperties(kind, inAuction)
     }
 
     def getAuctions : List[Auction] = {
