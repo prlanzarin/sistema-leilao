@@ -68,7 +68,6 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
       Dialog.showMessage(properties, "Selecione um endividado", "Erro", Dialog.Message.Error)
     else {
       val indebted = rowToIndebted(row.anchorIndex)
-      println(Connection.sendQueryIndebtedPropertiesRequest(indebted.cpf))
       visible = false
       new IndebtedPropertiesFrame(this, manager, indebted)
     }

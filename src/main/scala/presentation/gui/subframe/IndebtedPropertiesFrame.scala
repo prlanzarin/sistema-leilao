@@ -58,8 +58,14 @@ class IndebtedPropertiesFrame(parent: Frame, manager: Manager, indebted: Indebte
   }
 
   def newAuctionAction = {
-    //    visible = false
-    //    new NewAuctionFrame(this)
+    val row = table.selection.rows
+    if (row.isEmpty)
+      Dialog.showMessage(table, "Selecione um bem", "Erro", Dialog.Message.Error)
+    else {
+      val property = rowToProperty(row.anchorIndex)
+      visible = false
+      new CreateAuctionFrame(this, manager, property)
+    }
   }
 }
 
