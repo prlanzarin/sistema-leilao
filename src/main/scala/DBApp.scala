@@ -136,8 +136,10 @@ object DBApp {
         println("-----MAKE BID----")
         Database.queryAuction(1L).foreach(a => println(a))
         Database.queryHighestBid(1L).foreach(p => println(p))
-        //Database.makeBid(Bid(1L, chimerito, 55000.00))
-        //Database.queryHighestBid(1L).foreach(p => println(p))
+        Database.makeBid(Bid(1L, chimerito, 55000.00))
+        Database.queryHighestBid(1L).foreach(p => println(p))
+        Database.makeBid(Bid(1L, maurilio, 58000.00))
+        Database.queryHighestBid(1L).foreach(p => println(p))
 
     }
 }

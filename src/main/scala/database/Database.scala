@@ -216,7 +216,7 @@ object Database {
             MTable.getTables(auctions.tableName).firstOption  foreach(
                 MTable => {properties.insert(None, propertyName, value, kind,
                     dbQuery.list.head, boughtIn)}
-            )
+                )
         }
     }
 
@@ -247,25 +247,25 @@ object Database {
                 )
         }
     }
-/*
+
     def makeBid(bid : Bid) = {
         lazy val dbQuery = for {
             b <- userBids if b.auctionID === bid.auction &&
-            b.userID === bid.client.CPF
+            b.userID === bid.client.userName
         } yield b.value
 
         db withSession {
-            println(dbQuery.list().size)
+            println(dbQuery.list().head)
             MTable.getTables(userBids.tableName).firstOption foreach(
                 MTable => dbQuery.list.isEmpty match {
                     case false => dbQuery.update(bid.value)
                     case true => userBids.insert(None, bid.auction,
-                        bid.client.CPF, bid.value)
+                        bid.client.userName, bid.value)
                 }
                 )
         }
     }
-*/
+
     def queryIndebted(indebtedCPF: String): Option[Indebted] = {
         lazy val dbQuery = for {
             i <- indebteds if i.cpf === indebtedCPF
@@ -394,7 +394,7 @@ object Database {
                         telephone, address, email, usrLevel) =>
                             new Manager(userName, passWord, name)
                     }
-            )
+                )
         }
     }
 
@@ -413,7 +413,7 @@ object Database {
                             new Client(userName, passWord, name, cpf.get,
                                 bdate.get, telephone.get, address.get, email.get)
                     }
-            )
+                )
         }
     }
 
@@ -546,7 +546,7 @@ object Database {
     }
 
     private def queryAuctions(dbQuery : Query[Projection6[Option[Long], java.util.Date,
-     java.util.Date, Boolean, String, Long], auctions.TableType]): List[Auction] = {
+        java.util.Date, Boolean, String, Long], auctions.TableType]): List[Auction] = {
 
         db withSession {
             MTable.getTables(auctions.tableName) firstOption match {
