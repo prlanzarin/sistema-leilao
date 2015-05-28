@@ -1,6 +1,6 @@
 package main.scala.presentation.gui.validator
 
-import java.text.{SimpleDateFormat, ParsePosition, FieldPosition, DateFormat}
+import java.text._
 import java.util.{Calendar, Date}
 
 /**
@@ -8,7 +8,9 @@ import java.util.{Calendar, Date}
  */
 object Validator {
   val dateFormat = "dd/MM/yyyy"
+  val timeFormat = "hh:mm:ss"
   val dateFormatter = new SimpleDateFormat(dateFormat)
+  val timeFormatter = new SimpleDateFormat(timeFormat)
   val passwordSize = 3
 
   def validateName(input: String): String = {
@@ -18,9 +20,11 @@ object Validator {
   }
 
   def validateDate(input: String): Date = {
-    if (input.isEmpty)
-      throw new ValidationException("Data inválida, formato: " + dateFormat)
-    dateFormatter.parse(input)
+    try {
+      dateFormatter parse input
+    } catch {
+      case e: ParseException => throw new ValidationException("Data inválida, formato: " + dateFormat)
+    }
   }
 
   def validateCpf(input: String): String = {
@@ -88,5 +92,32 @@ object Validator {
     } catch {
       case e: NumberFormatException => throw new ValidationException("Ano inválido")
     }
+  }
+
+  def validateTime(input: String): Date = {
+    try {
+      timeFormatter parse input
+    } catch {
+      case e: ParseException => throw new ValidationException("Horário inválido, formato: " + timeFormat)
+    }
+  }
+
+  def validateDateTimeAfterNow(dateInput: String, timeInput: String): Date = {
+    val now = Calendar.getInstance.getTime()
+    val date = validateDate(dateInput)
+    val time = validateTime(timeInput)
+    val calTime = Calendar.getInstance
+    calTime.setTime(time)
+    val h = calTime.get(Calendar.HOUR_OF_DAY)
+    val m = calTime.get(Calendar.MINUTE)
+    val s = calTime.get(Calendar.SECOND)
+    val calDate = Calendar.getInstance
+    calDate.setTime(date)
+    calDate.add(Calendar.HOUR_OF_DAY, h)
+    calDate.add(Calendar.MINUTE, m)
+    calDate.add(Calendar.SECOND, s)
+    val dateTime = calDate.getTime()
+    if(dateTime.before(now)) throw new ValidationException("A data deve ser depois do dia de hoje")
+    dateTime
   }
 }

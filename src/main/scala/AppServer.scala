@@ -59,7 +59,16 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         if (serv.insertProperty(i, p))
                             AddPropertyReply("Success")
                         else
-                            new AddPropertyReply("Failed")
+                            AddPropertyReply("Success")
+
+                    case AddAuctionRequest(p, b, e) =>
+                        println("Server: adding auction")
+                        val serv = new ManagerServices
+                        if(serv.insertAuction(p, b, e))
+                            AddPropertyReply("Success")
+                        else
+                            AddPropertyReply("Success")
+
 
                     case QueryIndebtedPropertiesRequest(iCpf: String) =>
                         println("Server: querying indebted properties")

@@ -1,6 +1,6 @@
 package main.scala.presentation.gui.subframe
 
-import business.entities.{Manager, Property}
+import business.entities.{PropertyKind, Manager, Property}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelRadioButtonsPanel}
 import main.scala.presentation.gui.table.SortableTable
@@ -15,20 +15,20 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
   title = "Bens"
   resizable = false
 
-  val allProperties = new RadioMenuItem("Todos") {
+  val allProperties = new RadioButton("Todos") {
     selected = true
   }
-  val royalty = new RadioMenuItem("Imóvel")
-  val jewel = new RadioMenuItem("Jóia")
-  val vehicle = new RadioMenuItem("Veículo")
-  val other = new RadioMenuItem("Outro")
+  val royalty = new RadioButton("Imóvel")
+  val jewel = new RadioButton("Jóia")
+  val vehicle = new RadioButton("Veículo")
+  val other = new RadioButton("Outro")
   val propertyKind = new ButtonGroup(allProperties, royalty, jewel, vehicle, other)
   val propertyKindPanel = new LabelRadioButtonsPanel("Tipo:", propertyKind)
-  val allAuction = new RadioMenuItem("Todos") {
+  val allAuction = new RadioButton("Todos") {
     selected = true
   }
-  val yes = new RadioMenuItem("Sim")
-  val no = new RadioMenuItem("Não")
+  val yes = new RadioButton("Sim")
+  val no = new RadioButton("Não")
   val inAuction = new ButtonGroup(allAuction, yes, no)
   val inAuctionPanel = new LabelRadioButtonsPanel("Em Leilão:", inAuction)
 
@@ -37,9 +37,9 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
 
-  val newAuction = new Button {
+  val createAuction = new Button {
     action = Action("Novo Leilão") {
-      newAuctionAction
+      createAuctionAction
     }
   }
 
@@ -50,7 +50,7 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
       contents += inAuctionPanel
     }) = BorderPanel.Position.North
     layout(scrollTable) = BorderPanel.Position.Center
-    layout(new ButtonsPanel(List(newAuction))) = BorderPanel.Position.South
+    layout(new ButtonsPanel(List(createAuction))) = BorderPanel.Position.South
   }
 
   listenTo(allProperties, royalty, jewel, vehicle, other, allAuction, yes, no)
@@ -90,12 +90,19 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
     Array(property.name, property.boughtIn, property.value, property.kind)
   }
 
-  def rowToProperty() = {
-
+  def rowToProperty(row: Int) = {
+    new Property(table(row, 0).toString, table(row,2).toString.toDouble,
+      PropertyKind.withName(table(row,3).toString), table(row,1).toString.toInt)
   }
 
-  def newAuctionAction = {
-//    visible = false
-//    new RegisterAuctionFrame(this, )
+  def createAuctionAction = {
+    val row = table.selection.rows
+    if (row.isEmpty)
+      Dialog.showMessage(table, "Selecione um bem", "Erro", Dialog.Message.Error)
+    else {
+      val property = rowToProperty(row.anchorIndex)
+      visible = false
+      new CreateAuctionFrame(this, manager, property)
+    }
   }
 }

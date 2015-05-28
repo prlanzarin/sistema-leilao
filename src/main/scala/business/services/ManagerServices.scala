@@ -1,6 +1,6 @@
 package business.services
 
-import java.util.Date
+import java.util.{Calendar, Date}
 
 import business.entities.PropertyKind.PropertyKind
 import business.entities.{Auction, Indebted, Property}
@@ -21,8 +21,14 @@ class ManagerServices extends UserServices {
         }
     }
 
-    def insertAuction(beginDate: Date, endDate: Date, indebted: Indebted, property: Property) = {
-
+    def insertAuction(property: Property, beginDate: Date, endDate: Date): Boolean = {
+        val indebted = Database.queryIndebted(property).getOrElse(return false)
+        val nowTime = Calendar.getInstance.getTime()
+        val opened = beginDate.before(nowTime)
+        val auction = new Auction(indebted, property, beginDate, endDate, None, opened, None)
+        //TODO schedule auction if not opened
+        Database.addAuction(auction)
+        true
     }
 
     def insertProperty(i: Indebted, p: Property) : Boolean = {
