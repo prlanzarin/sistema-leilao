@@ -324,7 +324,7 @@ object Database {
                 case false => queryProperties(dbQueryF).filter(q =>
                     propertyKind.map(q.kind.toString == _).getOrElse(true))
             }
-            case None => queryProperties(dbQueryA).filter(q =>
+            case None => getProperties.filter(q =>
                 propertyKind.map(q.kind.toString == _).getOrElse(true))
         }
     }
