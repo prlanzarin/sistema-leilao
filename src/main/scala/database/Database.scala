@@ -235,6 +235,38 @@ object Database {
         }
     }
 
+    def addBid(bid : Bid) = {
+        lazy val dbQuery = for {
+            b <- userBids if b.auctionID === bid.auction &&
+            b.userID === bid.client.userName
+        } yield b.value
+
+        db withSession {
+            MTable.getTables(userBids.tableName).firstOption foreach(
+                MTable => dbQuery.list.isEmpty match {
+                    case false => dbQuery.update(bid.value)
+                    case true => userBids.insert(None, bid.auction,
+                        bid.client.userName, bid.value)
+                }
+                )
+        }
+    }
+
+    def cancelBid(bid : Bid) = {
+        lazy val dbQuery = for {
+            b <- userBids if b.auctionID === bid.auction &&
+            b.userID === bid.client.userName && b.value === bid.value
+        } yield b
+
+        db withSession {
+            MTable.getTables(userBids.tableName).firstOption foreach(
+                MTable => dbQuery.list.isEmpty match {
+                    case false => dbQuery.mutate(b => b.delete())
+                }
+                )
+        }
+    }
+
     def updateAuction(auction : Auction) = {
         lazy val dbQuery =
             for {
@@ -244,24 +276,6 @@ object Database {
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => dbQuery.update(auction.open)
-                )
-        }
-    }
-
-    def makeBid(bid : Bid) = {
-        lazy val dbQuery = for {
-            b <- userBids if b.auctionID === bid.auction &&
-            b.userID === bid.client.userName
-        } yield b.value
-
-        db withSession {
-            println(dbQuery.list().head)
-            MTable.getTables(userBids.tableName).firstOption foreach(
-                MTable => dbQuery.list.isEmpty match {
-                    case false => dbQuery.update(bid.value)
-                    case true => userBids.insert(None, bid.auction,
-                        bid.client.userName, bid.value)
-                }
                 )
         }
     }
@@ -346,6 +360,36 @@ object Database {
             }
             case None => getProperties.filter(q =>
                 propertyKind.map(q.kind.toString == _).getOrElse(true))
+        }
+    }
+
+    def queryOpenAuctions(propertyID : Option[Long], propertyKind :
+    Option[String]): List[Auction] = {
+        lazy val dbQuery = for {
+            p <- properties if p.id === propertyID
+            a <- auctions if a.property === p.id && a.open === true
+        } yield a.*
+
+        propertyID match {
+            case Some(x) => queryAuctions(dbQuery).filter(a =>
+                propertyKind.map(a.property.kind.toString == _).getOrElse(true))
+            case None => getOpenAuctions.filter(a =>
+                propertyKind.map(a.property.kind.toString == _).getOrElse(true))
+        }
+    }
+
+    def queryClosedAuctions(propertyID : Option[Long], propertyKind :
+    Option[String]): List[Auction] = {
+        lazy val dbQuery = for {
+            p <- properties if p.id === propertyID
+            a <- auctions if a.property === p.id && a.open === false
+        } yield a.*
+
+        propertyID match {
+            case Some(x) => queryAuctions(dbQuery).filter(a =>
+                propertyKind.map(a.property.kind.toString == _).getOrElse(true))
+            case None => getClosedAuctions.filter(a =>
+                propertyKind.map(a.property.kind.toString == _).getOrElse(true))
         }
     }
 

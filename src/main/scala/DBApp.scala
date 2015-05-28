@@ -6,7 +6,7 @@ import _root_.database.Database
 
 /**
  * Created by prlanzarin on 21/05/2015.
- * DB Test App
+ * DB Test App -> testes idiotas feitos usando println
  */
 object DBApp {
     def main (args: Array[String]) {
@@ -133,13 +133,43 @@ object DBApp {
             date, date, None, true, Some(1L)))
         Database.queryAuction(1L).foreach(a => println(a))
 
-        println("-----MAKE BID----")
+        println("-----ADD BID----")
         Database.queryAuction(1L).foreach(a => println(a))
         Database.queryHighestBid(1L).foreach(p => println(p))
-        Database.makeBid(Bid(1L, chimerito, 55000.00))
+        Database.addBid(Bid(1L, chimerito, 55000.00))
         Database.queryHighestBid(1L).foreach(p => println(p))
-        Database.makeBid(Bid(1L, maurilio, 58000.00))
+        Database.addBid(Bid(1L, maurilio, 58000.00))
         Database.queryHighestBid(1L).foreach(p => println(p))
+        println("-----CANCEL BID----")
+        Database.cancelBid(Bid(1L, maurilio, 58000.00))
+        Database.queryHighestBid(1L).foreach(p => println(p))
+
+        println("-----QUERY OPEN/CLOSED AUCTIONS----")
+        println("--1L VEHICLE OPEN--")
+        Database.queryOpenAuctions(Some(1L), Some(PropertyKind.VEHICLE.toString)).
+            foreach(a => println(a))
+        println("--2L VEHICLE OPEN--")
+        Database.queryOpenAuctions(Some(2L), Some(PropertyKind.VEHICLE.toString)).
+            foreach(a => println(a))
+        println("--2L VEHICLE CLOSED--")
+        Database.queryClosedAuctions(Some(2L), Some(PropertyKind.VEHICLE
+            .toString)).foreach(a => println(a))
+        println("--3L VEHICLE WRONG KIND--")
+        Database.queryOpenAuctions(Some(3L), Some(PropertyKind.VEHICLE
+            .toString)).foreach(a => println(a))
+        println("--3L VEHICLE RIGHT KIND--")
+        Database.queryOpenAuctions(Some(3L), Some(PropertyKind.OTHER
+            .toString)).foreach(a => println(a))
+        println("--ALL OPEN VEHICLE--")
+        Database.queryOpenAuctions(None, Some(PropertyKind.VEHICLE
+            .toString)).foreach(a => println(a))
+        println("--ALL CLOSED VEHICLE--")
+        Database.queryClosedAuctions(None, Some(PropertyKind.VEHICLE
+            .toString)).foreach(a => println(a))
+        println("--ALL ALL--")
+        Database.queryClosedAuctions(None, None).foreach(a => println(a))
+        Database.queryOpenAuctions(None, None).foreach(a => println(a))
+
 
     }
 }
