@@ -1,7 +1,5 @@
 package database
 
-import java.sql.Date
-
 import business.entities._
 
 import org.scalaquery.meta.MTable
@@ -212,8 +210,7 @@ object Database {
 
     def addProperty(cpf : String, propertyName : String,
                     value : Double, kind : String, boughtIn : Int) = {
-        lazy val dbQuery =
-            for { i <- indebteds if i.cpf === cpf } yield i.cpf
+        lazy val dbQuery = for { i <- indebteds if i.cpf === cpf } yield i.cpf
 
         db withSession {
             MTable.getTables(auctions.tableName).firstOption  foreach(
@@ -243,15 +240,7 @@ object Database {
             i <- indebteds if i.cpf === indebtedCPF
         } yield i.*
 
-        db withSession {
-            MTable.getTables(indebteds.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (cpf, name, bdate, debt) =>
-                            new Indebted(name, bdate, debt, cpf)
-                    }
-            )
-        }
+        queryIndebted(dbQuery)
     }
 
     def queryIndebted(property : Property) : Option[Indebted] = {
@@ -260,17 +249,41 @@ object Database {
             i <- indebteds if p.id === property.propertyID && p.ownerID === i.cpf
         } yield i.*
 
-        db withSession {
-            MTable.getTables(indebteds.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (cpf, name, bdate, debt) =>
-                            new Indebted(name, bdate, debt, cpf,
-                                queryIndebtedProperties(cpf))
-                    }
-                )
-        }
+        queryIndebted(dbQuery)
     }
+/*
+    def queryPropertyOwners(loproperties : List[Property]) : List[Map[Property,
+        Indebted]] = {
+        lazy val dbQuery = loproperties map {
+            elm => for {
+                p <- properties if p.id === elm.propertyID
+                i <- indebteds if p.ownerID === i.cpf
+            } yield i.*
+        }
+
+        db withSession {
+            MTable.getTables(indebteds.tableName) firstOption match {
+                case Some(x) => loproperties map {
+                    elm => for {
+                        p <- properties if p.id === elm.propertyID
+                        i <- indebteds if p.ownerID === i.cpf
+                    } yield (i.*, p.*)
+
+                }
+                case None =>
+                    indebteds.ddl.create
+                    Nil
+            }
+        }
+        /*
+        dbQuery map {
+                    case (cpf, namei, bdate, debt) =>
+                        Map(Property(elm, value, PropertyKind.withName(kind),
+                            boughtIn, id), Indebted(namei, bdate, debt, cpf,
+                            queryIndebtedProperties(cpf)))
+                }
+         */
+    } */
 
     def queryProperty(indebtedCPF : String, propertyName : String):
     Option[Property] = {
@@ -279,16 +292,7 @@ object Database {
             propertyName
         } yield p.*
 
-        db withSession {
-            MTable.getTables(properties.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID, boughtIn) =>
-                            new Property(name, value, PropertyKind.withName
-                                (kind), boughtIn)
-                    }
-            )
-        }
+        queryProperty(dbQuery)
     }
 
     def queryProperty(propertyID : Long): Option[Property] = {
@@ -296,16 +300,7 @@ object Database {
             p <- properties if p.id === propertyID
         } yield p.*
 
-        db withSession {
-            MTable.getTables(properties.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (id, name, value, kind, ownerID, boughtIn) =>
-                            new Property(name, value, PropertyKind.withName
-                                (kind), boughtIn)
-                    }
-                )
-        }
+        queryProperty(dbQuery)
     }
 
     def queryProperties(propertyKind : Option[String], auctionStatus :
@@ -329,8 +324,8 @@ object Database {
                 case false => queryProperties(dbQueryF).filter(q =>
                     propertyKind.map(q.kind.toString == _).getOrElse(true))
             }
-            case None => queryProperties(dbQueryA).filter(_.kind ==
-                propertyKind.getOrElse(true))
+            case None => queryProperties(dbQueryA).filter(q =>
+                propertyKind.map(q.kind.toString == _).getOrElse(true))
         }
     }
 
@@ -468,7 +463,7 @@ object Database {
         db withSession {
             MTable.getTables(indebteds.tableName) firstOption match {
                 case Some(x) => dbQuery map {
-                    case(cpf, name, bdate, debt) => new Indebted(name, bdate,
+                    case(cpf, name, bdate, debt) => Indebted(name, bdate,
                         debt, cpf)
                 }
                 case None =>
@@ -557,7 +552,7 @@ object Database {
             MTable.getTables(userBids.tableName) firstOption match {
                 case Some(x) => dbQuery.list map {
                     case (userBidID, auctionID, userID, value) =>
-                        new Bid(auctionID, queryUser(userID).get, value)
+                        Bid(auctionID, queryUser(userID).get, value)
                 }
                 case None =>
                     userBids.ddl.create
@@ -574,13 +569,42 @@ object Database {
             MTable.getTables(properties.tableName) firstOption match {
                 case Some(x) => dbQuery.list map {
                     case (id, name, value, kind, owner, boughtIn) =>
-                        new Property (name, value, PropertyKind.withName(kind),
-                            boughtIn)
+                        Property (name, value, PropertyKind.withName(kind),
+                            boughtIn, id)
                 }
                 case None =>
                     (indebteds.ddl ++ properties.ddl).create
                     Nil
             }
+        }
+    }
+
+    private def queryIndebted(dbQuery : Query[Projection4[String, String,
+        java.util.Date, Double], indebteds.TableType]) : Option[Indebted] = {
+        db withSession {
+            MTable.getTables(indebteds.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (cpf, name, bdate, debt) =>
+                            Indebted(name, bdate, debt, cpf,
+                                queryIndebtedProperties(cpf))
+                    }
+                )
+        }
+    }
+
+    private def queryProperty(dbQuery : Query[Projection6[Option[Long],
+        String, Double, String, String, Int], properties.TableType])
+    : Option[Property] = {
+        db withSession {
+            MTable.getTables(properties.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (id, name, value, kind, ownerID, boughtIn) =>
+                            Property(name, value, PropertyKind.withName(kind),
+                                boughtIn, id)
+                    }
+                )
         }
     }
 
