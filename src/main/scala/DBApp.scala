@@ -109,6 +109,35 @@ object DBApp {
         Database.queryProperties(None, Some(true)).foreach(p => println(p))
         println("--ALL FALSE--")
         Database.queryProperties(None, Some(false)).foreach(p => println(p))
+        println("--ALL, ALL--")
+        Database.queryProperties(None,None).foreach(p => println(p))
+
+        println("-----QUERY INDEBTED BY PROPERTY-----")
+        Database.queryIndebted(Database.queryProperty(6L).get).foreach(p =>
+            println(p))
+        Database.queryIndebted(Database.queryProperty(7L).get).foreach(p =>
+            println(p))
+
+        println("-----QUERY INDEBTEDS BY PROPERTIES-----")
+        Database.queryPropertyOwners(Database.getProperties).foreach(p =>
+            println(p))
+        Database.queryPropertyOwners(Nil).foreach(p => println(p))
+
+        println("-----UPDATE AUCTION----")
+        Database.updateAuction(Auction(Database.queryIndebted("01111111111")
+            .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
+            date, date, None, false, Some(1L)))
+        Database.queryAuction(1L).foreach(a => println(a))
+        Database.updateAuction(Auction(Database.queryIndebted("01111111111")
+            .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
+            date, date, None, true, Some(1L)))
+        Database.queryAuction(1L).foreach(a => println(a))
+
+        println("-----MAKE BID----")
+        Database.queryAuction(1L).foreach(a => println(a))
+        Database.queryHighestBid(1L).foreach(p => println(p))
+        //Database.makeBid(Bid(1L, chimerito, 55000.00))
+        //Database.queryHighestBid(1L).foreach(p => println(p))
 
     }
 }

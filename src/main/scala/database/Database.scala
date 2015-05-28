@@ -235,6 +235,37 @@ object Database {
         }
     }
 
+    def updateAuction(auction : Auction) = {
+        lazy val dbQuery =
+            for {
+                a <- auctions if a.auctionId === auction.auctionID
+            } yield a.open
+
+        db withSession {
+            MTable.getTables(auctions.tableName).firstOption foreach(
+                MTable => dbQuery.update(auction.open)
+                )
+        }
+    }
+/*
+    def makeBid(bid : Bid) = {
+        lazy val dbQuery = for {
+            b <- userBids if b.auctionID === bid.auction &&
+            b.userID === bid.client.CPF
+        } yield b.value
+
+        db withSession {
+            println(dbQuery.list().size)
+            MTable.getTables(userBids.tableName).firstOption foreach(
+                MTable => dbQuery.list.isEmpty match {
+                    case false => dbQuery.update(bid.value)
+                    case true => userBids.insert(None, bid.auction,
+                        bid.client.CPF, bid.value)
+                }
+                )
+        }
+    }
+*/
     def queryIndebted(indebtedCPF: String): Option[Indebted] = {
         lazy val dbQuery = for {
             i <- indebteds if i.cpf === indebtedCPF
@@ -251,39 +282,31 @@ object Database {
 
         queryIndebted(dbQuery)
     }
-/*
-    def queryPropertyOwners(loproperties : List[Property]) : List[Map[Property,
-        Indebted]] = {
-        lazy val dbQuery = loproperties map {
+
+    def queryPropertyOwners(loProperties : List[Property]) : List[(Property,
+        Indebted)] = {
+        lazy val dbQuery = loProperties map {
             elm => for {
                 p <- properties if p.id === elm.propertyID
                 i <- indebteds if p.ownerID === i.cpf
-            } yield i.*
+            } yield (i.*, p.*)
         }
-
         db withSession {
             MTable.getTables(indebteds.tableName) firstOption match {
-                case Some(x) => loproperties map {
-                    elm => for {
-                        p <- properties if p.id === elm.propertyID
-                        i <- indebteds if p.ownerID === i.cpf
-                    } yield (i.*, p.*)
-
+                case Some(x) => dbQuery map {
+                    dbqe => dbqe.first match {
+                        case((cpf, iname, bdate, debt), (id, pname, value,
+                        kind, owner, boughtIn)) => (Property(pname, value,
+                            PropertyKind.withName(kind), boughtIn, id),
+                            Indebted(iname, bdate, debt, cpf))
+                    }
                 }
                 case None =>
                     indebteds.ddl.create
                     Nil
             }
         }
-        /*
-        dbQuery map {
-                    case (cpf, namei, bdate, debt) =>
-                        Map(Property(elm, value, PropertyKind.withName(kind),
-                            boughtIn, id), Indebted(namei, bdate, debt, cpf,
-                            queryIndebtedProperties(cpf)))
-                }
-         */
-    } */
+    }
 
     def queryProperty(indebtedCPF : String, propertyName : String):
     Option[Property] = {
@@ -312,9 +335,6 @@ object Database {
         lazy val dbQueryF = for {
             a <- auctions
             p <- properties if a.property === p.id && a.open === false
-        } yield p.*
-        lazy val dbQueryA = for {
-            p <- properties
         } yield p.*
 
         auctionStatus match {
