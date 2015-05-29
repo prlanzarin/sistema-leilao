@@ -11,7 +11,6 @@ import _root_.database.Database
 object DBApp {
     def main (args: Array[String]) {
 
-        Database.populateDb()
         val date = new java.util.Date()
         val prlanza = new Manager("prlanzarin", "123", "Paulo")
         val neicilua = new Manager("neicilua", "123", "Neicilua")

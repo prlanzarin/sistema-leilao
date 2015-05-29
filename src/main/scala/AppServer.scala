@@ -25,7 +25,7 @@ object AppServer {
 case class ServerThread(socket: Socket) extends Thread("ServerThread") {
     override def run(): Unit = {
         try {
-            Database.populateDb()
+            Database.initialize()
             val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()));
             val in = new ObjectInputStream(
                 new DataInputStream(socket.getInputStream()));

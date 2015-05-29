@@ -9,174 +9,196 @@ import org.scalaquery.ql.TypeMapper._
 import org.scalaquery.ql.extended.H2Driver.Implicit._
 import org.scalaquery.ql.extended.{ExtendedTable => Table}
 
-object Database {
-
+class DBUser extends Table[(String, String, String, Option[String],
+    Option[java.util.Date], Option[String], Option[String],
+    Option[String], Int)]("USERS") {
     implicit val JavaUtilDateTypeMapper =
         MappedTypeMapper.base[java.util.Date, Long](_.getTime,
             new java.util.Date(_))
+    def userName = column[String]("U_NAME", O.PrimaryKey, O.NotNull)
+    def passWord = column[String]("PASSWORD", O.NotNull)
+    def name = column[String]("R_NAME", O.NotNull)
+    def cpf = column[String]("CPF", O.Nullable)
+    def bdate = column[java.util.Date]("BIRTHDATE", O.Nullable)
+    def telephone = column[String]("TELEPHONE", O.Nullable)
+    def address = column[String]("ADDRESS", O.Nullable)
+    def email = column[String]("EMAIL", O.Nullable)
+    def usrLevel = column[Int]("U_LVL", O.NotNull)
+
+    def * = userName ~ passWord ~ name ~
+        cpf.? ~ bdate.? ~ telephone.? ~ address.? ~ email.? ~ usrLevel
+}
+
+class DBIndebted extends
+Table[(String, String, java.util.Date, Double)]("INDEBTED") {
+    implicit val JavaUtilDateTypeMapper =
+        MappedTypeMapper.base[java.util.Date, Long](_.getTime,
+            new java.util.Date(_))
+    def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull)
+    def name = column[String]("NAME", O.NotNull)
+    def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
+    def debt = column[Double]("DEBT", O.NotNull)
+
+    def * = cpf ~ name ~ bdate ~ debt
+}
+
+class DBProperty(indebteds : DBIndebted) extends
+Table[(Option[Long], String, Double, String, String, Int)]("PROPERTIES"){
+
+    def id = column[Long]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
+    def name = column[String]("NAME", O.NotNull)
+    def value = column[Double]("VALUE", O.NotNull)
+    def kind = column[String]("KIND", O.NotNull)
+    def ownerID = column[String]("OWNER", O.NotNull)
+    def boughtIn = column[Int]("BOUGHT_IN", O.NotNull)
+
+    def ownerIDKey = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
+
+    def * = id.? ~ name ~ value ~ kind ~ ownerID ~ boughtIn
+}
+
+class DBAuction(val indebteds : DBIndebted, val properties : DBProperty)
+    extends Table[(Option[Long], java.util.Date, java.util.Date, Boolean,
+        String, Long)]("AUCTION") {
+    implicit val JavaUtilDateTypeMapper =
+        MappedTypeMapper.base[java.util.Date, Long](_.getTime,
+            new java.util.Date(_))
+    def auctionId = column[Long]("AUCT_ID", O.PrimaryKey, O.AutoInc, O
+        .DBType("serial"))
+    def begin = column[java.util.Date]("BEGIN", O.NotNull)
+    def end = column[java.util.Date]("END", O.NotNull)
+    def open = column[Boolean]("OPEN", O.NotNull)
+    def indebted = column[String]("INDEBTED", O.NotNull)
+    def property = column[Long]("PROPERTY", O.NotNull)
+
+    def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
+    def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
+
+    def * = auctionId.? ~ begin ~ end ~ open ~ indebted ~
+        property
+}
+
+class DBUserBids(val auctions : DBAuction, val users : DBUser) extends
+Table[(Option[Long], Long, String, Double)]("USER_AUCTIONS") {
+
+    def userBidID = column[Long]("UA_ID", O.PrimaryKey, O.NotNull, O
+        .AutoInc, O.DBType("serial"))
+    def auctionID = column[Long]("AUCTION_ID", O.NotNull)
+    def userID = column[String]("USER_ID", O.NotNull)
+    def value = column[Double]("VALUE", O.NotNull)
+
+    def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_.auctionId)
+    def userKey = foreignKey("USER_FK", userID, users)(_.userName)
+
+    def * = userBidID.? ~ auctionID ~ userID ~ value
+}
+
+object Database {
 
     val db = org.scalaquery.session.Database.
         forURL("jdbc:h2:file:./db/auctiondb", driver = "org.h2.Driver")
 
-    val users = new Table[(String, String, String, Option[String],
-        Option[java.util.Date], Option[String], Option[String],
-        Option[String], Int)]("USERS") {
+    val users = new DBUser
 
-        def userName = column[String]("U_NAME", O.PrimaryKey, O.NotNull)
-        def passWord = column[String]("PASSWORD", O.NotNull)
-        def name = column[String]("R_NAME", O.NotNull)
-        def cpf = column[String]("CPF", O.Nullable)
-        def bdate = column[java.util.Date]("BIRTHDATE", O.Nullable)
-        def telephone = column[String]("TELEPHONE", O.Nullable)
-        def address = column[String]("ADDRESS", O.Nullable)
-        def email = column[String]("EMAIL", O.Nullable)
-        def usrLevel = column[Int]("U_LVL", O.NotNull)
+    val indebteds = new DBIndebted
 
-        def * = userName ~ passWord ~ name ~
-            cpf.? ~ bdate.? ~ telephone.? ~ address.? ~ email.? ~ usrLevel
-    }
+    val properties = new DBProperty(indebteds)
 
-    val indebteds = new
-            Table[(String, String, java.util.Date, Double)]("INDEBTED") {
+    val auctions = new DBAuction(indebteds, properties)
 
-        def cpf = column[String]("CPF", O.PrimaryKey, O.NotNull)
-        def name = column[String]("NAME", O.NotNull)
-        def bdate = column[java.util.Date]("BIRTHDATE", O.NotNull)
-        def debt = column[Double]("DEBT", O.NotNull)
+    val userBids = new DBUserBids(auctions, users)
 
-        def * = cpf ~ name ~ bdate ~ debt
-    }
-
-    val properties = new
-            Table[(Option[Long], String, Double, String, String,
-                Int)]("PROPERTIES"){
-
-        def id = column[Long]("PROP_ID", O.PrimaryKey, O.AutoInc, O.NotNull)
-        def name = column[String]("NAME", O.NotNull)
-        def value = column[Double]("VALUE", O.NotNull)
-        def kind = column[String]("KIND", O.NotNull)
-        def ownerID = column[String]("OWNER", O.NotNull)
-        def boughtIn = column[Int]("BOUGHT_IN", O.NotNull)
-
-        def ownerIDKey = foreignKey("OWNER_FK", ownerID, indebteds)(_.cpf)
-
-        def * = id.? ~ name ~ value ~ kind ~ ownerID ~ boughtIn
-    }
-
-    val auctions = new Table[(Option[Long], java.util.Date, java.util.Date,
-        Boolean, String, Long)]("AUCTION") {
-
-        def auctionId = column[Long]("AUCT_ID", O.PrimaryKey, O.AutoInc, O
-            .DBType("serial"))
-        def begin = column[java.util.Date]("BEGIN", O.NotNull)
-        def end = column[java.util.Date]("END", O.NotNull)
-        def open = column[Boolean]("OPEN", O.NotNull)
-        def indebted = column[String]("INDEBTED", O.NotNull)
-        def property = column[Long]("PROPERTY", O.NotNull)
-
-        def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
-        def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
-
-        def * = auctionId.? ~ begin ~ end ~ open ~ indebted ~
-            property
-    }
-
-    val userBids = new
-            Table[(Option[Long], Long, String, Double)]("USER_AUCTIONS") {
-
-        def userBidID = column[Long]("UA_ID", O.PrimaryKey, O.NotNull, O
-            .AutoInc, O.DBType("serial"))
-        def auctionID = column[Long]("AUCTION_ID", O.NotNull)
-        def userID = column[String]("USER_ID", O.NotNull)
-        def value = column[Double]("VALUE", O.NotNull)
-
-        def auctionKey = foreignKey("AUCTION_FK", auctionID, auctions)(_.auctionId)
-        def userKey = foreignKey("USER_FK", userID, users)(_.userName)
-
-        def * = userBidID.? ~ auctionID ~ userID ~ value
-    }
-
-    def populateDb() = {
+    def initialize() = {
 
         db withSession {
             val a = new java.util.Date()
             val b = new java.util.Date(2015, 9, 25)
 
-            if (!MTable.getTables.list.exists(_.name.name == indebteds
-                .tableName) && (!MTable.getTables.list.exists(_.name.name ==
-                properties.tableName)) && (!MTable.getTables.list.exists(_.name.
-                name == auctions.tableName)) && (!MTable.getTables.list.exists
-                (_.name.name == users.tableName)) && (!MTable.getTables.list
-                .exists(_.name.name == userBids.tableName))) {
+            MTable.getTables(users.tableName).firstOption match {
+                case None =>
+                    users.ddl.create
+                    users.insertAll(
+                        ("lpsilvestrin", "123", "Luis", None, None, None, None,
+                            None, 0),
+                        ("prlanzarin", "123", "Paulo", None, None, None, None,
+                            None, 0),
+                        ("mhbackes", "123", "Marcos", None, None, None, None,
+                            None, 0),
+                        ("rgherdt", "123", "Ricardo", None, None, None, None,
+                            None, 0))
 
-                users.ddl.create
-                users.insertAll(
-                    ("lpsilvestrin", "123", "Luis", None, None, None, None,
-                        None, 0),
-                    ("prlanzarin", "123", "Paulo", None, None, None, None,
-                        None, 0),
-                    ("mhbackes", "123", "Marcos", None, None, None, None,
-                        None, 0),
-                    ("rgherdt", "123", "Ricardo", None, None, None, None,
-                        None, 0)
-                )
+                    users.insertAll(
+                        ("maurilio", "123", "Maurilio Santiago", Some
+                            ("12345678901"), Some(a), Some("12345600"), Some
+                            ("Rua do Papagaio"), Some("maurilio@lapaz.com"), 1),
+                        ("mariella", "123", "Mariella Santiago", Some
+                            ("12345678902"), Some(a), Some("12345601"), Some
+                            ("Rua da Anta"), Some("mariella@lapaz.com"), 1),
+                        ("chimerito", "123", "Chimerito Santiago", Some
+                            ("12345678903"), Some(a), Some("12345602"), Some
+                            ("Rua do Mamute"), Some("chimerito@lapaz.com"), 1))
+                case _ =>
+            }
 
-                users.insertAll(
-                    ("maurilio", "123", "Maurilio Santiago", Some("12345678901"),
-                        Some(a), Some("12345600"), Some("Rua do Papagaio"),
-                        Some("maurilio@lapaz.com"), 1),
-                    ("mariella", "123", "Mariella Santiago", Some
-                        ("12345678902"), Some(a), Some("12345601"),
-                        Some("Rua da Anta"), Some("mariella@lapaz.com"), 1),
-                    ("chimerito", "123", "Chimerito Santiago", Some("12345678903"),
-                        Some(a), Some("12345602"), Some("Rua do Mamute"),
-                        Some("chimerito@lapaz.com"), 1)
-                )
+            MTable.getTables(indebteds.tableName).firstOption match {
+                case None =>
+                    indebteds.ddl.create
+                    indebteds.insertAll(
+                        ("01111111111", "Siburgo Boapinta", a, 15000.50),
+                        ("02222222222", "Coronel Mortelenta", a, 2800.70),
+                        ("03333333333", "MC Carmen Furacao", a, 550.30),
+                        ("04444444444", "Princesa Jujubas", a, 19200.50),
+                        ("06666666661", "JOAO, o Devedor Usuario", a, 10.50),
+                        ("05555555555", "Douglas 10 Imortal Tricolor", a, 503810.38),
+                        ("06666666666", "Ze do Caixao", a, 1550.00),
+                        ("09999999999", "Pe. Fabio de Mormon", a, 300.00),
+                        ("07777777777", "Cesar Menotti", a, 10000.666),
+                        ("08888888888", "E Fabiano", a, 9999.333))
+                case _ =>
+            }
 
-                indebteds.ddl.create
-                indebteds.insertAll(
-                    ("01111111111", "Siburgo Boapinta", a, 15000.50),
-                    ("02222222222", "Coronel Mortelenta", a, 2800.70),
-                    ("03333333333", "MC Carmen Furacao", a, 550.30),
-                    ("04444444444", "Princesa Jujubas", a, 19200.50),
-                    ("06666666661", "JOAO, o Devedor Usuario", a, 10.50),
-                    ("05555555555", "Douglas 10 Imortal Tricolor", a, 503810.38),
-                    ("06666666666", "Ze do Caixao", a, 1550.00),
-                    ("09999999999", "Pe. Fabio de Mormon", a, 300.00),
-                    ("07777777777", "Cesar Menotti", a, 10000.666),
-                    ("08888888888", "E Fabiano", a, 9999.333)
-                )
+            MTable.getTables(properties.tableName).firstOption match {
+                case None =>
+                    properties.ddl.create
+                    properties.insertAll(
+                        (Some(1L), "Onibus da Carris", 35000.50,
+                            PropertyKind.VEHICLE.toString, "01111111111", 2001),
+                        (Some(2L), "Bicicleta Sundown", 20.00,
+                            PropertyKind.VEHICLE.toString, "02222222222", 2002),
+                        (Some(3L), "Oculos OAKLEY phoda", 10.50,
+                            PropertyKind.OTHER.toString, "03333333333", 2003),
+                        (Some(4L), "Skate motorizado", 50000.00,
+                            PropertyKind.VEHICLE.toString, "04444444444", 2004),
+                        (Some(5L), "TOURO NELORI BOA PINTA", 500.00,
+                            PropertyKind.OTHER.toString, "05555555555", 2005),
+                        (Some(6L), "Apartamento Duplex Power Plus",
+                            300000.00, PropertyKind.REALTY.toString, "06666666666",
+                            2006),
+                        (Some(7L), "Apartamento Triplex Power Max",
+                            500000.00, PropertyKind.REALTY.toString, "06666666666",
+                            2007))
+                case _ =>
+            }
 
-                properties.ddl.create
-                properties.insert(Some(1L), "Onibus da Carris", 35000.50,
-                    PropertyKind.VEHICLE.toString, "01111111111", 2001)
-                properties.insert(Some(2L), "Bicicleta Sundown", 20.00,
-                    PropertyKind.VEHICLE.toString, "02222222222", 2002)
-                properties.insert(Some(3L), "Oculos OAKLEY phoda", 10.50,
-                    PropertyKind.OTHER.toString, "03333333333", 2003)
-                properties.insert(Some(4L), "Skate motorizado", 50000.00,
-                    PropertyKind.VEHICLE.toString, "04444444444", 2004)
-                properties.insert(Some(5L), "TOURO NELORI BOA PINTA", 500.00,
-                    PropertyKind.OTHER.toString, "05555555555", 2005)
-                properties.insert(Some(6L), "Apartamento Duplex Power Plus",
-                    300000.00, PropertyKind.REALTY.toString, "06666666666", 2006)
-                properties.insert(Some(7L), "Apartamento Triplex Power Max",
-                    500000.00, PropertyKind.REALTY.toString, "06666666666", 2007)
+            MTable.getTables(auctions.tableName).firstOption match {
+                case None =>
+                    auctions.ddl.create
+                    auctions.insertAll(
+                        (None, a, b, true, "01111111111", 1L),
+                        (None, a, b, false, "02222222222", 2L),
+                        (None, a, b, true, "03333333333", 3L))
+                case _ =>
+            }
 
-                auctions.ddl.create
-                auctions.insertAll(
-                    (None, a, b, true, "01111111111", 1L),
-                    (None, a, b, false, "02222222222", 2L),
-                    (None, a, b, true, "03333333333", 3L)
-                )
-
-                userBids.ddl.create
-                userBids.insertAll(
-                    (None, 1L, "maurilio", 50000.00),
-                    (None, 1L, "chimerito", 50001.00),
-                    (None, 2L, "chimerito", 50.00),
-                    (None, 3L, "mariella", 992.39)
-                )
+            MTable.getTables(userBids.tableName).firstOption match {
+                case None =>
+                    userBids.ddl.create
+                    userBids.insertAll(
+                        (None, 1L, "maurilio", 50000.00),
+                        (None, 1L, "chimerito", 50001.00),
+                        (None, 2L, "chimerito", 50.00),
+                        (None, 3L, "mariella", 992.39))
+                case _ =>
             }
         }
     }
@@ -188,7 +210,8 @@ object Database {
                     users.insert(client.userName, client.password, client.name,
                         Some(client.CPF), Some(client.birthDay),
                         Some(client.telephone), Some(client.address),
-                        Some(client.email), 1)})
+                        Some(client.email), 1)}
+                ) orElse initialize()
         }
     }
 
@@ -196,15 +219,17 @@ object Database {
         db withSession {
             MTable.getTables(users.tableName).firstOption foreach(
                 MTable => {users.insert(manager.userName, manager.password,
-                    manager.name, None, None, None, None, None, 0)})
+                    manager.name, None, None, None, None, None, 0)}
+                ) orElse initialize()
         }
     }
 
     def addIndebted(name : String, birthDay : java.util.Date,
                     debt : Double, cpf : String) = {
         db withSession {
-            MTable.getTables(auctions.tableName).firstOption foreach(
-                MTable => {indebteds.insert(cpf, name, birthDay, debt)})
+            MTable.getTables(indebteds.tableName).firstOption foreach(
+                MTable => {indebteds.insert(cpf, name, birthDay, debt)}
+                ) orElse initialize()
         }
     }
 
@@ -216,7 +241,7 @@ object Database {
             MTable.getTables(auctions.tableName).firstOption  foreach(
                 MTable => {properties.insert(None, propertyName, value, kind,
                     dbQuery.list.head, boughtIn)}
-                )
+                ) orElse initialize()
         }
     }
 
@@ -231,7 +256,7 @@ object Database {
             MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => auctions.insert(None, auction.begin, auction.end,
                     auction.open, auction.indebted.cpf, dbQuery.list.head)
-                )
+                ) orElse initialize()
         }
     }
 
@@ -247,8 +272,7 @@ object Database {
                     case false => dbQuery.update(bid.value)
                     case true => userBids.insert(None, bid.auction,
                         bid.client.userName, bid.value)
-                }
-                )
+                }) orElse initialize()
         }
     }
 
@@ -262,8 +286,7 @@ object Database {
             MTable.getTables(userBids.tableName).firstOption foreach(
                 MTable => dbQuery.list.isEmpty match {
                     case false => dbQuery.mutate(b => b.delete())
-                }
-                )
+                }) orElse initialize()
         }
     }
 
@@ -276,7 +299,7 @@ object Database {
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => dbQuery.update(auction.open)
-                )
+                ) orElse initialize()
         }
     }
 
@@ -315,8 +338,7 @@ object Database {
                             Indebted(iname, bdate, debt, cpf))
                     }
                 }
-                case None =>
-                    indebteds.ddl.create
+                case None => initialize()
                     Nil
             }
         }
@@ -344,11 +366,11 @@ object Database {
     Option[Boolean]): List[Property] = {
         lazy val dbQueryT = for {
             a <- auctions
-            p <- properties if a.property === p.id && a.open === true
+            p <- properties if a.property === p.id
         } yield p.*
         lazy val dbQueryF = for {
             a <- auctions
-            p <- properties if a.property === p.id && a.open === false
+            p <- properties if !auctions.filter(a => a.property === p.id).exists
         } yield p.*
 
         auctionStatus match {
@@ -420,7 +442,7 @@ object Database {
                                     address.get, email.get)
                             }
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -438,7 +460,7 @@ object Database {
                         telephone, address, email, usrLevel) =>
                             new Manager(userName, passWord, name)
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -457,7 +479,7 @@ object Database {
                             new Client(userName, passWord, name, cpf.get,
                                 bdate.get, telephone.get, address.get, email.get)
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -472,8 +494,7 @@ object Database {
                     case (ubID, auctionID, userID, value) =>
                         queryAuction(auctionID).get
                 }
-                case None =>
-                    (users.ddl ++ auctions.ddl ++ userBids.ddl).create
+                case None => initialize()
                     Nil
             }
         }
@@ -511,7 +532,7 @@ object Database {
                             } yield Auction(dbi, dbp, begin, end,
                                 queryHighestBid(id.get), open, id)
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -530,8 +551,7 @@ object Database {
                     case(cpf, name, bdate, debt) => Indebted(name, bdate,
                         debt, cpf)
                 }
-                case None =>
-                    indebteds.ddl.create
+                case None => initialize()
                     Nil
             }
         }
@@ -585,7 +605,7 @@ object Database {
                             new Client(userName, passWord, name, cpf.get,
                                 bdate.get, telephone.get, address.get, email.get)
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -602,8 +622,7 @@ object Database {
                         } yield Auction(dbi, dbp, begin, end,
                             queryHighestBid(id.get), open, id)
                 }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl ++ auctions.ddl).create
+                case None => initialize()
                     Nil
             }
         }
@@ -618,8 +637,7 @@ object Database {
                     case (userBidID, auctionID, userID, value) =>
                         Bid(auctionID, queryUser(userID).get, value)
                 }
-                case None =>
-                    userBids.ddl.create
+                case None => initialize()
                     Nil
             }
         }
@@ -636,8 +654,7 @@ object Database {
                         Property (name, value, PropertyKind.withName(kind),
                             boughtIn, id)
                 }
-                case None =>
-                    (indebteds.ddl ++ properties.ddl).create
+                case None => initialize()
                     Nil
             }
         }
@@ -653,7 +670,7 @@ object Database {
                             Indebted(name, bdate, debt, cpf,
                                 queryIndebtedProperties(cpf))
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
@@ -668,7 +685,7 @@ object Database {
                             Property(name, value, PropertyKind.withName(kind),
                                 boughtIn, id)
                     }
-                )
+                ) orElse { initialize(); None }
         }
     }
 
