@@ -1,8 +1,9 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
 import business.entities.{Indebted, Manager}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.ButtonsPanel
+import main.scala.presentation.gui.subframe.ChildFrame
 import main.scala.presentation.gui.table.SortableTable
 import main.scala.presentation.gui.validator.Validator
 
@@ -24,10 +25,17 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
       registerIndebtedAction
     }
   }
-  val allIndebtedsReport = new Button("Relatório de Todos Endividados")
-  //TODO implement action
-  val indebtedReport = new Button("Relatório do Endividado")
-  //TODO implement action
+  val allIndebtedsReport = new Button{
+    action = Action("Relatório de Todos Endividados"){
+      allIndebtedsReportAction
+    }
+
+  }
+  val indebtedReport = new Button{
+    action = Action("Relatório do Endividado"){
+      indebtedReportAction
+    }
+  }
   val properties = new Button {
     action = Action("Bens") {
       propertiesAction
@@ -71,6 +79,14 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
       visible = false
       new IndebtedPropertiesFrame(this, manager, indebted)
     }
+  }
+
+  def allIndebtedsReportAction: Unit = {
+    //TODO all indebteds report code here
+  }
+
+  def indebtedReportAction: Unit = {
+    //TODO indebted report here
   }
 }
 

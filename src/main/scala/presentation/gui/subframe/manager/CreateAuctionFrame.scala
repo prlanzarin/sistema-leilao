@@ -1,11 +1,10 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
-import java.util.Calendar
-
-import business.entities.{Indebted, Auction, Property, Manager}
+import business.entities.{Manager, Property}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelTextFieldPanel}
-import main.scala.presentation.gui.validator.{Validator, ValidationException}
+import main.scala.presentation.gui.subframe.ChildFrame
+import main.scala.presentation.gui.validator.{ValidationException, Validator}
 
 import scala.swing._
 

@@ -3,7 +3,8 @@ package main.scala.presentation.gui
 import business.entities.{Client, Manager}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelTextFieldPanel}
-import main.scala.presentation.gui.subframe.{ManagerMenuFrame, ClientMenuFrame, RegisterClientFrame}
+import main.scala.presentation.gui.subframe.client.ClientMenuFrame
+import main.scala.presentation.gui.subframe.manager.{RegisterClientFrame, ManagerMenuFrame}
 import main.scala.presentation.gui.validator.{ValidationException, Validator}
 
 import scala.swing._

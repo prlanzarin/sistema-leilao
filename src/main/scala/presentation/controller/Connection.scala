@@ -83,6 +83,39 @@ object Connection {
     }
   }
 
+  def sendQueryAuctionHistoryRequest(client: Client, propertyName: String, propertyKind: Option[String]): List[(Auction, Bid)] = {
+    val msg: RequestMessage = QueryAuctionHistoryRequest(client, propertyName, propertyKind)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case QueryAuctionHistoryReply(lab) => lab
+      case _ => Nil
+    }
+  }
+
+  def sendQueryOpenedAuctionsRequest(name: String, propertyKind: Option[String]): List[Auction] = {
+    val msg: RequestMessage = QueryOpenedAuctionsRequest(name, propertyKind)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case QueryOpenedAuctionsReply(la) => la
+      case _ => Nil
+    }
+  }
+
+  def sendQueryClosedAuctionsRequest(name: String, propertyKind: Option[String]): List[Auction] = {
+    val msg: RequestMessage = QueryClosedAuctionsRequest(name, propertyKind)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case QueryClosedAuctionsReply(la) => la
+      case _ => Nil
+    }
+  }
+
   def sendQueryIndebtedPropertiesRequest(indebtedCpf: String): List[Property] = {
     val msg: RequestMessage = QueryIndebtedPropertiesRequest(indebtedCpf)
     out.writeObject(msg)
