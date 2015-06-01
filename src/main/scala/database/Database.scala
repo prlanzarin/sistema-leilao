@@ -530,7 +530,8 @@ object Database {
                                 dbi <- Database.queryIndebted(indebted)
                                 dbp <- Database.queryProperty(property)
                             } yield Auction(dbi, dbp, begin, end,
-                                queryHighestBid(id.get), open, id)
+                                queryHighestBid(id.get), open, id,
+                                Some(countAuctionBids(id.get)))
                     }
                 ) orElse { initialize(); None }
         }
@@ -620,7 +621,8 @@ object Database {
                             dbi <- Database.queryIndebted(indebted)
                             dbp <- Database.queryProperty(property)
                         } yield Auction(dbi, dbp, begin, end,
-                            queryHighestBid(id.get), open, id)
+                            queryHighestBid(id.get), open, id,
+                            Some(countAuctionBids(id.get)))
                 }
                 case None => initialize()
                     Nil
@@ -686,6 +688,20 @@ object Database {
                                 boughtIn, id)
                     }
                 ) orElse { initialize(); None }
+        }
+    }
+
+    private def countAuctionBids(auctionID : Long) : Int = {
+        lazy val dbQuery = for {
+            ub <- userBids if ub.auctionID === auctionID
+        } yield ub.userBidID.count
+
+        db withSession {
+            MTable.getTables(userBids.tableName).firstOption match {
+                case Some(x) => dbQuery.list.head
+                case None => initialize()
+                    dbQuery.list.head
+            }
         }
     }
 

@@ -11,7 +11,8 @@ case class Auction(indebted: Indebted,
                    end: Date,
                    highestBid : Option[Bid] = None,
                    open : Boolean,
-                   auctionID : Option[Long] = None) {
+                   auctionID : Option[Long] = None,
+                   numberOfBids : Option[Int] = None) {
 
     def highestBid_(bid : Option[Bid]) = Auction(indebted, property, begin,
         end, bid, open, auctionID)
@@ -27,5 +28,5 @@ case class Auction(indebted: Indebted,
         UIUtils.dateFormatter.format(begin) +"\nFim: " + UIUtils.dateFormatter.
         format(end) + "\nIdentificador: " + auctionID.get + "\nAberto == " +
         open + "\nLance mais alto -> " + highestBid.getOrElse(println
-        ("Nenhum"))
+        ("Nenhum")) + "\nNumero de lances: " + numberOfBids.getOrElse(None)
 }
