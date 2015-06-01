@@ -1,7 +1,8 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.client
 
 import business.entities.Client
 import main.scala.presentation.gui.panel.ButtonsPanel
+import main.scala.presentation.gui.subframe.ChildFrame
 
 import scala.swing.{Action, Button, Frame}
 
@@ -11,9 +12,9 @@ import scala.swing.{Action, Button, Frame}
 class ClientMenuFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
   title = "Bem Vindo, " + client.name + "!"
   resizable = false
-  val newBid = new Button {
+  val createBid = new Button {
     action = Action("Novo Lance") {
-      newBidAction
+      createBidAction
     }
   }
   val history = new Button {
@@ -21,15 +22,17 @@ class ClientMenuFrame(parent: Frame, client: Client) extends ChildFrame(parent) 
       historyAction
     }
   }
-  contents = new ButtonsPanel(List(newBid, history))
+  contents = new ButtonsPanel(List(createBid, history))
 
-  def newBidAction = {
-//    visible = false
-//    new NewBidFrame(this, client)
+  def createBidAction = {
+    visible = false
+    new CreateBidFrame(this, client)
   }
 
   def historyAction = {
-//    visible = false
-//    new HistoryFrame(this, client)
+    visible = false
+    new HistoryFrame(this, client)
   }
 }
+
+

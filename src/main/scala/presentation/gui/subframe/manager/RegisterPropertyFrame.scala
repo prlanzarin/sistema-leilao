@@ -1,8 +1,9 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
 import business.entities._
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelComboBoxPanel, LabelTextFieldPanel}
+import main.scala.presentation.gui.subframe.ChildFrame
 import main.scala.presentation.gui.validator.{ValidationException, Validator}
 
 import scala.swing._

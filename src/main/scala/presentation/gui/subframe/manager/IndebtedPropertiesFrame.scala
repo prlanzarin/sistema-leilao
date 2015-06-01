@@ -1,8 +1,9 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
-import business.entities.{PropertyKind, Indebted, Property, Manager}
+import business.entities.{Indebted, Manager, Property, PropertyKind}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.ButtonsPanel
+import main.scala.presentation.gui.subframe.ChildFrame
 import main.scala.presentation.gui.table.SortableTable
 
 import scala.swing._

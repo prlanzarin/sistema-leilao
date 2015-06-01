@@ -1,12 +1,13 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
-import business.entities.{PropertyKind, Manager, Property}
+import business.entities.{Manager, Property, PropertyKind}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelRadioButtonsPanel}
+import main.scala.presentation.gui.subframe.ChildFrame
 import main.scala.presentation.gui.table.SortableTable
 
 import scala.swing._
-import scala.swing.event.{ButtonClicked, SelectionChanged}
+import scala.swing.event.ButtonClicked
 
 /**
  * Created by mhbackes on 26/05/15.

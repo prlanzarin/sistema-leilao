@@ -1,8 +1,9 @@
-package main.scala.presentation.gui.subframe
+package main.scala.presentation.gui.subframe.manager
 
 import business.entities.Manager
+import main.scala.presentation.gui.subframe.ChildFrame
 
-import scala.swing.{GridPanel, Action, Button, Frame}
+import scala.swing.{Action, Button, Frame, GridPanel}
 
 /**
  * Created by mhbackes on 25/05/15.
@@ -48,13 +49,13 @@ class ManagerMenuFrame(parent: Frame, manager: Manager) extends ChildFrame(paren
   }
 
   def openedAuctionsAction = {
-//    visible = false
-//    new OpenedAuctions(this)
+    visible = false
+    new OpenedAuctionsFrame(this, manager)
   }
 
   def closedAuctionsAction = {
-//    visible = false
-//    new ClosedAuctions(this)
+    visible = false
+    new ClosedAuctionsFrame(this, manager)
   }
 }
 

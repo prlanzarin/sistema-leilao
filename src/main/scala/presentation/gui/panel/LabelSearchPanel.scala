@@ -1,12 +1,13 @@
 package main.scala.presentation.gui.panel
 
-import scala.swing.{Button, FlowPanel, TextField}
+import scala.swing.{Label, Button, FlowPanel, TextField}
 
 /**
  * Created by mhbackes on 25/05/15.
  */
-class SearchPanel(textField: TextField, button: Button)
+class LabelSearchPanel(label: String, textField: TextField, button: Button)
   extends FlowPanel(FlowPanel.Alignment.Left)() {
+  contents += new Label(label)
   contents += textField
   contents += button
 }
