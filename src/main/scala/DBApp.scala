@@ -125,11 +125,11 @@ object DBApp {
         println("-----UPDATE AUCTION----")
         Database.updateAuction(Auction(Database.queryIndebted("01111111111")
             .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
-            date, date, None, false, Some(1L)))
+            date, date, None, Some(1L)))
         Database.queryAuction(1L).foreach(a => println(a))
         Database.updateAuction(Auction(Database.queryIndebted("01111111111")
             .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
-            date, date, None, true, Some(1L)))
+            date, date, None, Some(1L)))
         Database.queryAuction(1L).foreach(a => println(a))
 
         println("-----ADD BID----")
@@ -145,19 +145,20 @@ object DBApp {
 
         println("-----QUERY OPEN/CLOSED AUCTIONS----")
         println("--1L VEHICLE OPEN--")
-        Database.queryOpenAuctions(Some(1L), Some(PropertyKind.VEHICLE.toString)).
+        Database.queryOpenAuctions(Some("Onibus da Carris"), Some(PropertyKind
+            .VEHICLE.toString)).
             foreach(a => println(a))
         println("--2L VEHICLE OPEN--")
-        Database.queryOpenAuctions(Some(2L), Some(PropertyKind.VEHICLE.toString)).
+        Database.queryOpenAuctions(Some("Bicicleta Sundown"), Some(PropertyKind.VEHICLE.toString)).
             foreach(a => println(a))
         println("--2L VEHICLE CLOSED--")
-        Database.queryClosedAuctions(Some(2L), Some(PropertyKind.VEHICLE
+        Database.queryClosedAuctions(Some("Bicicleta Sundown"), Some(PropertyKind.VEHICLE
             .toString)).foreach(a => println(a))
         println("--3L VEHICLE WRONG KIND--")
-        Database.queryOpenAuctions(Some(3L), Some(PropertyKind.VEHICLE
+        Database.queryOpenAuctions(Some("Oculos OAKLEY phoda"), Some(PropertyKind.VEHICLE
             .toString)).foreach(a => println(a))
         println("--3L VEHICLE RIGHT KIND--")
-        Database.queryOpenAuctions(Some(3L), Some(PropertyKind.OTHER
+        Database.queryOpenAuctions(Some("Oculos OAKLEY phoda"), Some(PropertyKind.OTHER
             .toString)).foreach(a => println(a))
         println("--ALL OPEN VEHICLE--")
         Database.queryOpenAuctions(None, Some(PropertyKind.VEHICLE

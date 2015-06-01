@@ -1,5 +1,7 @@
 package database
 
+import java.util
+
 import business.entities._
 
 import org.scalaquery.meta.MTable
@@ -58,8 +60,8 @@ Table[(Option[Long], String, Double, String, String, Int)]("PROPERTIES"){
 }
 
 class DBAuction(val indebteds : DBIndebted, val properties : DBProperty)
-    extends Table[(Option[Long], java.util.Date, java.util.Date, Boolean,
-        String, Long)]("AUCTION") {
+    extends Table[(Option[Long], java.util.Date, java.util.Date, String,
+        Long)]("AUCTION") {
     implicit val JavaUtilDateTypeMapper =
         MappedTypeMapper.base[java.util.Date, Long](_.getTime,
             new java.util.Date(_))
@@ -67,14 +69,13 @@ class DBAuction(val indebteds : DBIndebted, val properties : DBProperty)
         .DBType("serial"))
     def begin = column[java.util.Date]("BEGIN", O.NotNull)
     def end = column[java.util.Date]("END", O.NotNull)
-    def open = column[Boolean]("OPEN", O.NotNull)
     def indebted = column[String]("INDEBTED", O.NotNull)
     def property = column[Long]("PROPERTY", O.NotNull)
 
     def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
     def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
 
-    def * = auctionId.? ~ begin ~ end ~ open ~ indebted ~
+    def * = auctionId.? ~ begin ~ end ~ indebted ~
         property
 }
 
@@ -94,6 +95,10 @@ Table[(Option[Long], Long, String, Double)]("USER_AUCTIONS") {
 }
 
 object Database {
+
+    implicit val JavaUtilDateTypeMapper =
+        MappedTypeMapper.base[java.util.Date, Long](_.getTime,
+            new java.util.Date(_))
 
     val db = org.scalaquery.session.Database.
         forURL("jdbc:h2:file:./db/auctiondb", driver = "org.h2.Driver")
@@ -184,9 +189,9 @@ object Database {
                 case None =>
                     auctions.ddl.create
                     auctions.insertAll(
-                        (None, a, b, true, "01111111111", 1L),
-                        (None, a, b, false, "02222222222", 2L),
-                        (None, a, b, true, "03333333333", 3L))
+                        (None, a, b, "01111111111", 1L),
+                        (None, a, b, "02222222222", 2L),
+                        (None, a, b, "03333333333", 3L))
                 case _ =>
             }
 
@@ -255,7 +260,7 @@ object Database {
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => auctions.insert(None, auction.begin, auction.end,
-                    auction.open, auction.indebted.cpf, dbQuery.list.head)
+                    auction.indebted.cpf, dbQuery.list.head)
                 ) orElse initialize()
         }
     }
@@ -294,11 +299,11 @@ object Database {
         lazy val dbQuery =
             for {
                 a <- auctions if a.auctionId === auction.auctionID
-            } yield a.open
+            } yield a.end
 
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
-                MTable => dbQuery.update(auction.open)
+                MTable => dbQuery.update(auction.end)
                 ) orElse initialize()
         }
     }
@@ -385,14 +390,15 @@ object Database {
         }
     }
 
-    def queryOpenAuctions(propertyID : Option[Long], propertyKind :
+    def queryOpenAuctions(propertyName : Option[String], propertyKind :
     Option[String]): List[Auction] = {
         lazy val dbQuery = for {
-            p <- properties if p.id === propertyID
-            a <- auctions if a.property === p.id && a.open === true
+            p <- properties if p.name === propertyName
+            a <- auctions if a.property === p.id && a.begin <= new util.Date() &&
+            a.end >= new util.Date()
         } yield a.*
 
-        propertyID match {
+        propertyName match {
             case Some(x) => queryAuctions(dbQuery).filter(a =>
                 propertyKind.map(a.property.kind.toString == _).getOrElse(true))
             case None => getOpenAuctions.filter(a =>
@@ -400,14 +406,14 @@ object Database {
         }
     }
 
-    def queryClosedAuctions(propertyID : Option[Long], propertyKind :
+    def queryClosedAuctions(propertyName : Option[String], propertyKind :
     Option[String]): List[Auction] = {
         lazy val dbQuery = for {
-            p <- properties if p.id === propertyID
-            a <- auctions if a.property === p.id && a.open === false
+            p <- properties if p.name === propertyName
+            a <- auctions if a.property === p.id && a.end < new util.Date()
         } yield a.*
 
-        propertyID match {
+        propertyName match {
             case Some(x) => queryAuctions(dbQuery).filter(a =>
                 propertyKind.map(a.property.kind.toString == _).getOrElse(true))
             case None => getClosedAuctions.filter(a =>
@@ -425,8 +431,7 @@ object Database {
 
     def queryUser(login : String ,password : String) : Option[User] = {
         lazy val dbQuery = for {
-            m <- users if m.userName === login && m.passWord ===
-            password
+            m <- users if m.userName === login && m.passWord === password
         } yield m.*
 
         db withSession {
@@ -525,12 +530,12 @@ object Database {
             MTable.getTables(users.tableName).firstOption flatMap(
                 MTable =>
                     dbQuery.firstOption flatMap {
-                        case (id, begin, end, open, indebted, property) =>
+                        case (id, begin, end, indebted, property) =>
                             for {
                                 dbi <- Database.queryIndebted(indebted)
                                 dbp <- Database.queryProperty(property)
                             } yield Auction(dbi, dbp, begin, end,
-                                queryHighestBid(id.get), open, id,
+                                queryHighestBid(id.get), id,
                                 Some(countAuctionBids(id.get)))
                     }
                 ) orElse { initialize(); None }
@@ -577,7 +582,8 @@ object Database {
 
     def getOpenAuctions : List[Auction] = {
         lazy val dbQuery = for {
-            a <- auctions if a.open === true
+            a <- auctions if a.begin <= new util.Date() && a.end >= new util
+        .Date()
         } yield a.*
 
         queryAuctions(dbQuery)
@@ -585,7 +591,7 @@ object Database {
 
     def getClosedAuctions : List[Auction] = {
         lazy val dbQuery = for {
-            a <- auctions if a.open === false
+            a <- auctions if a.end < new util.Date()
         } yield a.*
 
         queryAuctions(dbQuery)
@@ -610,18 +616,18 @@ object Database {
         }
     }
 
-    private def queryAuctions(dbQuery : Query[Projection6[Option[Long], java.util.Date,
-        java.util.Date, Boolean, String, Long], auctions.TableType]): List[Auction] = {
+    private def queryAuctions(dbQuery : Query[Projection5[Option[Long], java.util.Date,
+        java.util.Date, String, Long], auctions.TableType]): List[Auction] = {
 
         db withSession {
             MTable.getTables(auctions.tableName) firstOption match {
                 case Some(x) => dbQuery.list flatMap {
-                    case (id, begin, end, open, indebted, property) =>
+                    case (id, begin, end, indebted, property) =>
                         for {
                             dbi <- Database.queryIndebted(indebted)
                             dbp <- Database.queryProperty(property)
                         } yield Auction(dbi, dbp, begin, end,
-                            queryHighestBid(id.get), open, id,
+                            queryHighestBid(id.get), id,
                             Some(countAuctionBids(id.get)))
                 }
                 case None => initialize()

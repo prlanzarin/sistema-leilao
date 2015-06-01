@@ -24,8 +24,7 @@ class ManagerServices extends UserServices {
     def insertAuction(property: Property, beginDate: Date, endDate: Date): Boolean = {
         val indebted = Database.queryIndebted(property).getOrElse(return false)
         val nowTime = Calendar.getInstance.getTime()
-        val opened = beginDate.before(nowTime)
-        val auction = new Auction(indebted, property, beginDate, endDate, None, opened, None)
+        val auction = new Auction(indebted, property, beginDate, endDate, None, None)
         //TODO schedule auction if not opened
         Database.addAuction(auction)
         true
@@ -47,7 +46,7 @@ class ManagerServices extends UserServices {
     }
 
     def endAuction(auction: Auction) = {
-
+        Database.updateAuction(auction)
     }
 
     def getIndebtedProperties(indebtedCpf: String): List[Property] ={

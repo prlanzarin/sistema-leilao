@@ -10,23 +10,24 @@ case class Auction(indebted: Indebted,
                    begin: Date,
                    end: Date,
                    highestBid : Option[Bid] = None,
-                   open : Boolean,
                    auctionID : Option[Long] = None,
                    numberOfBids : Option[Int] = None) {
 
     def highestBid_(bid : Option[Bid]) = Auction(indebted, property, begin,
-        end, bid, open, auctionID)
-
-    def open_(isOpen : Boolean) = Auction(indebted, property, begin, end,
-        highestBid, isOpen, auctionID)
+        end, bid, auctionID)
 
     def auctionID_(newID : Option[Long]) = Auction(indebted, property,
-        begin, end, highestBid, open, newID)
+        begin, end, highestBid, newID)
+
+    def isOpen : Boolean = {
+        lazy val now = Calendar.getInstance.getTime()
+        begin.before(now) && end.after(now)
+    }
 
     override def toString: String = "Endividado: " + indebted.name +
         "\nPropriedade: " + "" + property.name + "\nComeco (R$): " +
         UIUtils.dateFormatter.format(begin) +"\nFim: " + UIUtils.dateFormatter.
         format(end) + "\nIdentificador: " + auctionID.get + "\nAberto == " +
-        open + "\nLance mais alto -> " + highestBid.getOrElse(println
+         isOpen + "\nLance mais alto -> " + highestBid.getOrElse(println
         ("Nenhum")) + "\nNumero de lances: " + numberOfBids.getOrElse(None)
 }
