@@ -83,7 +83,8 @@ object Connection {
     }
   }
 
-  def sendQueryAuctionHistoryRequest(client: Client, propertyName: String, propertyKind: Option[String]): List[(Auction, Bid)] = {
+  def sendQueryAuctionHistoryRequest(client: Client, propertyName:
+  Option[String], propertyKind: Option[String]): List[(Auction, Bid)] = {
     val msg: RequestMessage = QueryAuctionHistoryRequest(client, propertyName, propertyKind)
     out.writeObject(msg)
     out.flush()
@@ -94,7 +95,7 @@ object Connection {
     }
   }
 
-  def sendQueryOpenedAuctionsRequest(name: String, propertyKind: Option[String]): List[Auction] = {
+  def sendQueryOpenedAuctionsRequest(name: Option[String], propertyKind: Option[String]): List[Auction] = {
     val msg: RequestMessage = QueryOpenedAuctionsRequest(name, propertyKind)
     out.writeObject(msg)
     out.flush()
@@ -105,7 +106,7 @@ object Connection {
     }
   }
 
-  def sendQueryClosedAuctionsRequest(name: String, propertyKind: Option[String]): List[Auction] = {
+  def sendQueryClosedAuctionsRequest(name: Option[String], propertyKind: Option[String]): List[Auction] = {
     val msg: RequestMessage = QueryClosedAuctionsRequest(name, propertyKind)
     out.writeObject(msg)
     out.flush()

@@ -75,8 +75,7 @@ class DBAuction(val indebteds : DBIndebted, val properties : DBProperty)
     def indebtedKey = foreignKey("INDEBTED_FK", indebted, indebteds)(_.cpf)
     def propertyKey = foreignKey("PROP_FK", property, properties)(_.id)
 
-    def * = auctionId.? ~ begin ~ end ~ indebted ~
-        property
+    def * = auctionId.? ~ begin ~ end ~ indebted ~ property
 }
 
 class DBUserBids(val auctions : DBAuction, val users : DBUser) extends
@@ -488,6 +487,41 @@ object Database {
         }
     }
 
+    private def queryUser(id : String) :  Option[Client] = {
+        lazy val dbQuery = for {
+            c <- users if c.userName === id
+        } yield c.*
+
+        db withSession {
+            MTable.getTables(users.tableName).firstOption flatMap(
+                MTable =>
+                    dbQuery.firstOption map {
+                        case (userName, passWord, name, cpf, bdate,
+                        telephone, address, email, usrLevel) =>
+                            new Client(userName, passWord, name, cpf.get,
+                                bdate.get, telephone.get, address.get, email.get)
+                    }
+                ) orElse { initialize(); None }
+        }
+    }
+
+    def queryClientBidHistory(client : Client) : List[(Auction, Bid)] = {
+        lazy val dbQuery = for {
+            ub <- userBids if ub.userID === client.userName
+        } yield ub.*
+        db withSession {
+            MTable.getTables(indebteds.tableName) firstOption match {
+                case Some(x) => dbQuery.list map {
+                    case (ubid, aID, uID, value) =>
+                        (queryAuction(aID).get, Bid(aID, queryUser(uID).get,
+                            value))
+                }
+                case None => initialize()
+                    Nil
+            }
+        }
+    }
+
     def queryClientAuctions(client : Client) : List[Auction] = {
         lazy val dbQuery = for {
             ub <- userBids if ub.userID === client.userName
@@ -596,24 +630,6 @@ object Database {
 
         queryAuctions(dbQuery)
 
-    }
-
-    private def queryUser(id : String) :  Option[Client] = {
-        lazy val dbQuery = for {
-            c <- users if c.userName === id
-        } yield c.*
-
-        db withSession {
-            MTable.getTables(users.tableName).firstOption flatMap(
-                MTable =>
-                    dbQuery.firstOption map {
-                        case (userName, passWord, name, cpf, bdate,
-                        telephone, address, email, usrLevel) =>
-                            new Client(userName, passWord, name, cpf.get,
-                                bdate.get, telephone.get, address.get, email.get)
-                    }
-                ) orElse { initialize(); None }
-        }
     }
 
     private def queryAuctions(dbQuery : Query[Projection5[Option[Long], java.util.Date,

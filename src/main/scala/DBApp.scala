@@ -146,14 +146,15 @@ object DBApp {
         println("-----QUERY OPEN/CLOSED AUCTIONS----")
         println("--1L VEHICLE OPEN--")
         Database.queryOpenAuctions(Some("Onibus da Carris"), Some(PropertyKind
-            .VEHICLE.toString)).
-            foreach(a => println(a))
+            .VEHICLE.toString)).foreach(a => println(a))
         println("--2L VEHICLE OPEN--")
         Database.queryOpenAuctions(Some("Bicicleta Sundown"), Some(PropertyKind.VEHICLE.toString)).
             foreach(a => println(a))
         println("--2L VEHICLE CLOSED--")
         Database.queryClosedAuctions(Some("Bicicleta Sundown"), Some(PropertyKind.VEHICLE
             .toString)).foreach(a => println(a))
+        Database.queryClosedAuctions(Some("Onibus da Carris"), Some(PropertyKind
+            .VEHICLE.toString)).foreach(a => println(a))
         println("--3L VEHICLE WRONG KIND--")
         Database.queryOpenAuctions(Some("Oculos OAKLEY phoda"), Some(PropertyKind.VEHICLE
             .toString)).foreach(a => println(a))
@@ -169,6 +170,7 @@ object DBApp {
         println("--ALL ALL--")
         Database.queryClosedAuctions(None, None).foreach(a => println(a))
         Database.queryOpenAuctions(None, None).foreach(a => println(a))
+        println("--!!!!!!!!!!!!!--")
 
 
     }

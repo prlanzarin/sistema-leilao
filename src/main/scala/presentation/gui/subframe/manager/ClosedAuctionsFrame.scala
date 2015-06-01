@@ -63,7 +63,7 @@ class ClosedAuctionsFrame(parent: Frame, manager: Manager) extends ChildFrame(pa
 
   def updateAuctionTable: Unit = {
     val propertyKind = getPropertyKindFilter
-    val propertyName = searchText.text
+    val propertyName = Some(searchText.text) //FIXME OPTION?
     val auctionList = Connection.sendQueryClosedAuctionsRequest(propertyName, propertyKind)
     rowData = new Array[Array[Any]](auctionList.size)
     auctionList.zipWithIndex.foreach { case (x, i) => rowData(i) = auctionToRow(x) }

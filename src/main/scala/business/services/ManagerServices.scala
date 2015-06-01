@@ -65,8 +65,18 @@ class ManagerServices extends UserServices {
         Database.getAuctions
     }
 
+    def getOpenAuctions(property : Option[String], propertyKind :
+    Option[String]) : List[Auction] = {
+        Database.queryOpenAuctions(property, propertyKind)
+    }
+
     def getOpenAuction : List[Auction] = {
         Database.getOpenAuctions
+    }
+
+    def getClosedAuctions(property : Option[String], propertyKind :
+    Option[String]) : List[Auction] = {
+        Database.queryClosedAuctions(property, propertyKind)
     }
 
     def getClosedAuctions : List[Auction] = {

@@ -74,7 +74,7 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
 
   def updateAuctionBidTable: Unit = {
     val propertyKind = getPropertyKindFilter
-    val propertyName = searchText.text
+    val propertyName = Some(searchText.text) //FIXME OPTION?
     val auctionList = Connection.sendQueryAuctionHistoryRequest(client, propertyName, propertyKind)
     rowData = new Array[Array[Any]](auctionList.size)
     auctionList.zipWithIndex.foreach { case ((x, y), i) => rowData(i) = auctionBidToRow(x,y) }

@@ -60,7 +60,7 @@ class CreateBidFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
 
   def updateAuctionTable: Unit = {
     val propertyKind = getPropertyKindFilter
-    val propertyName = searchText.text
+    val propertyName = Some(searchText.text) // FIXME OPTION?
     val auctionList = Connection.sendQueryOpenedAuctionsRequest(propertyName, propertyKind)
     rowData = new Array[Array[Any]](auctionList.size)
     auctionList.zipWithIndex.foreach { case (x, i) => rowData(i) = auctionToRow(x) }

@@ -9,13 +9,13 @@ import database.Database
 object AppServer {
     def main(args: Array[String]): Unit = {
         try {
-            val listener = new ServerSocket(9999);
+            val listener = new ServerSocket(9999)
             while (true)
-                new ServerThread(listener.accept()).start();
+                new ServerThread(listener.accept()).start()
             listener.close()
         } catch {
             case e: IOException =>
-                System.err.println("Could not listen on port: 9999.");
+                System.err.println("Could not listen on port: 9999.")
                 System.exit(-1)
         }
     }
@@ -26,12 +26,12 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
     override def run(): Unit = {
         try {
             Database.initialize()
-            val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()));
+            val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()))
             val in = new ObjectInputStream(
-                new DataInputStream(socket.getInputStream()));
+                new DataInputStream(socket.getInputStream()))
 
             while (socket.isBound()) {
-                val msg = in.readObject().asInstanceOf[RequestMessage];
+                val msg = in.readObject().asInstanceOf[RequestMessage]
                 val r = msg match {
                     case LoginRequest(u, p) =>
                         println("Server: login request from user \"" + u + "\"")
@@ -88,21 +88,39 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         val pl = serv.getProperties(k,i)
                         QueryPropertiesReply(pl)
 
+                    case QueryOpenedAuctionsRequest(pn, pk) =>
+                        println("Server: querying open auctions")
+                        val serv = new ManagerServices
+                        val oa = serv.getOpenAuctions(pn, pk)
+                        QueryOpenedAuctionsReply(oa)
+
+                    case QueryClosedAuctionsRequest(pn, pk) =>
+                        println("Server: querying open auctions")
+                        val serv = new ManagerServices
+                        val ca = serv.getClosedAuctions(pn, pk)
+                        QueryClosedAuctionsReply(ca)
+
+                    case QueryAuctionHistoryRequest(cl, pn, pk) =>
+                        println("Server: querying open auctions")
+                        val serv = new ClientServices
+                        val ah = serv.queryAuctionHistory(cl, pn, pk)
+                        QueryAuctionHistoryReply(ah)
+
                     case _ => throw new SocketException // TODO Create other exception
 
                 }
-                out.writeObject(r);
+                out.writeObject(r)
                 out.flush()
             }
 
-            out.close();
-            in.close();
+            out.close()
+            in.close()
             socket.close()
         } catch {
             case e: SocketException =>
                 () // avoid stack trace when stopping a client with Ctrl-C
             case e: IOException =>
-                e.printStackTrace();
+                e.printStackTrace()
         }
     }
 }

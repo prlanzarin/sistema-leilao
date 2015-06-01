@@ -19,10 +19,11 @@ class ClientServices extends UserServices {
         Database.queryOpenAuctions(property, propertyKind)
     }
 
-    def queryAuctions(client : Client, propertyID : Option[Long], propertyKind :
-    Option[String]) : List[Auction] = {
-        Database.queryClientAuctions(client).filter(a =>
-            propertyKind.map(a.property.kind.toString == _ && a.property.
-                propertyID == propertyID).getOrElse(true))
+    def queryAuctionHistory(client : Client, propertyName : Option[String],
+                      propertyKind : Option[String]) : List[(Auction, Bid)] = {
+        val ca = Database.queryClientAuctions(client).filter(a =>
+            propertyKind.map(a.property.kind.toString == _ && a.property.name
+                == propertyName.getOrElse(true)).getOrElse(true))
+        Nil
     }
 }
