@@ -275,8 +275,7 @@ object Database {
             MTable.getTables(userBids.tableName).firstOption foreach(
                 MTable => dbQuery.list.isEmpty match {
                     case false => dbQuery.update(value)
-                    case true => userBids.insert(None, aid,
-                        uid, value)
+                    case true => userBids.insert(None, aid, uid, value)
                 }) orElse initialize()
         }
     }
@@ -488,7 +487,7 @@ object Database {
         }
     }
 
-    private def queryUser(id : String) :  Option[Client] = {
+    def queryUser(id : String) :  Option[Client] = {
         lazy val dbQuery = for {
             c <- users if c.userName === id
         } yield c.*

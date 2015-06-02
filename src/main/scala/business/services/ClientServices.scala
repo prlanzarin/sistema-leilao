@@ -7,15 +7,21 @@ import database.Database
 class ClientServices extends UserServices {
 
     def createBid(uid : String, aid : Long, value : Double) : Boolean = {
-        Database.addBid(uid, aid, value)
-        true
-        //TODO CATCH DB EXCEPTIONS
+        Database.queryAuction(aid) match {
+            case Some(x) => Database.queryUser(uid) foreach(
+                u => Database.addBid (uid, aid, value))
+                true
+            case None => false
+        }
     }
 
     def cancelBid(uid : String, aid : Long, value : Double) : Boolean = {
-        Database.cancelBid(uid, aid, value)
-        true
-        //TODO CATCH DB EXCEPTIONS
+        Database.queryAuction(aid) match {
+            case Some(x) => Database.queryUser(uid) foreach(
+                u => Database.cancelBid(uid, aid, value))
+                true
+            case None => false
+        }
     }
 
     def queryOpenAuctions(property : Option[String], propertyKind :
