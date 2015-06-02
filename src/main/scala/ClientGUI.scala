@@ -2,7 +2,7 @@ package main.scala
 
 import main.scala.presentation.gui.LoginFrame
 
-import scala.swing.SimpleSwingApplication
+import scala.swing.{Dialog, SimpleSwingApplication}
 import java.net.SocketException
 
 /**
@@ -13,7 +13,8 @@ object ClientGUI extends SimpleSwingApplication {
     try {
       new LoginFrame
     } catch {
-      case e: SocketException => println("Não foi possível conectar ao servidor.")
+      case e: SocketException =>
+        Dialog.showMessage(null, "Não foi possível conectar a o servidor", "Erro", Dialog.Message.Error)
         sys.exit(-1)
     }
   }
