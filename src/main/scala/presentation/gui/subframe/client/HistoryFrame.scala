@@ -5,8 +5,10 @@ import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{LabelSearchPanel, ButtonsPanel, LabelRadioButtonsPanel}
 import main.scala.presentation.gui.subframe.ChildFrame
 import main.scala.presentation.gui.table.SortableTable
+import main.scala.presentation.gui.validator.Validator
 
 import scala.swing._
+import scala.swing.event.ButtonClicked
 
 /**
  * Created by mhbackes on 30/05/15.
@@ -29,29 +31,29 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
     }
   }
 
-  val headers = Seq("Bem", "Tipo", "Lance Dado", "Maior Lance", "Lances", "Início", "Término")
+  val headers = Seq("Leilão", "Bem", "Tipo", "Lance Dado", "Maior Lance", "Lances", "Início", "Término")
   var rowData: Array[Array[Any]] = Array()
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
 
   val allAuctionsReport = new Button{
     action = Action("Relatório de Todos Leilões"){
-
+      //TODO report
     }
   }
   val auctionReport = new Button{
     action = Action("Relatório do Leilão"){
-
+      //TODO report
     }
   }
   val payment = new Button{
     action = Action("Solicitar Pagamento"){
-
+      //TODO fake boleto
     }
   }
   val cancelBid = new Button{
     action = Action("Cancelar Lance"){
-
+      //TODO cancel bid
     }
   }
 
@@ -62,6 +64,12 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
     }) = BorderPanel.Position.North
     layout(scrollTable) = BorderPanel.Position.Center
     layout(new ButtonsPanel(List(allAuctionsReport, auctionReport, payment, cancelBid))) = BorderPanel.Position.South
+  }
+  updateAuctionBidTable
+
+  listenTo(all, royalty, jewel, vehicle, other)
+  reactions += {
+    case ButtonClicked(_) => updateAuctionBidTable
   }
 
   def getPropertyKindFilter: Option[String] = {
@@ -74,16 +82,23 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
 
   def updateAuctionBidTable: Unit = {
     val propertyKind = getPropertyKindFilter
-    val propertyName = Some(searchText.text) //FIXME OPTION?
-    val auctionList = Connection.sendQueryAuctionHistoryRequest(client, propertyName, propertyKind)
-    rowData = new Array[Array[Any]](auctionList.size)
-    auctionList.zipWithIndex.foreach { case ((x, y), i) => rowData(i) = auctionBidToRow(x,y) }
+    val propertyName = if (searchText.text.isEmpty) None else Option(searchText.text)
+    val auctionBidList = Connection.sendQueryAuctionHistoryRequest(client, propertyName, propertyKind)
+    rowData = new Array[Array[Any]](auctionBidList.size)
+    auctionBidList.zipWithIndex.foreach { case ((x, y), i) => rowData(i) = auctionBidToRow(x,y) }
     table = new SortableTable(rowData, headers)
     scrollTable.contents = table
   }
 
   def auctionBidToRow(auction: Auction, bid: Bid): Array[Any] = {
-    new Array[Any](7)
+    Array(auction.auctionID.get, auction.property.name, auction.property.kind, bid.value, isHighestBid(auction, client),
+    auction.numberOfBids.get, Validator.dateFormatter.format(auction.begin), Validator.dateFormatter.format(auction.end))
+  }
+
+  def isHighestBid(auction: Auction, client: Client): String ={
+    if (auction.highestBid.get.client.userName == client.userName)
+      "Sim"
+    else "Não"
   }
 
   def allAuctionsReportAction: Unit = {
