@@ -268,7 +268,7 @@ object Database {
     def addBid(uid : String, aid : Long, value : Double) = {
         lazy val dbQuery = for {
             b <- userBids if b.auctionID === aid &&
-            b.userID === uid
+            b.userID === uid && b.value < value
         } yield b.value
 
         db withSession {
