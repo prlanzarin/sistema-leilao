@@ -41,7 +41,6 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
         Dialog.showMessage(table, "Leilão cancelado com sucesso", "Sucesso", Dialog.Message.Info)
       else
         Dialog.showMessage(table, "Leilão não pode ser cancelado", "Erro", Dialog.Message.Error)
-
       updateAuctionTable
     }
   }
