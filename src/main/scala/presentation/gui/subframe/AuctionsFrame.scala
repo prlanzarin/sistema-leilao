@@ -41,9 +41,10 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
   def updateAuctionTable
 
   def auctionToRow(auction: Auction): Array[Any] = {
-    Array(auction.auctionID.get, auction.property.name, auction.property.kind, auction.highestBid.get.value,
-      auction.numberOfBids.get, Validator.dateFormatter.format(auction.begin),
-      Validator.dateFormatter.format(auction.end))
+      val value = auction.highestBid map (_.value)
+    Array(auction.auctionID.get, auction.property.name, auction.property.kind,
+        value, auction.numberOfBids.getOrElse(0), Validator.dateFormatter.
+            format(auction.begin), Validator.dateFormatter.format(auction.end))
   }
 
   def rowToAuctionId(row: Int) : Long = {

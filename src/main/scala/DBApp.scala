@@ -78,9 +78,10 @@ object DBApp {
 
         println("-----AUCTIONS TEST-----")
         println("--ADD AUCTIONS---")
-        /*Database.addAuction(Auction(Database.queryIndebted("06666666666").get,
+        Database.addAuction(Auction(Database.queryIndebted("06666666666").get,
             Database.queryProperty("06666666666", "Apartamento Duplex Power Plus").get,
-            date, date, None, false))*/
+            date, date))
+        Database.getAuctions.foreach(a => println(a))
         println("--CLOSED AUCTIONS---")
         Database.getClosedAuctions foreach(ac => println(ac))
         println("--OPEN AUCTIONS---")
