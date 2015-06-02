@@ -135,12 +135,12 @@ object DBApp {
         println("-----ADD BID----")
         Database.queryAuction(1L).foreach(a => println(a))
         Database.queryHighestBid(1L).foreach(p => println(p))
-        Database.addBid(Bid(1L, chimerito, 55000.00))
+        Database.addBid("chimerito", 1L, 55000.00)
         Database.queryHighestBid(1L).foreach(p => println(p))
-        Database.addBid(Bid(1L, maurilio, 58000.00))
+        Database.addBid("maurilio", 1L, 58000.00)
         Database.queryHighestBid(1L).foreach(p => println(p))
         println("-----CANCEL BID----")
-        Database.cancelBid(Bid(1L, maurilio, 58000.00))
+        Database.cancelBid("maurilio", 1L, 58000.00)
         Database.queryHighestBid(1L).foreach(p => println(p))
 
         println("-----QUERY OPEN/CLOSED AUCTIONS----")
@@ -166,6 +166,11 @@ object DBApp {
             .toString)).foreach(a => println(a))
         println("--ALL CLOSED VEHICLE--")
         Database.queryClosedAuctions(None, Some(PropertyKind.VEHICLE
+            .toString)).foreach(a => println(a))
+        println("--ALL OPENCLOSED JEWEL NO KIND--")
+        Database.queryClosedAuctions(None, Some(PropertyKind.JEWEL
+            .toString)).foreach(a => println(a))
+        Database.queryOpenAuctions(None, Some(PropertyKind.JEWEL
             .toString)).foreach(a => println(a))
         println("--ALL ALL--")
         Database.queryClosedAuctions(None, None).foreach(a => println(a))

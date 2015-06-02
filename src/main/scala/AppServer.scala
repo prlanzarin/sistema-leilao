@@ -59,7 +59,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         if (serv.insertProperty(i, p))
                             AddPropertyReply("Success")
                         else
-                            AddPropertyReply("Success")
+                            AddPropertyReply("Failed")
 
                     case AddAuctionRequest(p, b, e) =>
                         println("Server: adding auction")
@@ -67,7 +67,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         if(serv.insertAuction(p, b, e))
                             AddPropertyReply("Success")
                         else
-                            AddPropertyReply("Success")
+                            AddPropertyReply("Failed")
 
                     case QueryIndebtedPropertiesRequest(iCpf: String) =>
                         println("Server: querying indebted properties")
@@ -79,7 +79,8 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         println("Server: querying indebted")
                         val serv = new ManagerServices()
                         val indebted = serv.getIndebteds
-                        indebted.foreach { x => out.writeObject(QueryIndebtedsReply(x))}
+                        indebted.foreach {
+                            x => out.writeObject(QueryIndebtedsReply(x))}
                         QueryIndebtedsReply(null) // Might be empty
 
                     case QueryPropertiesRequest(k, i) =>
@@ -106,7 +107,24 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         val ah = serv.queryAuctionHistory(cl, pn, pk)
                         QueryAuctionHistoryReply(ah)
 
-                    case _ => throw new SocketException // TODO Create other exception
+                    case AddBidRequest(uid, aid, value) =>
+                        println("Server: adding bid")
+                        val serv = new ClientServices
+                        if(serv.createBid(uid, aid, value))
+                            AddBidReply("Success")
+                        else
+                            AddBidReply("Failed")
+
+                    case CancelBidRequest(uid, aid, value) =>
+                        println("Server: adding bid")
+                        val serv = new ClientServices
+                        if(serv.createBid(uid, aid, value))
+                            CancelBidReply("Success")
+                        else
+                            CancelBidReply("Failed")
+
+                    case _ => throw new SocketException
+                    // TODO Create other exception
 
                 }
                 out.writeObject(r)

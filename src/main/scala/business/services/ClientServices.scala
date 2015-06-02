@@ -6,12 +6,16 @@ import database.Database
 
 class ClientServices extends UserServices {
 
-    def createBid(bid : Bid) = {
-        Database.addBid(bid)
+    def createBid(uid : String, aid : Long, value : Double) : Boolean = {
+        Database.addBid(uid, aid, value)
+        true
+        //TODO CATCH DB EXCEPTIONS
     }
 
-    def cancelBid(bid : Bid) = {
-        Database.cancelBid(bid)
+    def cancelBid(uid : String, aid : Long, value : Double) : Boolean = {
+        Database.cancelBid(uid, aid, value)
+        true
+        //TODO CATCH DB EXCEPTIONS
     }
 
     def queryOpenAuctions(property : Option[String], propertyKind :
@@ -21,9 +25,8 @@ class ClientServices extends UserServices {
 
     def queryAuctionHistory(client : Client, propertyName : Option[String],
                       propertyKind : Option[String]) : List[(Auction, Bid)] = {
-        val ca = Database.queryClientAuctions(client).filter(a =>
-            propertyKind.map(a.property.kind.toString == _ && a.property.name
-                == propertyName.getOrElse(true)).getOrElse(true))
-        Nil
+        Database.queryClientBidHistory(client).filter(a =>
+            propertyKind.map(a._1.property.kind.toString == _ && a._1.property
+                .name == propertyName.getOrElse(true)).getOrElse(true))
     }
 }
