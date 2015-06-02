@@ -33,7 +33,7 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
   val inAuction = new ButtonGroup(allAuction, yes, no)
   val inAuctionPanel = new LabelRadioButtonsPanel("Em Leilão:", inAuction)
 
-  val headers = Seq("Bem", "Ano da Compra", "Valor Estimado (R$)", "Tipo")
+  val headers = Seq("Bem", "Nome", "Ano da Compra", "Valor Estimado (R$)", "Tipo")
   var rowData: Array[Array[Any]] = Array()
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
@@ -88,12 +88,12 @@ class PropertiesFrame(parent: Frame, manager: Manager) extends ChildFrame(parent
   }
 
   def propertyToRow(property: Property): Array[Any] ={
-    Array(property.name, property.boughtIn, property.value, property.kind)
+    Array(property.propertyID.get, property.name, property.boughtIn, property.value, property.kind)
   }
 
   def rowToProperty(row: Int) = {
-    new Property(table(row, 0).toString, table(row,2).toString.toDouble,
-      PropertyKind.withName(table(row,3).toString), table(row,1).toString.toInt)
+    new Property(table(row, 1).toString, table(row,3).toString.toDouble,
+      PropertyKind.withName(table(row,4).toString), table(row,2).toString.toInt, Some(table(row, 0).toString.toLong))
   }
 
   def createAuctionAction = {
