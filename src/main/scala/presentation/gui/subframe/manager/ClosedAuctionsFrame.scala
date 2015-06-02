@@ -30,10 +30,9 @@ class ClosedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
       contents += new LabelRadioButtonsPanel("Filtrar Bens:", propertyKind)
       contents += new LabelSearchPanel("Nome do Bem:", searchText, searchButton)
     }) = BorderPanel.Position.North
-    layout(new ScrollPane(table)) = BorderPanel.Position.Center
+    layout(scrollTable) = BorderPanel.Position.Center
     layout(new ButtonsPanel(List(allAuctionsReport, auctionReport))) = BorderPanel.Position.South
   }
-  updateAuctionTable
 
   def updateAuctionTable: Unit = {
     val propertyKind = getPropertyKindFilter

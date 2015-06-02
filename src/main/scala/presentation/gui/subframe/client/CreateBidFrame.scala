@@ -27,7 +27,7 @@ class CreateBidFrame(parent: Frame, client: Client) extends AuctionsFrame(parent
       contents += new LabelRadioButtonsPanel("Filtrar Bens:", propertyKind)
       contents += new LabelSearchPanel("Nome do Bem:", searchText, searchButton)
     }) = BorderPanel.Position.North
-    layout(new ScrollPane(table)) = BorderPanel.Position.Center
+    layout(scrollTable) = BorderPanel.Position.Center
     layout(new LabelSearchPanel("Valor do Lance:", newBidValue, newBidButton)) = BorderPanel.Position.South
   }
   updateAuctionTable
