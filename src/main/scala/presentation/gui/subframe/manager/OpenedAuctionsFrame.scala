@@ -27,10 +27,9 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
       contents += new LabelRadioButtonsPanel("Filtrar Bens:", propertyKind)
       contents += new LabelSearchPanel("Nome do Bem:", searchText, searchButton)
     }) = BorderPanel.Position.North
-    layout(new ScrollPane(table)) = BorderPanel.Position.Center
+    layout(scrollTable) = BorderPanel.Position.Center
     layout(new ButtonsPanel(List(closeAuction))) = BorderPanel.Position.South
   }
-  updateAuctionTable
 
   def closeAuctionAction: Unit = {
     //TODO cancel auction code here

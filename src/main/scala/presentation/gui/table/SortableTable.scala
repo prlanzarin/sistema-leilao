@@ -1,5 +1,7 @@
 package main.scala.presentation.gui.table
 
+import java.util.Date
+
 import main.scala.presentation.gui.table.event.TableColumnHeaderSelected
 
 import scala.swing.Table
@@ -47,9 +49,19 @@ class SortableTable(var rowData: Array[Array[Any]], headers: Seq[Any]) extends T
 
   def sortByRow(row: Int)(reverse: Boolean)(a: Array[Any], b: Array[Any]): Boolean = { //FIXME only sorts strings
     if (reverse)
-      a(row).toString.toUpperCase > b(row).toString.toUpperCase
+      (a(row), b(row)) match {
+        case (x: Double, y: Double) => x > y
+        case (x: Int, y: Int) => x > y
+        case (x: Date, y: Date) => x.compareTo(y) > 0
+        case (_, _) => a(row).toString.toUpperCase > b(row).toString.toUpperCase
+      }
     else
-      a(row).toString.toUpperCase < b(row).toString.toUpperCase
+      (a(row), b(row)) match {
+        case (x: Double, y: Double) => x < y
+        case (x: Int, y: Int) => x < y
+        case (x: Date, y: Date) => x.compareTo(y) < 0
+        case (_, _) => a(row).toString.toUpperCase < b(row).toString.toUpperCase
+      }
   }
 
   def updateCells {
