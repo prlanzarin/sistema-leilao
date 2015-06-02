@@ -6,12 +6,16 @@ import database.Database
 
 class ClientServices extends UserServices {
 
-    def createBid(uid : String, aid : Long, value : Double) : Boolean = {
+    def createBid(uid : String, aid : Long, value : Double) : Option[Boolean] = {
         Database.queryAuction(aid) match {
-            case Some(x) => Database.queryUser(uid) foreach(
-                u => Database.addBid (uid, aid, value))
-                true
-            case None => false
+            case Some(x) => value <= Database.queryHighestBid(aid).get.value
+            match {
+                case false => Database.queryUser(uid) map
+                    (u => Database.addBid(uid, aid, value))
+                    Some(true)
+                case true => Some(false)
+            }
+            case None => None
         }
     }
 

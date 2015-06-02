@@ -118,15 +118,18 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                     case AddBidRequest(uid, aid, value) =>
                         println("Server: adding bid")
                         val serv = new ClientServices
-                        if(serv.createBid(uid, aid, value))
-                            AddBidReply("Success")
-                        else
-                            AddBidReply("Failed")
+                        serv.createBid(uid, aid, value) match {
+                            case Some(true) => AddBidReply("Success")
+                            case Some(false) => AddBidReply("Failed: bid was " +
+                                "topped")
+                            case None => AddBidReply("Failed: auction has " +
+                                "ended")
+                        }
 
                     case CancelBidRequest(uid, aid, value) =>
                         println("Server: cancelling bid")
                         val serv = new ClientServices
-                        if(serv.createBid(uid, aid, value))
+                        if(serv.cancelBid(uid, aid, value))
                             CancelBidReply("Success")
                         else
                             CancelBidReply("Failed")

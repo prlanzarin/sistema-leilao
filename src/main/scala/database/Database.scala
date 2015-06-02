@@ -264,18 +264,26 @@ object Database {
         }
     }
 
-    def addBid(uid : String, aid : Long, value : Double) = {
+    def addBid(uid : String, aid : Long, value : Double) : Boolean = {
         lazy val dbQuery = for {
             b <- userBids if b.auctionID === aid &&
-            b.userID === uid && b.value < value
+            b.userID === uid //&& b.value < value
         } yield b.value
 
         db withSession {
-            MTable.getTables(userBids.tableName).firstOption foreach(
-                MTable => dbQuery.list.isEmpty match {
-                    case false => dbQuery.update(value)
-                    case true => userBids.insert(None, aid, uid, value)
-                }) orElse initialize()
+            MTable.getTables(userBids.tableName).firstOption match {
+                case Some(t) => dbQuery.firstOption match {
+                    case Some(x) => x.self < value match {
+                        case true => dbQuery.update(value); true
+                        case _ => false
+                    }
+                    case None =>
+                        userBids.insert(None, aid, uid, value)
+                        true
+                }
+                case None => initialize()
+                    false
+            }
         }
     }
 
