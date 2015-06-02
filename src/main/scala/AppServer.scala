@@ -65,9 +65,9 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         println("Server: adding auction")
                         val serv = new ManagerServices
                         if(serv.insertAuction(p, b, e))
-                            AddPropertyReply("Success")
+                            AddAuctionReply("Success")
                         else
-                            AddPropertyReply("Failed")
+                            AddAuctionReply("Failed")
 
                     case QueryIndebtedPropertiesRequest(iCpf: String) =>
                         println("Server: querying indebted properties")
@@ -96,7 +96,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         QueryOpenedAuctionsReply(oa)
 
                     case QueryClosedAuctionsRequest(pn, pk) =>
-                        println("Server: querying open auctions")
+                        println("Server: querying closed auctions")
                         val serv = new ManagerServices
                         val ca = serv.getClosedAuctions(pn, pk)
                         QueryClosedAuctionsReply(ca)

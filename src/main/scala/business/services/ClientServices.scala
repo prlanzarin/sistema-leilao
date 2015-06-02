@@ -32,7 +32,7 @@ class ClientServices extends UserServices {
     def queryAuctionHistory(client : Client, propertyName : Option[String],
                       propertyKind : Option[String]) : List[(Auction, Bid)] = {
         Database.queryClientBidHistory(client).filter(a =>
-            propertyKind.map(a._1.property.kind.toString == _ && a._1.property
-                .name == propertyName.getOrElse(true)).getOrElse(true))
+            propertyKind.map(a._1.property.kind.toString == _).getOrElse
+                (true) && propertyName.map(a._1.property.name == _).getOrElse(true))
     }
 }

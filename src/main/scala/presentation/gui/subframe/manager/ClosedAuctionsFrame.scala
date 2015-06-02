@@ -37,7 +37,8 @@ class ClosedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
   def updateAuctionTable: Unit = {
     val propertyKind = getPropertyKindFilter
     val propertyName = if (searchText.text.isEmpty) None else Some(searchText.text)
-    val auctionList = Connection.sendQueryOpenedAuctionsRequest(propertyName, propertyKind)
+    val auctionList = Connection.sendQueryClosedAuctionsRequest(propertyName,
+        propertyKind)
     rowData = new Array[Array[Any]](auctionList.size)
     auctionList.zipWithIndex.foreach { case (x, i) => rowData(i) = auctionToRow(x) }
     table = new SortableTable(rowData, headers)

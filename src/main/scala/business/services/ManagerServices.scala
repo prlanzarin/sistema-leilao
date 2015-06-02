@@ -22,11 +22,11 @@ class ManagerServices extends UserServices {
     }
 
     def insertAuction(property: Property, beginDate: Date, endDate: Date): Boolean = {
-        val indebted = Database.queryIndebted(property).getOrElse(return false)
+        val indebted = Database.queryIndebted(property)
         val nowTime = Calendar.getInstance.getTime()
-        val auction = new Auction(indebted, property, beginDate, endDate, None, None)
         //TODO schedule auction if not opened
-        Database.addAuction(auction)
+        Database.addAuction(Auction(indebted.getOrElse(return false), property,
+            beginDate, endDate))
         true
     }
 
@@ -69,13 +69,13 @@ class ManagerServices extends UserServices {
         Database.getAuctions
     }
 
+    def getOpenAuction : List[Auction] = {
+        Database.getOpenAuctions
+    }
+
     def getOpenAuctions(property : Option[String], propertyKind :
     Option[String]) : List[Auction] = {
         Database.queryOpenAuctions(property, propertyKind)
-    }
-
-    def getOpenAuction : List[Auction] = {
-        Database.getOpenAuctions
     }
 
     def getClosedAuctions(property : Option[String], propertyKind :

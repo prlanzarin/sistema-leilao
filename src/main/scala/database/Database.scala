@@ -256,7 +256,6 @@ object Database {
                 i <- properties if i.name === auction.property.name &&
                 i.ownerID === auction.indebted.cpf
             } yield i.id
-
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
                 MTable => auctions.insert(None, auction.begin, auction.end,
