@@ -25,7 +25,8 @@ class ManagerServices extends UserServices {
         val indebted = Database.queryIndebted(property)
         val nowTime = Calendar.getInstance.getTime()
         //TODO schedule auction if not opened
-        Database.addAuction(Auction(indebted.get, property, beginDate, endDate))
+        Database.addAuction(Auction(indebted.getOrElse(return false), property,
+            beginDate, endDate))
         true
     }
 
