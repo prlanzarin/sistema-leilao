@@ -8,6 +8,7 @@ case class AddPropertyReply(msg: String) extends ReplyMessage
 case class AddAuctionReply(msg: String) extends ReplyMessage
 case class AddBidReply(msg: String) extends RequestMessage
 case class CancelBidReply(msg: String) extends RequestMessage
+case class EndAuctionReply(msg : String) extends RequestMessage
 case class QueryOpenedAuctionsReply(la: List[Auction]) extends ReplyMessage
 case class QueryClosedAuctionsReply(la: List[Auction]) extends ReplyMessage
 case class QueryIndebtedPropertiesReply(il : List[Property]) extends ReplyMessage

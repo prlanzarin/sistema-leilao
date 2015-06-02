@@ -1,6 +1,7 @@
 package database
 
 import java.util
+import java.util.Date
 
 import business.entities._
 
@@ -294,15 +295,15 @@ object Database {
         }
     }
 
-    def updateAuction(auction : Auction) = {
+    def updateAuction(aid : Long) = {
         lazy val dbQuery =
             for {
-                a <- auctions if a.auctionId === auction.auctionID
+                a <- auctions if a.auctionId === aid
             } yield a.end
 
         db withSession {
             MTable.getTables(auctions.tableName).firstOption foreach(
-                MTable => dbQuery.update(auction.end)
+                MTable => dbQuery.update(new Date())
                 ) orElse initialize()
         }
     }

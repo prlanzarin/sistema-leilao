@@ -101,6 +101,14 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                         val ca = serv.getClosedAuctions(pn, pk)
                         QueryClosedAuctionsReply(ca)
 
+                    case EndAuctionRequest(aid) =>
+                        println("Server: closing auction")
+                        val serv = new ManagerServices
+                        if(serv.endAuction(aid))
+                            EndAuctionReply("Success")
+                        else
+                            EndAuctionReply("Failed")
+
                     case QueryAuctionHistoryRequest(cl, pn, pk) =>
                         println("Server: querying open auctions")
                         val serv = new ClientServices
@@ -116,7 +124,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                             AddBidReply("Failed")
 
                     case CancelBidRequest(uid, aid, value) =>
-                        println("Server: adding bid")
+                        println("Server: cancelling bid")
                         val serv = new ClientServices
                         if(serv.createBid(uid, aid, value))
                             CancelBidReply("Success")
