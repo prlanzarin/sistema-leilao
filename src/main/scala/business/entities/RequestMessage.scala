@@ -14,6 +14,7 @@ case class AddBidRequest(uid : String, aid : Long, value : Double)
     extends RequestMessage
 case class CancelBidRequest(uid : String, aid : Long, value : Double)
     extends RequestMessage
+case class EndAuctionRequest(aid : Long) extends RequestMessage
 case class QueryOpenedAuctionsRequest(name: Option[String], propertyKind:
 Option[String]) extends RequestMessage
 case class QueryClosedAuctionsRequest(name: Option[String], propertyKind:

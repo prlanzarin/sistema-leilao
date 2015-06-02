@@ -123,13 +123,8 @@ object DBApp {
         Database.queryPropertyOwners(Nil).foreach(p => println(p))
 
         println("-----UPDATE AUCTION----")
-        Database.updateAuction(Auction(Database.queryIndebted("01111111111")
-            .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
-            date, date, None, Some(1L)))
         Database.queryAuction(1L).foreach(a => println(a))
-        Database.updateAuction(Auction(Database.queryIndebted("01111111111")
-            .get, Database.queryProperty("01111111111", "Onibus da Carris").get,
-            date, date, None, Some(1L)))
+        Database.updateAuction(1L)
         Database.queryAuction(1L).foreach(a => println(a))
 
         println("-----ADD BID----")

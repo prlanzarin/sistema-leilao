@@ -45,8 +45,12 @@ class ManagerServices extends UserServices {
         }
     }
 
-    def endAuction(auction: Auction) = {
-        Database.updateAuction(auction)
+    def endAuction(aid : Long) : Boolean = {
+        Database.queryAuction(aid) match {
+            case Some(x) => Database.updateAuction(aid)
+                true
+            case None => false
+        }
     }
 
     def getIndebtedProperties(indebtedCpf: String): List[Property] ={
