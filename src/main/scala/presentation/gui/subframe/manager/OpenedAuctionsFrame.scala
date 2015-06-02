@@ -16,9 +16,9 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
   title = "Leilões Abertos"
   resizable = false
 
-  val closeAuction = new Button{
+  val endAuction = new Button{
     action = Action("Encerrar Leilão"){
-      closeAuctionAction
+      endAuctionAction
     }
   }
 
@@ -28,11 +28,22 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
       contents += new LabelSearchPanel("Nome do Bem:", searchText, searchButton)
     }) = BorderPanel.Position.North
     layout(scrollTable) = BorderPanel.Position.Center
-    layout(new ButtonsPanel(List(closeAuction))) = BorderPanel.Position.South
+    layout(new ButtonsPanel(List(endAuction))) = BorderPanel.Position.South
   }
 
-  def closeAuctionAction: Unit = {
+  def endAuctionAction: Unit = {
+    val row = table.selection.rows
+    if (row.isEmpty)
+      Dialog.showMessage(table, "Selecione um leilão", "Erro", Dialog.Message.Error)
+    else {
+      val auctionId = rowToAuctionId(row.anchorIndex)
+      if(Connection.sendEndAuctionRequest(auctionId))
+        Dialog.showMessage(table, "Leilão cancelado com sucesso", "Sucesso", Dialog.Message.Info)
+      else
+        Dialog.showMessage(table, "Leilão não pode ser cancelado", "Erro", Dialog.Message.Error)
 
+      updateAuctionTable
+    }
   }
 
 

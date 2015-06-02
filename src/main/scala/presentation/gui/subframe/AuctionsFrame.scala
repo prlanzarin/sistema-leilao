@@ -43,8 +43,8 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
   def auctionToRow(auction: Auction): Array[Any] = {
       val value = auction.highestBid map (_.value)
     Array(auction.auctionID.get, auction.property.name, auction.property.kind,
-        value, auction.numberOfBids.getOrElse(0), Validator.dateFormatter.
-            format(auction.begin), Validator.dateFormatter.format(auction.end))
+        value.getOrElse("Nenhum"), auction.numberOfBids.getOrElse(0), Validator.dateTimeFormatter.
+            format(auction.begin), Validator.dateTimeFormatter.format(auction.end))
   }
 
   def rowToAuctionId(row: Int) : Long = {

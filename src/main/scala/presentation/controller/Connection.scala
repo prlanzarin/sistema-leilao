@@ -165,4 +165,15 @@ object Connection {
       case _ => false
     }
   }
+
+  def sendEndAuctionRequest(aid: Long): Boolean = {
+    val msg: RequestMessage = EndAuctionRequest(aid)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case EndAuctionReply(msg: String) => msg == "Success"
+      case _ => false
+    }
+  }
 }
