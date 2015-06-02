@@ -176,4 +176,15 @@ object Connection {
       case _ => false
     }
   }
+
+  def sendCancelBidRequest(uid: String, aid: Long, value: Double): Boolean = {
+    val msg: RequestMessage = CancelBidRequest(uid, aid, value)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case CancelBidReply(msg: String) => msg == "Success"
+      case _ => false
+    }
+  }
 }

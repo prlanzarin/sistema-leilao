@@ -38,22 +38,22 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
 
   val allAuctionsReport = new Button{
     action = Action("Relatório de Todos Leilões"){
-      //TODO report
+      allAuctionsReportAction
     }
   }
   val auctionReport = new Button{
     action = Action("Relatório do Leilão"){
-      //TODO report
+      auctionReportAction
     }
   }
   val payment = new Button{
     action = Action("Solicitar Pagamento"){
-      //TODO fake boleto
+      fakeBoletoAction
     }
   }
   val cancelBid = new Button{
     action = Action("Cancelar Lance"){
-      //TODO cancel bid
+      cancelBidAction
     }
   }
 
@@ -95,6 +95,14 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
     auction.numberOfBids.get, Validator.dateFormatter.format(auction.begin), Validator.dateFormatter.format(auction.end))
   }
 
+  def rowToAuctionId(row: Int): Long = {
+    table(row, 0).toString.toLong
+  }
+
+  def rowToBidValue(row: Int): Double = {
+    table(row, 3).toString.toDouble
+  }
+
   def isHighestBid(auction: Auction, client: Client): String ={
     if (auction.highestBid.get.client.userName == client.userName)
       "Sim"
@@ -109,11 +117,23 @@ class HistoryFrame(parent: Frame, client: Client) extends ChildFrame(parent) {
     //TODO auction report code here
   }
 
-  def paymentAction: Unit = {
+  def fakeBoletoAction: Unit = {
     //TODO payment action code here
   }
 
   def cancelBidAction: Unit = {
-    //TODO cancel bid action code here
+    val row = table.selection.rows
+    if(row.isEmpty)
+      Dialog.showMessage(table, "Selecione um lance", "Erro", Dialog.Message.Error)
+    else {
+      val auctionId = rowToAuctionId(row.anchorIndex)
+      val clientId = client.userName
+      val value = rowToBidValue(row.anchorIndex)
+      if (Connection.sendCancelBidRequest(clientId, auctionId, value))
+        Dialog.showMessage(table, "Lance cancelado com sucesso", "Sucesso", Dialog.Message.Info)
+      else
+        Dialog.showMessage(table, "Lance não pode ser cancelado", "Erro", Dialog.Message.Error)
+      updateAuctionBidTable
+    }
   }
 }

@@ -38,9 +38,9 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
     else {
       val auctionId = rowToAuctionId(row.anchorIndex)
       if(Connection.sendEndAuctionRequest(auctionId))
-        Dialog.showMessage(table, "Leilão cancelado com sucesso", "Sucesso", Dialog.Message.Info)
+        Dialog.showMessage(table, "Leilão finalizado com sucesso", "Sucesso", Dialog.Message.Info)
       else
-        Dialog.showMessage(table, "Leilão não pode ser cancelado", "Erro", Dialog.Message.Error)
+        Dialog.showMessage(table, "Leilão não pode ser finalizado", "Erro", Dialog.Message.Error)
       updateAuctionTable
     }
   }
