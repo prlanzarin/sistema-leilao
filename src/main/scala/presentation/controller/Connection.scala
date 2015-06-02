@@ -154,4 +154,15 @@ object Connection {
       case _ => Nil
     }
   }
+
+  def sendAddBidRequest(uid: String, aid: Long, value: Double): Boolean ={
+    val msg: RequestMessage = AddBidRequest(uid, aid, value)
+    out.writeObject(msg)
+    out.flush()
+    val r = in.readObject().asInstanceOf[ReplyMessage]
+    r match {
+      case AddBidReply(msg: String) => msg == "Success"
+      case _ => false
+    }
+  }
 }

@@ -32,8 +32,10 @@ class OpenedAuctionsFrame(parent: Frame, manager: Manager) extends AuctionsFrame
   }
 
   def closeAuctionAction: Unit = {
-    //TODO cancel auction code here
+
   }
+
+
 
   def updateAuctionTable: Unit = {
     val propertyKind = getPropertyKindFilter

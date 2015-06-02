@@ -5,6 +5,7 @@ import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{LabelRadioButtonsPanel, LabelSearchPanel}
 import main.scala.presentation.gui.subframe.{AuctionsFrame, ChildFrame}
 import main.scala.presentation.gui.table.SortableTable
+import main.scala.presentation.gui.validator.{ValidationException, Validator}
 
 import scala.swing._
 
@@ -43,6 +44,24 @@ class CreateBidFrame(parent: Frame, client: Client) extends AuctionsFrame(parent
   }
 
   def createBidAction: Unit = {
-    //TODO create bid code here
+    val row = table.selection.rows
+    if(row.isEmpty)
+      Dialog.showMessage(table, "Selecione um leilão", "Erro", Dialog.Message.Error)
+    else{
+      try {
+        val clientId = client.userName
+        val auctionId = rowToAuctionId(row.anchorIndex)
+        val value = Validator.validateValue(newBidValue.text)
+        if(Connection.sendAddBidRequest(clientId, auctionId, value))
+          Dialog.showMessage(table, "Lance realizado com sucesso", "Sucesso", Dialog.Message.Info)
+        else
+          Dialog.showMessage(table, "Lance inválido", "Erro", Dialog.Message.Error)
+      }
+      catch {
+        case e: ValidationException => Dialog.showMessage(table, e.msg, "Erro", Dialog.Message.Error)
+      } finally {
+        updateAuctionTable
+      }
+    }
   }
 }

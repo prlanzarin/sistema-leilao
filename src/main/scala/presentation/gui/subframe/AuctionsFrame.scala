@@ -1,6 +1,7 @@
 package main.scala.presentation.gui.subframe
 
 import business.entities.Auction
+import main.scala.presentation.gui.subframe.manager.IndebtedPropertiesFrame
 import main.scala.presentation.gui.table.SortableTable
 import main.scala.presentation.gui.validator.Validator
 
@@ -26,7 +27,7 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
     }
   }
 
-  val headers = Seq("Bem", "Tipo", "Maior Lance", "Lances", "Início", "Término")
+  val headers = Seq("Leilão", "Bem", "Tipo", "Maior Lance", "Lances", "Início", "Término")
   var rowData: Array[Array[Any]] = Array()
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
@@ -40,15 +41,17 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
   def updateAuctionTable
 
   def auctionToRow(auction: Auction): Array[Any] = {
-    Array(auction.property.name, auction.property.kind, auction.highestBid.get.value, auction.numberOfBids.get,
-      Validator.dateFormatter.format(auction.begin), Validator.dateFormatter.format(auction.end))
+    Array(auction.auctionID.get, auction.property.name, auction.property.kind, auction.highestBid.get.value,
+      auction.numberOfBids.get, Validator.dateFormatter.format(auction.begin),
+      Validator.dateFormatter.format(auction.end))
+  }
+
+  def rowToAuctionId(row: Int) : Long = {
+    table(row, 0).toString.toLong
   }
 
   def getPropertyKindFilter: Option[String] = {
     val sel = propertyKind.selected.get
-    if (sel == all)
-      None
-    else
-      Some(sel.text)
+    if (sel == all) None else Some(sel.text)
   }
 }
