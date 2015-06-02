@@ -1,6 +1,5 @@
 package business.services
 
-import business.entities.PropertyKind.PropertyKind
 import business.entities.{Auction, Client, Bid}
 import database.Database
 

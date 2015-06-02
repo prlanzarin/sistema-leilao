@@ -27,7 +27,7 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
     }
   }
 
-  val headers = Seq("Leilão", "Bem", "Tipo", "Maior Lance", "Lances", "Início", "Término")
+  val headers = Seq("Leilão", "Bem", "Tipo", "Lance Mínimo", "Maior Lance", "Lances", "Início", "Término")
   var rowData: Array[Array[Any]] = Array()
   var table = new SortableTable(rowData, headers)
   val scrollTable = new ScrollPane(table)
@@ -42,9 +42,9 @@ abstract class AuctionsFrame(parent: Frame) extends ChildFrame(parent){
 
   def auctionToRow(auction: Auction): Array[Any] = {
       val value = auction.highestBid map (_.value)
-    Array(auction.auctionID.get, auction.property.name, auction.property.kind,
-        value, auction.numberOfBids.getOrElse(0), Validator.dateFormatter.
-            format(auction.begin), Validator.dateFormatter.format(auction.end))
+    Array(auction.auctionID.get, auction.property.name, auction.property.kind, auction.property.value,
+        value.getOrElse("Nenhum"), auction.numberOfBids.getOrElse(0), Validator.dateTimeFormatter.
+            format(auction.begin), Validator.dateTimeFormatter.format(auction.end))
   }
 
   def rowToAuctionId(row: Int) : Long = {

@@ -8,8 +8,10 @@ import database.Database
 
 object AppServer {
     def main(args: Array[String]): Unit = {
+        println("Server: initializing...")
         try {
             val listener = new ServerSocket(9999)
+            println("Server: ready")
             while (true)
                 new ServerThread(listener.accept()).start()
             listener.close()
@@ -29,7 +31,7 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
             val out = new ObjectOutputStream(new DataOutputStream(socket.getOutputStream()))
             val in = new ObjectInputStream(
                 new DataInputStream(socket.getInputStream()))
-
+            println("Server: client connected")
             while (socket.isBound()) {
                 val msg = in.readObject().asInstanceOf[RequestMessage]
                 val r = msg match {
@@ -141,15 +143,17 @@ case class ServerThread(socket: Socket) extends Thread("ServerThread") {
                 out.writeObject(r)
                 out.flush()
             }
-
             out.close()
             in.close()
-            socket.close()
         } catch {
             case e: SocketException =>
                 () // avoid stack trace when stopping a client with Ctrl-C
+            case e: EOFException =>
+                println("Server: client disconnected")
             case e: IOException =>
-                e.printStackTrace()
+              e.printStackTrace()
+        } finally {
+            socket.close()
         }
     }
 }

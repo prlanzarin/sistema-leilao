@@ -9,8 +9,10 @@ import java.util.{Calendar, Date}
 object Validator {
   val dateFormat = "dd/MM/yyyy"
   val timeFormat = "hh:mm:ss"
+  val dateTimeFormat = dateFormat + " - " + timeFormat
   val dateFormatter = new SimpleDateFormat(dateFormat)
   val timeFormatter = new SimpleDateFormat(timeFormat)
+  val dateTimeFormatter = new SimpleDateFormat(dateTimeFormat)
   val passwordSize = 3
 
   def validateName(input: String): String = {
