@@ -1,7 +1,7 @@
 package main.scala.presentation.gui.subframe.client
 
 import business.entities.{PropertyKind, Auction, Client}
-import main.scala.presentation.controller.Connection
+import main.scala.presentation.controller.{ConnectionException, Connection}
 import main.scala.presentation.gui.panel.{LabelRadioButtonsPanel, LabelSearchPanel}
 import main.scala.presentation.gui.subframe.{AuctionsFrame, ChildFrame}
 import main.scala.presentation.gui.table.SortableTable
@@ -52,13 +52,12 @@ class CreateBidFrame(parent: Frame, client: Client) extends AuctionsFrame(parent
         val clientId = client.userName
         val auctionId = rowToAuctionId(row.anchorIndex)
         val value = Validator.validateValue(newBidValue.text)
-        if(Connection.sendAddBidRequest(clientId, auctionId, value))
+        Connection.sendAddBidRequest(clientId, auctionId, value)
           Dialog.showMessage(table, "Lance realizado com sucesso", "Sucesso", Dialog.Message.Info)
-        else
-          Dialog.showMessage(table, "Lance inválido", "Erro", Dialog.Message.Error)
       }
       catch {
-        case e: ValidationException => Dialog.showMessage(table, e.msg, "Erro", Dialog.Message.Error)
+        case e: ValidationException => Dialog.showMessage(table, e.getMessage, "Erro", Dialog.Message.Error)
+        case e: ConnectionException => Dialog.showMessage(table, e.getMessage, "Erro", Dialog.Message.Error)
       } finally {
         updateAuctionTable
       }

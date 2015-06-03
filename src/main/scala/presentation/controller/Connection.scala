@@ -155,14 +155,17 @@ object Connection {
     }
   }
 
-  def sendAddBidRequest(uid: String, aid: Long, value: Double): Boolean ={
+  @throws(classOf[ConnectionException])
+  def sendAddBidRequest(uid: String, aid: Long, value: Double) ={
     val msg: RequestMessage = AddBidRequest(uid, aid, value)
     out.writeObject(msg)
     out.flush()
     val r = in.readObject().asInstanceOf[ReplyMessage]
     r match {
-      case AddBidReply(msg: String) => msg == "Success"
-      case _ => false
+      case AddBidReply("Success") =>
+      case AddBidReply("Failed: bid was topped") => throw new ConnectionException("Lance inválido: valor insuficiente")
+      case AddBidReply("Failed: auction has ended") => throw new ConnectionException("Leilão encerrado")
+      case _ => throw new ConnectionException("Erro inesperado no servidor")
     }
   }
 
