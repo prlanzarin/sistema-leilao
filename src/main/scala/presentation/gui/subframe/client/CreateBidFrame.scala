@@ -16,7 +16,7 @@ class CreateBidFrame(parent: Frame, client: Client) extends AuctionsFrame(parent
   title = "Novo Lance"
   resizable = false
 
-  val newBidValue = new TextField(37)
+  val newBidValue = new TextField(50)
   val newBidButton = new Button{
     action = Action("Fazer Lance"){
       createBidAction
@@ -53,11 +53,11 @@ class CreateBidFrame(parent: Frame, client: Client) extends AuctionsFrame(parent
         val auctionId = rowToAuctionId(row.anchorIndex)
         val value = Validator.validateValue(newBidValue.text)
         Connection.sendAddBidRequest(clientId, auctionId, value)
-          Dialog.showMessage(table, "Lance realizado com sucesso", "Sucesso", Dialog.Message.Info)
+        Dialog.showMessage(table, "Lance realizado com sucesso", "Sucesso", Dialog.Message.Info)
       }
       catch {
-        case e: ValidationException => Dialog.showMessage(table, e.getMessage, "Erro", Dialog.Message.Error)
-        case e: ConnectionException => Dialog.showMessage(table, e.getMessage, "Erro", Dialog.Message.Error)
+        case e @ (_:ValidationException | _:ConnectionException) =>
+          Dialog.showMessage(table, e.getMessage, "Erro", Dialog.Message.Error)
       } finally {
         updateAuctionTable
       }
