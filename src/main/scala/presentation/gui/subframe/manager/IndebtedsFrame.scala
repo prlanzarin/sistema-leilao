@@ -82,7 +82,12 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
   }
 
   def allIndebtedsReportAction: Unit = {
-    //TODO all indebteds report code here
+    val indebteds = Connection.sendQueryIndebtedsRequest
+    val line = "----------------------------------------"
+    val str = indebteds.foldLeft("")((acc, i) => acc + i + "\n" + line)
+
+    visible = false
+    new ReportFrame(this, str)
   }
 
   def indebtedReportAction: Unit = {
