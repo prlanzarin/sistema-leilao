@@ -83,7 +83,7 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
 
   def allIndebtedsReportAction: Unit = {
     val indebteds = Connection.sendQueryIndebtedsRequest
-    val line = "----------------------------------------"
+    val line = "----------------------------------------\n"
     val str = indebteds.foldLeft("")((acc, i) => acc + i + "\n" + line)
 
     visible = false
@@ -91,7 +91,14 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
   }
 
   def indebtedReportAction: Unit = {
-    //TODO indebted report here
+    val row = table.selection.rows
+    if (row.isEmpty)
+      Dialog.showMessage(properties, "Selecione um endividado", "Erro", Dialog.Message.Error)
+    else {
+      val indebted = rowToIndebted(row.anchorIndex)
+      visible = false
+      new ReportFrame(this, "Relatório do endividado", indebted.toString)
+    }
   }
 }
 
