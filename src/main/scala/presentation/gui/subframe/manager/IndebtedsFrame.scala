@@ -87,7 +87,7 @@ class IndebtedsFrame(parent: Frame, manager: Manager) extends ChildFrame(parent)
     val str = indebteds.foldLeft("")((acc, i) => acc + i + "\n" + line)
 
     visible = false
-    new ReportFrame(this, str)
+    new ReportFrame(this, "Relatório de Endividados", str)
   }
 
   def indebtedReportAction: Unit = {

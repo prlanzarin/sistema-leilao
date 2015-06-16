@@ -12,12 +12,13 @@ import scala.swing._
 /**
  * Created by mhbackes on 26/05/15.
  */
-class ReportFrame(parent: Frame, text: String)
+class ReportFrame(parent: Frame, frameTitle: String,  text: String)
     extends ChildFrame(parent) {
     resizable = true
+    title = frameTitle
 
-    val textArea = new TextArea(text) 
-    visible = true
+    val textArea = new TextArea(text)
+    contents = new ScrollPane(textArea)
 }
 
 
