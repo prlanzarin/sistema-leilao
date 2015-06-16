@@ -9,6 +9,7 @@ class ManagerUI extends UI {
     val commands = Map[String, Command](
         "C" -> new CreateIndebtedCommand(),
         "S" -> new SelectIndebtedCommand(),
+        "G" -> new GenerateIndebtedsReportCommand,
         "Q" -> new ExitCommand)
 
     def show {

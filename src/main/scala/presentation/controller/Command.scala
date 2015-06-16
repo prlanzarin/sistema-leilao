@@ -108,3 +108,20 @@ class ExitCommand extends Command {
     override def execute = Unit
     override def toString = "Sair"
 }
+
+class GenerateIndebtedsReportCommand extends Command {
+    override def execute = {
+        val loi: List[Indebted] = Connection.sendQueryIndebtedsRequest()
+        if (loi == Nil)
+            println("Não há endividados cadastrados.")
+        else {
+            val fn = UIUtils.readString("Nome do arquivo de relatório:")
+            var data = loi.map(i => i.toString)
+            val rg = new ReportGenerator
+            rg.printToFile(fn, data)
+
+        }
+    }
+
+    override def toString = "Gerar relatório de todos os endividados"
+}
