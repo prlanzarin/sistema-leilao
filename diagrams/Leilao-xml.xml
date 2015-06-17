@@ -28612,7 +28612,7 @@
           <JUDE:Diagram.styleProperty key="association.name.direction.visibility" value="true"/>
         </JUDE:Diagram.customStyleMap>
       </JUDE:Diagram>
-      <JUDE:CollaborationDiagram xmi.id="1t1aa-910259c450714b1961dfa355c1aed162" name="Communication Diagram0" version="0" typeInfo="Collaboration Diagram" isFlatMessageIndex="false" isMessageIndexVisible="true" isMessageParamVisible="true" isMessageParamTypeVisible="true" isMessageReturnValueVisible="true" isMessageReturnValueVariableVisible="true">
+      <JUDE:CollaborationDiagram xmi.id="1t1aa-910259c450714b1961dfa355c1aed162" name="CD_cancelar_lance" version="0" typeInfo="Collaboration Diagram" isFlatMessageIndex="false" isMessageIndexVisible="true" isMessageParamVisible="true" isMessageParamTypeVisible="true" isMessageReturnValueVisible="true" isMessageReturnValueVariableVisible="true">
         <JUDE:InteractionDiagram.semanticModel>
           <UML:Collaboration xmi.idref="1t1ab-910259c450714b1961dfa355c1aed162"/>
         </JUDE:InteractionDiagram.semanticModel>
@@ -28732,7 +28732,7 @@
               <XMI.field>394.0</XMI.field>
             </JUDE:JomtPresentation.location>
           </JUDE:ObjectPresentation>
-          <JUDE:FramePresentation xmi.id="1t1ae-910259c450714b1961dfa355c1aed162" version="0" depth="2147483646" stereotypeVisibility="true" constraintVisibility="true" notationType="0" width="577.1486322588537" height="409.19558311808913" doAutoResize="false" visibility="true" label="Communication+Diagram0">
+          <JUDE:FramePresentation xmi.id="1t1ae-910259c450714b1961dfa355c1aed162" version="0" depth="2147483646" stereotypeVisibility="true" constraintVisibility="true" notationType="0" width="577.1486322588537" height="409.19558311808913" doAutoResize="false" visibility="true" label="CD_cancelar_lance">
             <JUDE:UPresentation.diagram>
               <JUDE:Diagram xmi.idref="1t1aa-910259c450714b1961dfa355c1aed162"/>
             </JUDE:UPresentation.diagram>
