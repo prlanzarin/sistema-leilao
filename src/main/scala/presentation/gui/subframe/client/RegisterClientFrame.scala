@@ -1,4 +1,4 @@
-package main.scala.presentation.gui.subframe.manager
+package main.scala.presentation.gui.subframe.client
 
 import business.entities.Client
 import main.scala.presentation.controller.Connection

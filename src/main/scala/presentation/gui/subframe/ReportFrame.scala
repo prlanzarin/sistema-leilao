@@ -15,6 +15,7 @@ import scala.swing._
 class ReportFrame(parent: Frame, frameTitle: String,  text: String)
     extends ChildFrame(parent) {
     resizable = true
+    preferredSize = new Dimension(400, 400)
     title = frameTitle
 
     val textArea = new TextArea(text)

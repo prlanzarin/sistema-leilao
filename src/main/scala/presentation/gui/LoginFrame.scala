@@ -3,8 +3,8 @@ package main.scala.presentation.gui
 import business.entities.{Client, Manager}
 import main.scala.presentation.controller.Connection
 import main.scala.presentation.gui.panel.{ButtonsPanel, LabelTextFieldPanel}
-import main.scala.presentation.gui.subframe.client.ClientMenuFrame
-import main.scala.presentation.gui.subframe.manager.{RegisterClientFrame, ManagerMenuFrame}
+import main.scala.presentation.gui.subframe.client.{RegisterClientFrame, ClientMenuFrame}
+import main.scala.presentation.gui.subframe.manager.ManagerMenuFrame
 import main.scala.presentation.gui.validator.{ValidationException, Validator}
 
 import scala.swing._
@@ -14,8 +14,9 @@ import scala.swing._
  */
 class LoginFrame extends MainFrame {
   setLocationRelativeTo(this)
-  title = "Login"
+  title = "Leilões Justiça Federal"
   resizable = false
+  preferredSize = new Dimension(230, 100)
   Connection.init
 
   val userName = new TextField(12)
