@@ -1,4 +1,4 @@
-# Student Projet - Leilões da Justiça Federal
+# Student Project - Leilões da Justiça Federal
 # Projeto arquitetural e prototipação
   
 Links úteis:
